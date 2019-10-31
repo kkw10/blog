@@ -3,8 +3,10 @@ const { PORT } = process.env;
 
 const Express = require('express');
 const morgan = require('morgan');
+const db = require('./models');
 
 const app = new Express();
+db.sequelize.sync();
 
 app.use(morgan('dev'));
 
