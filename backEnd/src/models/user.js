@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 // Modeling a user "table"
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
@@ -21,6 +23,14 @@ module.exports = (sequelize, DataTypes) => {
 
   // 테이블간의 관계 설정
   User.associate = (db) => {
-    //...
+    
   }
+
+  // Static mehtods
+  User.setPassword = async (password) => {
+    const hashedPassword = await bcrypt.hash(password, 12);
+    return hashedPassword;
+  }
+
+  return User;
 }

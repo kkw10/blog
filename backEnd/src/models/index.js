@@ -7,13 +7,14 @@ const db = {};
 
 const sequelize = new Sequelize(config.database, config.username, config.password, config);
 
+db.User = require('./user')(sequelize, Sequelize);
+
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
 });
 
-db.User = require('./user')(sequelize, Sequelize);
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
