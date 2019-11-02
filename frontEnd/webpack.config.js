@@ -42,5 +42,6 @@ module.exports = {
   devServer: {
     publicPath: "/dist/",
     port: 1990,
+    historyApiFallback: true,
   }
 }
