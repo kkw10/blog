@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Header from './Header';
+import HeaderContainer from '../../containers/common/HeaderContainer';
 import { brandingColor } from '../../lib/styles/branding';
 
 const LayoutWrap = styled.div`
@@ -13,7 +13,7 @@ const LayoutWrap = styled.div`
 const Layout = ({ children }) => {
   return (
     <LayoutWrap>
-      <Header />
+      <HeaderContainer />
       { children }
     </LayoutWrap>
   )

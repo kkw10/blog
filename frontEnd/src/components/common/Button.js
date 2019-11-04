@@ -16,6 +16,17 @@ const StyledButton = styled.button`
   )}
 
   ${props => (
+    props.size === 'mx' && css`
+      width: 100%;
+      height: 36px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 5px;      
+    `
+  )}
+
+  ${props => (
     props.size === 'lg' && css`
       width: 120px;
       height: 32px;

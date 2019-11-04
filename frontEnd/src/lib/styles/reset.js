@@ -17,6 +17,12 @@ export const resetCSS = css`
     text-decoration: none;
   }
 
+  input {
+    &:focus {
+      outline: none;
+    }
+  }
+
   button {
     background: none;
     border: none;
