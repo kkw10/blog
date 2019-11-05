@@ -43,5 +43,10 @@ module.exports = {
     publicPath: "/dist/",
     port: 1990,
     historyApiFallback: true,
+    proxy: { // 백엔드 cors 해결 
+      '/api': {
+        target: 'http://localhost:1991'
+      }
+    }    
   }
 }

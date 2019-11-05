@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from './index';
-import AuthForm from '../../auth/AuthForm';
+import AuthFormContainer from '../../../containers/auth/AuthFormContainer';
 
 const Register = ({ visible, type, onCancel, title, description }) => {
   return (
@@ -11,7 +11,7 @@ const Register = ({ visible, type, onCancel, title, description }) => {
       description={ description }  
       onCancel={ onCancel }
     >
-      <AuthForm type={type} />
+      <AuthFormContainer type={type} />
     </Modal>
   )
 }
