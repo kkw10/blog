@@ -32,5 +32,10 @@ module.exports = (sequelize, DataTypes) => {
     return hashedPassword;
   }
 
+  User.prototype.checkPassword = async function(password) {
+    const result = await bcrypt.compare(password, this.dataValues.password);
+    return result;
+  }
+
   return User;
 }

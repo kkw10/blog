@@ -30,11 +30,39 @@ exports.register = async (req, res, next) => {
   }
 }
 
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
+  const { email, password } = req.body;
+  
+  if (!email || !password) {
+    res.status(401).send('[Unauthorized]: 이메일과 비밀번호가 제대로 입력되지 않았습니다.');
+  }
+
   try {
+    const user = await db.User.findOne({
+      where: { email: email },
+      attributte: ['id', 'email', 'nickname']
+    })
+
+    if (!user) {
+      res.status(401).send('[Unauthorized]: 일치하는 유저가 존재하지 않습니다.');
+      return;
+    }
+
+    const valid = await user.checkPassword(password);
+
+    if (!valid) {
+      res.status(401).send('[Unauthorized]: 유효한 비밀번호가 아닙니다.');
+      return;
+    }
+
+    const data = user.toJSON();
+    delete data.password;
+    
+    return res.status(200).send(data);
 
   } catch (e) {
-
+    console.error(e);
+    return next(e);
   }
 }
 
