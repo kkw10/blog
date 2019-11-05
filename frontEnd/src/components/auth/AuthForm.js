@@ -25,51 +25,54 @@ const AuthFormWrap = styled.div`
   button {
     margin-top: 0.5rem;
   }
-`
+`;
 
-const AuthForm = ({ type, form, onChange, onSubmit }) => {
-  return (
-    <AuthFormWrap>
-      <form onSubmit={onSubmit}>
-        <input 
-          autoComplete="email"
-          name="email"
-          placeholder="이메일"
-          value={form.email}
+const AuthForm = ({
+  type,
+  form,
+  onChange,
+  onSubmit,
+}) => (
+  <AuthFormWrap>
+    <form onSubmit={onSubmit}>
+      <input
+        autoComplete="email"
+        name="email"
+        placeholder="이메일"
+        value={form.email}
+        onChange={onChange}
+      />
+      {type === 'register' && (
+        <input
+          name="nickname"
+          placeholder="닉네임"
+          value={form.nickname}
           onChange={onChange}
         />
-        {type === 'register' && (
-          <input 
-            name="nickname"
-            placeholder="닉네임"
-            value={form.nickname}
-            onChange={onChange}
-          />          
-        )}
-        <input 
-          name="password"
-          placeholder="비밀번호"
+      )}
+      <input
+        name="password"
+        placeholder="비밀번호"
+        type="password"
+        value={form.password}
+        onChange={onChange}
+      />
+      {type === 'register' && (
+        <input
+          name="passwordConfirm"
+          placeholder="비밀번호 확인"
           type="password"
-          value={form.password}
+          value={form.passwordConfirm}
           onChange={onChange}
         />
-        {type === 'register' && (
-          <input 
-            name="passwordConfirm"
-            placeholder="비밀번호 확인"
-            type="password"
-            value={form.passwordConfirm}
-            onChange={onChange}
-          />             
-        )}     
-        <Button 
-          placeholder="회원가입"
-          size="mx"
-          background="point"
-        />
-      </form>
-    </AuthFormWrap>
-  )
-}
+      )}
+      <Button
+        placeholder={type === 'login' ? '로그인' : '회원가입'}
+        size="mx"
+        background="point"
+      />
+    </form>
+  </AuthFormWrap>
+);
 
 export default AuthForm;
