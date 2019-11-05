@@ -17,16 +17,14 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
     min-height: 100%;
   }
-`
+`;
 
-const App = () => {
-  return (
-    <Layout>
-      <GlobalStyle />
-      <Route component={PostPage} path='/' exact />
-      <Route component={AboutPage} path="/about" />
-    </Layout>
-  );
-};
+const App = () => (
+  <Layout>
+    <GlobalStyle />
+    <Route component={PostPage} path="/" exact />
+    <Route component={AboutPage} path="/about" />
+  </Layout>
+);
 
 export default App;
