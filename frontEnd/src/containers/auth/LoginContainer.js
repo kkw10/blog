@@ -10,6 +10,9 @@ import {
 import {
   check,
 } from '../../models/actions/user';
+import {
+  toggling,
+} from '../../models/actions/toggle';
 
 const LoginContainer = ({ type, history }) => {
   const [formError, setFormError] = useState(null);
@@ -35,7 +38,8 @@ const LoginContainer = ({ type, history }) => {
   const onSubmit = (e) => {
     e.preventDefault();
     const {
-      email, password,
+      email,
+      password,
     } = form;
 
     dispatch(login({ email, password }));
@@ -53,30 +57,25 @@ const LoginContainer = ({ type, history }) => {
       console.log('로그인 성공');
       console.log(result);
       dispatch(check());
+      dispatch(initializeForm(type));
+      dispatch(toggling(''));
     }
   }, [result, error, dispatch]);
 
   useEffect(() => {
-    if (user) {
-      console.log('check API 성공');
-      console.log(user);
-    }
-  }, [user]);
-
-  useEffect(() => {
-    dispatch(initializeForm(type));
-    setFormError(null);
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (user) history.push('/');
-
     try {
       localStorage.setItem('user', JSON.stringify(user));
     } catch (e) {
       console.log('localStorage error...');
     }
+
+    if (user) history.push('/');
   }, [user, history]);
+
+  useEffect(() => {
+    dispatch(initializeForm(type));
+    setFormError(null);
+  }, [dispatch]);
 
   return (
     <AuthForm

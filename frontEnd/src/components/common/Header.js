@@ -36,6 +36,7 @@ const Spacer = styled.div`
 const Header = ({
   toggle,
   onToggling,
+  onLogout,
   user,
 }) => {
   return (
@@ -65,6 +66,7 @@ const Header = ({
                 placeholder="로그아웃"
                 size="lg"
                 background="point"
+                onClick={onLogout}
               />
             </div>
           )}

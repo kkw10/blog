@@ -10,6 +10,9 @@ import {
 import {
   check,
 } from '../../models/actions/user';
+import {
+  toggling,
+} from '../../models/actions/toggle';
 
 const AuthFormContainer = ({ type, history }) => {
   const [formError, setFormError] = useState(null);
@@ -69,20 +72,10 @@ const AuthFormContainer = ({ type, history }) => {
       console.log('회원가입 성공');
       console.log(result);
       dispatch(check());
+      dispatch(initializeForm(type));
+      dispatch(toggling(''));
     }
   }, [result, error, dispatch]);
-
-  useEffect(() => {
-    if (user) {
-      console.log('check API 성공');
-      console.log(user);
-    }
-  }, [user]);
-
-  useEffect(() => {
-    dispatch(initializeForm(type));
-    setFormError(null);
-  }, [dispatch]);
 
   useEffect(() => {
     if (user) history.push('/');
@@ -92,6 +85,11 @@ const AuthFormContainer = ({ type, history }) => {
       console.log('localStorage error...');
     }
   }, [user, history]);
+
+  useEffect(() => {
+    dispatch(initializeForm(type));
+    setFormError(null);
+  }, [dispatch]);
 
   return (
     <AuthForm

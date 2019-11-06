@@ -36,6 +36,8 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         [action.payload.form]: initialState[action.payload.form],
+        result: null,
+        error: null,
       };
     case REGISTER_SUCCESS:
       return {

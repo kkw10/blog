@@ -2,6 +2,7 @@ import {
   TEMP_SET_USER,
   CHECK_SUCCESS,
   CHECK_FAILURE,
+  LOGOUT,
 } from '../actions/user';
 
 const initialState = {
@@ -27,6 +28,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         user: null,
         checkError: action.payload,
+      };
+    case LOGOUT:
+      return {
+        ...state,
+        user: null,
       };
     default:
       return state;

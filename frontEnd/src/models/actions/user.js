@@ -6,6 +6,7 @@ export const [
   CHECK_SUCCESS,
   CHECK_FAILURE,
 ] = createRequestActionTypes('user/CHECK');
+export const LOGOUT = 'user/LOGOUT';
 
 // 새로고침 이후 임시 로그인 처리
 export const tempSetUser = (user) => ({
@@ -15,4 +16,8 @@ export const tempSetUser = (user) => ({
 
 export const check = () => ({
   type: CHECK,
+});
+
+export const logout = () => ({
+  type: LOGOUT,
 });
