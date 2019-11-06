@@ -86,6 +86,11 @@ const AuthFormContainer = ({ type, history }) => {
 
   useEffect(() => {
     if (user) history.push('/');
+    try {
+      localStorage.setItem('user', JSON.stringify(user));
+    } catch (e) {
+      console.log('localStorage error...');
+    }
   }, [user, history]);
 
   return (
