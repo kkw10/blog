@@ -3,8 +3,11 @@ const { PORT } = process.env;
 
 const Express = require('express');
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
+const httpContext = require('express-http-context');
 const db = require('./models');
 const authAPIRouter = require('./api/auth');
+const jwtMiddleware = require('./lib/jwtMiddleware');
 
 const app = new Express();
 db.sequelize.sync();
@@ -13,6 +16,9 @@ db.sequelize.sync();
 app.use(morgan('dev'));
 app.use(Express.json());
 app.use(Express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(httpContext.middleware);
+app.use(jwtMiddleware);
 
 // API 설정
 app.use('/api/auth', authAPIRouter);

@@ -1,4 +1,5 @@
 const db = require('../../models');
+const httpContext = require('express-http-context');
 
 exports.register = async (req, res, next) => {
   try {
@@ -22,13 +23,19 @@ exports.register = async (req, res, next) => {
     const data = newUser.toJSON();
     delete data.password;
 
-    return res.status(200).send(data);
+    const token = newUser.generateToken();
+    res.cookie('access_token', token, {
+      maxAge: 1000 * 60 * 60 * 2,
+      httpOnly: true,
+    })
+
+    res.status(200).send(data);
     
   } catch (e) {
     console.error(e);
     return next(e);
   }
-}
+};
 
 exports.login = async (req, res, next) => {
   const { email, password } = req.body;
@@ -58,26 +65,34 @@ exports.login = async (req, res, next) => {
     const data = user.toJSON();
     delete data.password;
     
-    return res.status(200).send(data);
+    const token = user.generateToken();
+    res.cookie('access_token', token, {
+      maxAge: 1000 * 60 * 60 * 2,
+      httpOnly: true,
+    })
+
+    res.status(200).send(data);
 
   } catch (e) {
     console.error(e);
     return next(e);
   }
-}
+};
 
 exports.check = async (req, res) => {
-  try {
+  const user = httpContext.get('user');
+  console.log('@@@@@ httpContext');
+  console.log(user);
 
-  } catch (e) {
-
+  if (!user) {
+    res.status(401).send('[Unauthorized]: 유효하지 않은 사용자입니다.');
+    return;
   }
-}
+
+  res.status(200).send(user);
+};
 
 exports.logout = async (req, res) => {
-  try {
-
-  } catch (e) {
-
-  }
-}
+  res.cookie('access_token');
+  res.status(200).send('로그아웃 하셨습니다.');
+};
