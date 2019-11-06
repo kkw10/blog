@@ -31,11 +31,12 @@ const ResponsiveWrap = styled(Responsive)`
 
 const Spacer = styled.div`
   height: 3rem;
-`
+`;
 
-const Header = ({ 
+const Header = ({
   toggle,
-  onToggling
+  onToggling,
+  user,
 }) => {
   return (
     <>
@@ -44,38 +45,54 @@ const Header = ({
           <h1>
             <Link to="/" className="logo">LOGO</Link>
           </h1>
-          <div className="right">
-            <Button 
-              placeholder="로그인" 
-              size="lg"
-              onClick={() => onToggling('login')}
-            />
-            <Button 
-              placeholder="회원가입" 
-              size="lg" 
-              background="point" 
-              onClick={() => onToggling('register')}
-            />
-          </div>
-        </ResponsiveWrap>      
+          {!user ? (
+            <div className="right">
+              <Button
+                placeholder="로그인"
+                size="lg"
+                onClick={() => onToggling('login')}
+              />
+              <Button
+                placeholder="회원가입"
+                size="lg"
+                background="point"
+                onClick={() => onToggling('register')}
+              />
+            </div>
+          ) : (
+            <div className="right">
+              <Button
+                placeholder="로그아웃"
+                size="lg"
+                background="point"
+              />
+            </div>
+          )}
+        </ResponsiveWrap>
       </HeaderWrap>
-      <Spacer />    
-      <AuthModal 
-        type="register" 
-        title="회원가입"
-        description="양식을 작성해 주세요."
-        visible={toggle.activeToggle === 'register'} 
-        onCancel={onToggling}
-      />
-      <AuthModal 
-        type="login" 
-        title="로그인"
-        description="양식을 작성해 주세요."        
-        visible={toggle.activeToggle === 'login'} 
-        onCancel={onToggling}
-      />
+      <Spacer />
+      {!user ? (
+        <>
+          <AuthModal
+            type="register"
+            title="회원가입"
+            description="양식을 작성해 주세요."
+            visible={!user && toggle.activeToggle === 'register'}
+            onCancel={onToggling}
+          />
+          <AuthModal
+            type="login"
+            title="로그인"
+            description="양식을 작성해 주세요."
+            visible={!user && toggle.activeToggle === 'login'}
+            onCancel={onToggling}
+          />
+        </>
+      ) : (
+        null
+      )}
     </>
-  )
-}
+  );
+};
 
 export default Header;
