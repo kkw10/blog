@@ -1,19 +1,28 @@
 import React from 'react';
 import Modal from './index';
-import AuthFormContainer from '../../../containers/auth/AuthFormContainer';
+import LoginContainer from '../../../containers/auth/LoginContainer';
+import RegisterContainer from '../../../containers/auth/RegisterContainer';
 
-const Register = ({ visible, type, onCancel, title, description }) => {
-  return (
-    <Modal
-      type={ type }
-      visible={ visible }
-      title={ title }
-      description={ description }  
-      onCancel={ onCancel }
-    >
-      <AuthFormContainer type={type} />
-    </Modal>
-  )
-}
+const Register = ({
+  visible,
+  type,
+  onCancel,
+  title,
+  description,
+}) => (
+  <Modal
+    type={type}
+    visible={visible}
+    title={title}
+    description={description}
+    onCancel={onCancel}
+  >
+    {type === 'register' ? (
+      <RegisterContainer type={type} />
+    ) : (
+      <LoginContainer type={type} />
+    )}
+  </Modal>
+);
 
 export default Register;

@@ -27,11 +27,21 @@ const AuthFormWrap = styled.div`
   }
 `;
 
+const ErrorMessage = styled.div`
+  color: ${brandingColor.main[8]};
+  text-align: center;
+  font-size: 13px;
+  font-weight: bold;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+`;
+
 const AuthForm = ({
   type,
   form,
   onChange,
   onSubmit,
+  error,
 }) => (
   <AuthFormWrap>
     <form onSubmit={onSubmit}>
@@ -66,6 +76,7 @@ const AuthForm = ({
           onChange={onChange}
         />
       )}
+      {error && <ErrorMessage>{ error }</ErrorMessage>}
       <Button
         placeholder={type === 'login' ? '로그인' : '회원가입'}
         size="mx"
