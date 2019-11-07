@@ -5,7 +5,7 @@ import Button from '../Button';
 
 const Overlay = styled.div`
   position: fixed;
-  z-index: 100;
+  z-index: 1000;
   top: 0;
   left: 0;
   width: 100%;

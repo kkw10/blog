@@ -11,6 +11,7 @@ const HeaderWrap = styled.header`
   height: 3rem;
   padding: 0.5rem 0;
   position: fixed;
+  z-index: 999;
   width: 100%;
   background: #fff;
   border-bottom: 1px solid ${brandingColor.common[2]};
@@ -20,6 +21,7 @@ const ResponsiveWrap = styled(Responsive)`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background: #fff;
 
   .right {
     display: flex;

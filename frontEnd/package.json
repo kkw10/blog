@@ -12,6 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.19.0",
+    "codemirror": "^5.49.2",
+    "highlight.js": "^9.16.2",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-icons": "^3.8.0",
@@ -20,7 +22,8 @@
     "redux": "^4.0.4",
     "redux-devtools-extension": "^2.13.8",
     "redux-saga": "^1.1.1",
-    "styled-components": "^4.4.1"
+    "styled-components": "^4.4.1",
+    "tui-editor": "^1.4.7"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.4",
@@ -37,6 +40,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.16.0",
     "eslint-plugin-react-hooks": "^1.7.0",
+    "file-loader": "^4.2.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "style-loader": "^1.0.0",

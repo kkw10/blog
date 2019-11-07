@@ -5,7 +5,6 @@ import { brandingColor } from '../../lib/styles/branding';
 
 const LayoutWrap = styled.div`
   position: absolute;
-  height: 100%;
   width: 100%;
   background: ${brandingColor.common[2]};
 `;

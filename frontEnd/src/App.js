@@ -6,12 +6,14 @@ import Layout from './components/common/Layout';
 import PostPage from './pages/PostPage';
 import AboutPage from './pages/AboutPage';
 import WritePage from './pages/WritePage';
+import { brandingColor } from './lib/styles/branding';
 
 const GlobalStyle = createGlobalStyle`
   ${resetCSS}
 
   html {
     height: 100%;
+    background: ${brandingColor.common[2]};
   }
 
   body {

@@ -3,12 +3,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: [
-    './src/index.js'
+    './src/index.js',
   ],
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/dist/'
+    publicPath: '/dist/',
   },
   module: {
     rules: [
@@ -16,37 +16,41 @@ module.exports = {
         test: /\.html$/,
         exclude: /node_modules/,
         use: {
-          loader: "html-loader"
-        }
+          loader: 'html-loader',
+        },
       },
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
-        }
+          loader: 'babel-loader',
+        },
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"]
-      }
-    ]
+        use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.(png|jpg)$/,
+        use: ['file-loader'],
+      },
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "./public/index.html",
-      filename: 'index.html'
-    })
+      template: './public/index.html',
+      filename: 'index.html',
+    }),
   ],
-  devtool: "cheap-eval-source-map",
+  devtool: 'cheap-eval-source-map',
   devServer: {
-    publicPath: "/dist/",
+    publicPath: '/dist/',
     port: 1990,
     historyApiFallback: true,
-    proxy: { // 백엔드 cors 해결 
+    proxy: { // 백엔드 cors 해결
       '/api': {
-        target: 'http://localhost:1991'
-      }
-    }    
-  }
-}
+        target: 'http://localhost:1991',
+      },
+    },
+  },
+};
