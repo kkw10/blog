@@ -5,7 +5,7 @@ const ResponsiveBlock = styled.div`
   padding: 0 1rem;
   width: 100%;
   margin: 0 auto;
-`
+`;
 
 const Responsive = ({ children, ...rest }) => {
   return (
@@ -13,6 +13,6 @@ const Responsive = ({ children, ...rest }) => {
       {children}
     </ResponsiveBlock>
   )
-}
+};
 
 export default Responsive;

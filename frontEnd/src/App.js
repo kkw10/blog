@@ -1,10 +1,11 @@
 import React from 'react';
 import { createGlobalStyle } from 'styled-components';
 import { Route } from 'react-router-dom';
-import PostPage from './pages/PostPage';
-import AboutPage from './pages/AboutPage';
 import { resetCSS } from './lib/styles/reset';
 import Layout from './components/common/Layout';
+import PostPage from './pages/PostPage';
+import AboutPage from './pages/AboutPage';
+import WritePage from './pages/WritePage';
 
 const GlobalStyle = createGlobalStyle`
   ${resetCSS}
@@ -24,6 +25,7 @@ const App = () => (
     <GlobalStyle />
     <Route component={PostPage} path="/" exact />
     <Route component={AboutPage} path="/about" />
+    <Route component={WritePage} path="/write" />
   </Layout>
 );
 
