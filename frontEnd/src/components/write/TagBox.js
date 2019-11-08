@@ -1,4 +1,9 @@
-import React, { memo, useState, useCallback } from 'react';
+import React, {
+  memo,
+  useState,
+  useCallback,
+  useEffect,
+} from 'react';
 import styled from 'styled-components';
 import { FaHashtag } from 'react-icons/fa';
 import { brandingColor } from '../../lib/styles/branding';
@@ -79,7 +84,10 @@ const TagList = memo(({ tags, onRemove }) => (
   </TagListWrap>
 ));
 
-const TagBox = () => {
+const TagBox = ({
+  hashTags,
+  onChangeTags,
+}) => {
   const [input, setInput] = useState('');
   const [localTags, setLocalTags] = useState([]);
 
@@ -90,8 +98,11 @@ const TagBox = () => {
   const insertTag = useCallback((tag) => {
     if (!tag) return;
     if (localTags.includes(tag)) return;
-    setLocalTags([...localTags, tag]);
-  }, [localTags]);
+
+    const newTags = [...localTags, tag];
+    setLocalTags(newTags);
+    onChangeTags(newTags);
+  }, [localTags, onChangeTags]);
 
   const onSubmit = useCallback((e) => {
     e.preventDefault();
@@ -100,8 +111,14 @@ const TagBox = () => {
   }, [input, insertTag]);
 
   const onRemove = useCallback((tag) => {
-    setLocalTags(localTags.filter((t) => t !== tag));
-  }, [localTags]);
+    const newTags = localTags.filter((t) => t !== tag);
+    setLocalTags(newTags);
+    onChangeTags(newTags);
+  }, [localTags, onChangeTags]);
+
+  useEffect(() => {
+    setLocalTags(hashTags);
+  }, [hashTags]);
 
   return (
     <TagBoxWrap>

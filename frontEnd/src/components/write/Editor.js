@@ -109,7 +109,10 @@ const TitleInput = styled.input`
   }
 `;
 
-const WriteEditor = () => {
+const WriteEditor = ({
+  title,
+  onChangeField,
+}) => {
   useEffect(() => {
     const instance = new Editor({
       el: document.querySelector('#tui_editor'),
@@ -120,11 +123,30 @@ const WriteEditor = () => {
     });
 
     instance.getHtml();
-  }, []);
+
+    instance.on('change', () => {
+      const data = instance.getValue();
+      onChangeField({
+        key: 'contents',
+        value: data,
+      });
+    });
+  }, [onChangeField]);
+
+  const onChangeTitle = (e) => {
+    onChangeField({
+      key: 'title',
+      value: e.target.value,
+    });
+  };
 
   return (
     <WriteEditorWrap>
-      <TitleInput placeholder="제목" />
+      <TitleInput
+        placeholder="제목"
+        value={title}
+        onChange={onChangeTitle}
+      />
       <div id="tui_editor" />
     </WriteEditorWrap>
   );
