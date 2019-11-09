@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
 
   // 테이블간의 관계 설정
   User.associate = (db) => {
-    
+    db.User.hasMany(db.Post);
   };
 
   // Static mehtods
@@ -41,6 +41,7 @@ module.exports = (sequelize, DataTypes) => {
   User.prototype.generateToken = function() {
     const token = jwt.sign(
       {
+        id: this.dataValues.id,
         email: this.dataValues.email,
         nickname: this.dataValues.nickname
       },

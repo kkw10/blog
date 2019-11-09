@@ -10,6 +10,7 @@ const jwtMiddleware = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     httpContext.set('user', {
+      id: decoded.id,
       email: decoded.email,
       nickname: decoded.nickname,
     })

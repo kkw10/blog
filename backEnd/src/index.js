@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const httpContext = require('express-http-context');
 const db = require('./models');
 const authAPIRouter = require('./api/auth');
+const postAPIRouter = require('./api/post');
 const jwtMiddleware = require('./lib/jwtMiddleware');
 
 const app = new Express();
@@ -22,6 +23,7 @@ app.use(jwtMiddleware);
 
 // API 설정
 app.use('/api/auth', authAPIRouter);
+app.use('/api/post', postAPIRouter);
 
 const port = PORT || 8080;
 app.listen(port, () => {

@@ -65,6 +65,9 @@ exports.login = async (req, res, next) => {
     const data = user.toJSON();
     delete data.password;
     
+    console.log('@@@@@@@');
+    console.log(data);
+
     const token = user.generateToken();
     res.cookie('access_token', token, {
       maxAge: 1000 * 60 * 60 * 2,
