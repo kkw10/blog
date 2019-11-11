@@ -1,6 +1,7 @@
 import React from 'react';
 import { createGlobalStyle } from 'styled-components';
 import { Route } from 'react-router-dom';
+import tuiStyle from 'tui-editor/dist/tui-editor-contents.css'; // editor's content
 import { resetCSS } from './lib/styles/reset';
 import Layout from './components/common/Layout';
 import MainPage from './pages/MainPage';
@@ -20,6 +21,10 @@ const GlobalStyle = createGlobalStyle`
   body {
     box-sizing: border-box;
     min-height: 100%;
+  }
+
+  .tui-style {
+    ${tuiStyle}
   }
 `;
 

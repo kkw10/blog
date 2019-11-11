@@ -122,10 +122,8 @@ const WriteEditor = ({
       placeholder: '내용',
     });
 
-    instance.getHtml();
-
     instance.on('change', () => {
-      const data = instance.getValue();
+      const data = instance.getHtml();
       onChangeField({
         key: 'contents',
         value: data,

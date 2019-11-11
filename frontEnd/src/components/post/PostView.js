@@ -87,9 +87,12 @@ const PostView = ({
             </span>
           </div>
         </HeadInfo>
-        <h2>제목</h2>
+        <h2>{postData.title}</h2>
       </Head>
-      <Contents dangerouslySetInnerHTML={{ __html: postData.contents }} />
+      <Contents
+        className="tui-style tui-editor-contents"
+        dangerouslySetInnerHTML={{ __html: postData.contents }}
+      />
     </PostViewWrap>
   );
 };
