@@ -3,9 +3,10 @@ import { createGlobalStyle } from 'styled-components';
 import { Route } from 'react-router-dom';
 import { resetCSS } from './lib/styles/reset';
 import Layout from './components/common/Layout';
-import PostPage from './pages/PostPage';
+import MainPage from './pages/MainPage';
 import AboutPage from './pages/AboutPage';
 import WritePage from './pages/WritePage';
+import PostPage from './pages/PostPage';
 import { brandingColor } from './lib/styles/branding';
 
 const GlobalStyle = createGlobalStyle`
@@ -25,9 +26,10 @@ const GlobalStyle = createGlobalStyle`
 const App = () => (
   <Layout>
     <GlobalStyle />
-    <Route component={PostPage} path="/" exact />
+    <Route component={MainPage} path="/" exact />
     <Route component={AboutPage} path="/about" />
     <Route component={WritePage} path="/write" />
+    <Route component={PostPage} path="/post/:UserId/:PostId" />
   </Layout>
 );
 

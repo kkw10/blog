@@ -36,7 +36,7 @@ const PostingButtonsContainer = ({ history }) => {
     if (result) {
       console.log('@@@@@ 다음은 포스팅 요청 결과입니다.');
       console.log(result);
-      history.push('/');
+      history.push(`/post/${result.UserId}/${result.id}`);
     }
 
     if (postingError) {
