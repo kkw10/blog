@@ -29,7 +29,22 @@ exports.write = async (req, res, next) => {
 };
 
 exports.read = async (req, res, next) => {
+  const id = req.params.id;
 
+  try {
+    const post = await db.Post.findOne({
+      where: { id },
+      include: [{
+        model: db.User,
+        attributes: ['email', 'nickname']
+      }],
+    })
+
+    res.json(post);
+  } catch (e) {
+    console.error(e);
+    return next(e);
+  }
 };
 
 exports.update = async (req, res, next) => {
