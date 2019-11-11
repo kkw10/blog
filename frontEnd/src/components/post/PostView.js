@@ -54,26 +54,44 @@ const Contents = styled.div`
 
 `;
 
-const PostView = () => (
-  <PostViewWrap>
-    <Head>
-      <HeadInfo>
-        <ul className="tags">
-          <li>태그1</li>
-          <li>태그2</li>
-          <li>태그3</li>
-        </ul>
-        <div className="auther">
-          <b>작성자</b>
-          <span>
-            {new Date().toLocaleDateString()}
-          </span>
-        </div>
-      </HeadInfo>
-      <h2>제목</h2>
-    </Head>
-    <Contents dangerouslySetInnerHTML={{ __html: '<p>더미 컨텐츠입니다.</p>' }} />
-  </PostViewWrap>
-);
+const PostView = ({
+  postData,
+  postError,
+  loading,
+}) => {
+  if (loading || !postData) {
+    return null;
+  }
+
+  if (postError) {
+    return (
+      <PostViewWrap>
+        {postError}
+      </PostViewWrap>
+    );
+  }
+
+  return (
+    <PostViewWrap>
+      <Head>
+        <HeadInfo>
+          <ul className="tags">
+            {postData.HashTags.map((hashTag) => (
+              <li className="tag" key="tag">{hashTag.name}</li>
+            ))}
+          </ul>
+          <div className="auther">
+            <b>{postData.User.nickname}</b>
+            <span>
+              {new Date(postData.createdAt).toLocaleDateString()}
+            </span>
+          </div>
+        </HeadInfo>
+        <h2>제목</h2>
+      </Head>
+      <Contents dangerouslySetInnerHTML={{ __html: postData.contents }} />
+    </PostViewWrap>
+  );
+};
 
 export default PostView;

@@ -1,10 +1,10 @@
 import React from 'react';
-import PostView from '../components/post/PostView';
+import PostViewContainer from '../containers/post/postViewContainer';
 import Responsive from '../components/common/Responsive';
 
 const PostPage = () => (
   <Responsive maxWidth="1200">
-    <PostView />
+    <PostViewContainer />
   </Responsive>
 );
 

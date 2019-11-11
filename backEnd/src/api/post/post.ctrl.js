@@ -4,6 +4,10 @@ const httpContext = require('express-http-context');
 exports.write = async (req, res, next) => {
   const { title, contents, hashTags } = req.body;
 
+  console.log('@@@@@ POST API write ctrl...!');
+  console.log(req.body);
+  console.log(contents.length);
+
   try {
     const newPost = await db.Post.create({
       title: title,
@@ -31,14 +35,22 @@ exports.write = async (req, res, next) => {
 exports.read = async (req, res, next) => {
   const id = req.params.id;
 
+  console.log('@@@@@ POST API read ctrl...!');
+  console.log(id);  
+
   try {
     const post = await db.Post.findOne({
       where: { id },
       include: [{
         model: db.User,
         attributes: ['email', 'nickname']
+      }, {
+        model: db.HashTag,
+        attributes: ['name']
       }],
     })
+
+    console.log(post);
 
     res.json(post);
   } catch (e) {

@@ -4,6 +4,7 @@ import toggle from './toggle';
 import loading from './loading';
 import user from './user';
 import write from './write';
+import post from './post';
 
 const rootReducer = combineReducers({
   auth,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   loading,
   user,
   write,
-})
+  post,
+});
 
 export default rootReducer;
