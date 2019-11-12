@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { brandingColor } from '../../lib/styles/branding';
+import Tag from '../common/Tag';
 
 const PostsViewWrap = styled.div`
   margin-top: 2rem;
@@ -30,8 +31,7 @@ const PostBoxWrap = styled.div`
 
   .tags {
     display: flex;
-    margin-top: 0.5rem;
-    font-size: 13px;
+    margin-top: 1rem;
 
     li {
       margin-right: 0.5rem;
@@ -66,7 +66,9 @@ const PostBox = ({ postData }) => {
       </h3>
       <ul className="tags">
         {postData.HashTags.map((tag) => (
-          <li>{tag.name}</li>
+          <li key={tag.name}>
+            <Tag name={tag.name} />
+          </li>
         ))}
       </ul>
       <div className="date">
@@ -74,7 +76,7 @@ const PostBox = ({ postData }) => {
         {new Date(postData.updatedAt).toLocaleDateString()}
       </div>
     </PostBoxWrap>
-  )
+  );
 };
 
 const PostsView = ({
@@ -84,10 +86,13 @@ const PostsView = ({
   return (
     <PostsViewWrap>
       {postsData && postsData.map((postData) => (
-        <PostBox postData={postData} />
+        <PostBox
+          key={postData.id}
+          postData={postData}
+        />
       ))}
     </PostsViewWrap>
-  )
-}
+  );
+};
 
 export default PostsView;

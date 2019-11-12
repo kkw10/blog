@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { brandingColor } from '../../lib/styles/branding';
+import Tag from '../common/Tag';
 
 const PostViewWrap = styled.div`
   margin-top: 2rem;
@@ -15,6 +16,7 @@ const Head = styled.div`
   h2 {
     margin-top: 0.5rem;
     font-size: 18px;
+    color: ${brandingColor.point[5]};
   }
 `;
 
@@ -77,7 +79,9 @@ const PostView = ({
         <HeadInfo>
           <ul className="tags">
             {postData.HashTags.map((hashTag) => (
-              <li className="tag" key="tag">{hashTag.name}</li>
+              <li className="tag" key="tag">
+                <Tag name={hashTag.name} />
+              </li>
             ))}
           </ul>
           <div className="auther">
