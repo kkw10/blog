@@ -5,6 +5,7 @@ import Tag from '../common/Tag';
 
 const PostViewWrap = styled.div`
   margin-top: 2rem;
+  margin-bottom: 2rem;
   background: #fff;
   border-radius: 5px;
   padding: 1rem;

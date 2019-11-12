@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { brandingColor } from '../../lib/styles/branding';
 import Tag from '../common/Tag';
@@ -62,7 +63,7 @@ const PostBox = ({ postData }) => {
   return (
     <PostBoxWrap>
       <h3>
-        {postData.title}
+        <Link to={`/post/${postData.UserId}/${postData.id}`}>{postData.title}</Link>
       </h3>
       <ul className="tags">
         {postData.HashTags.map((tag) => (
