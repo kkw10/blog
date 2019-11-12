@@ -1,8 +1,12 @@
 import React from 'react';
+import PostsViewContainer from '../containers/posts/postsViewContainer';
+import Responsive from '../components/common/Responsive';
 
 const PostPage = () => {
   return (
-    <div>Main page...</div>
+    <Responsive maxWidth="1200">
+      <PostsViewContainer />
+    </Responsive>
   )
 }
 
