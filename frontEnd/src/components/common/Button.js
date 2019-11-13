@@ -36,7 +36,18 @@ const StyledButton = styled.button`
       border-radius: 5px;      
     `
   )}
-`
+
+  ${props => (
+    props.size === 'md' && css`
+      width: 72px;
+      height: 28px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: bold;
+      border-radius: 5px;      
+    `
+  )}  
+`;
 
 const Button = ({ placeholder, ...props }) => {
   return (

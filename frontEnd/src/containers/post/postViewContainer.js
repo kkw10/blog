@@ -6,10 +6,11 @@ import { readPost } from '../../models/actions/post';
 
 const PostViewContainer = ({ match }) => {
   const dispatch = useDispatch();
-  const { postData, postError, loading } = useSelector(({ post, loading }) => ({
+  const { postData, postError, loading, user } = useSelector(({ post, loading, user }) => ({
     postData: post.result,
     postError: post.postError,
     loading: loading['post/READ_POST'],
+    user: user.user,
   }));
   const postId = match.params.PostId;
 
@@ -22,6 +23,7 @@ const PostViewContainer = ({ match }) => {
       postData={postData}
       loading={loading}
       postError={postError}
+      user={user}
     />
   );
 };
