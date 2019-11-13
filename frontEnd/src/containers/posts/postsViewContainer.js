@@ -1,26 +1,36 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import qs from 'qs';
+import { withRouter } from 'react-router-dom';
 import PostsView from '../../components/posts/postsView';
 import { readPosts } from '../../models/actions/posts';
 
-const PostsViewContainer = () => {
+const PostsViewContainer = ({ location }) => {
   const dispatch = useDispatch();
-  const { postsData, postsError } = useSelector(({ posts }) => ({
+  const { postsData, postsError, lastPage } = useSelector(({ posts }) => ({
     postsData: posts.result,
     postsError: posts.postsError,
+    lastPage: posts.lastPage,
   }));
 
   useEffect(() => {
-    dispatch(readPosts());
-    console.log(postsData);
-  }, [dispatch]);
+    const { page } = qs.parse(location.search, {
+      ignoreQueryPrefix: true,
+    });
+
+    console.log('@@@@@ [page]');
+    console.log(page);
+
+    dispatch(readPosts(page));
+  }, [dispatch, location.search]);
 
   return (
     <PostsView
       postsData={postsData}
       potsError={postsError}
+      lastPage={lastPage}
     />
   );
 };
 
-export default PostsViewContainer;
+export default withRouter(PostsViewContainer);

@@ -5,6 +5,7 @@ import {
 
 const initialState = {
   result: null,
+  lastPage: 1,
   postsError: null,
 };
 
@@ -14,6 +15,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         result: action.payload,
+        lastPage: action.meta.headers['last-page'],
         postsError: null,
       };
     case READ_POSTS_FAILURE:

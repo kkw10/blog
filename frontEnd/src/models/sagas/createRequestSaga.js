@@ -11,7 +11,7 @@ export default function createRequestSaga(type, request) {
   const SUCCESS = `${type}_SUCCESS`;
   const FAILURE = `${type}_FAILURE`;
 
-  return function*(action) {
+  return function* (action) {
     yield put(startLoading(type));
 
     try {
@@ -20,16 +20,16 @@ export default function createRequestSaga(type, request) {
       yield put({
         type: SUCCESS,
         payload: res.data,
-      })
-
+        meta: res,
+      });
     } catch (e) {
       yield put({
         type: FAILURE,
         payload: e,
-        isError: true
-      })
+        isError: true,
+      });
     }
 
     yield put(finishLoading(type));
-  }
+  };
 }

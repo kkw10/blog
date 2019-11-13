@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { brandingColor } from '../../lib/styles/branding';
 import Tag from '../common/Tag';
+import PageNum from './PageNum';
 
 const PostsViewWrap = styled.div`
   margin-top: 2rem;
@@ -10,13 +11,15 @@ const PostsViewWrap = styled.div`
   background: #fff;
   border-radius: 5px;
   padding: 1rem;
+  display: flex;
 
   .left {
-
+    display: flex;
+    justify-content: center;
   }
 
   .right {
-
+    width: 100%;
   }
 `;
 
@@ -83,15 +86,28 @@ const PostBox = ({ postData }) => {
 const PostsView = ({
   postsData,
   postsError,
+  lastPage,
 }) => {
+  if (postsError) {
+    return null;
+  }
+
   return (
     <PostsViewWrap>
-      {postsData && postsData.map((postData) => (
-        <PostBox
-          key={postData.id}
-          postData={postData}
+      <div className="left">
+        <PageNum
+          lastPage={lastPage}
         />
-      ))}
+      </div>
+      <ul className="right">
+        {postsData && postsData.map((postData) => (
+          <li key={postData.id}>
+            <PostBox
+              postData={postData}
+            />
+          </li>
+        ))}
+      </ul>
     </PostsViewWrap>
   );
 };
