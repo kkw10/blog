@@ -104,7 +104,7 @@ const PostView = ({
           <h2>{postData.title}</h2>
         </div>
         <div className="right">
-          {postData.UserId === user.id ? (
+          {user && postData.UserId === user.id ? (
             <>
               <Button
                 placeholder="수정"

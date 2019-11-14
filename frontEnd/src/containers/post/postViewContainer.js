@@ -6,7 +6,12 @@ import { readPost } from '../../models/actions/post';
 
 const PostViewContainer = ({ match }) => {
   const dispatch = useDispatch();
-  const { postData, postError, loading, user } = useSelector(({ post, loading, user }) => ({
+  const {
+    postData,
+    postError,
+    loading,
+    user,
+  } = useSelector(({ post, loading, user }) => ({
     postData: post.result,
     postError: post.postError,
     loading: loading['post/READ_POST'],
