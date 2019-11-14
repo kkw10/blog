@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import qs from 'qs';
 import { withRouter } from 'react-router-dom';
@@ -17,9 +17,6 @@ const PostsViewContainer = ({ location }) => {
     const { page } = qs.parse(location.search, {
       ignoreQueryPrefix: true,
     });
-
-    console.log('@@@@@ [page]');
-    console.log(page);
 
     dispatch(readPosts(page));
   }, [dispatch, location.search]);

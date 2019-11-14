@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { brandingColor } from '../../lib/styles/branding';
 import Tag from '../common/Tag';
 import Button from '../common/Button';
+import AlertModal from '../common/modal/AlertModal';
 
 const PostViewWrap = styled.div`
   margin-top: 2rem;
@@ -69,6 +70,10 @@ const PostView = ({
   postError,
   loading,
   user,
+  onEdit,
+  onDelete,
+  toggle,
+  onToggling,
 }) => {
   if (loading || !postData) {
     return null;
@@ -83,47 +88,57 @@ const PostView = ({
   }
 
   return (
-    <PostViewWrap>
-      <Head>
-        <div className="left">
-          <HeadInfo>
-            <ul className="tags">
-              {postData.HashTags.map((hashTag) => (
-                <li className="tag" key="tag">
-                  <Tag name={hashTag.name} />
-                </li>
-              ))}
-            </ul>
-            <div className="auther">
-              <b>{postData.User.nickname}</b>
-              <span>
-                {new Date(postData.createdAt).toLocaleDateString()}
-              </span>
-            </div>
-          </HeadInfo>
-          <h2>{postData.title}</h2>
-        </div>
-        <div className="right">
-          {user && postData.UserId === user.id ? (
-            <>
-              <Button
-                placeholder="수정"
-                size="md"
-              />
-              <Button
-                placeholder="삭제"
-                size="md"
-                background="point"
-              />
-            </>
-          ) : null}
-        </div>
-      </Head>
-      <Contents
-        className="tui-style tui-editor-contents"
-        dangerouslySetInnerHTML={{ __html: postData.contents }}
+    <>
+      <PostViewWrap>
+        <Head>
+          <div className="left">
+            <HeadInfo>
+              <ul className="tags">
+                {postData.HashTags.map((hashTag) => (
+                  <li className="tag" key="tag">
+                    <Tag name={hashTag.name} />
+                  </li>
+                ))}
+              </ul>
+              <div className="auther">
+                <b>{postData.User.nickname}</b>
+                <span>
+                  {new Date(postData.createdAt).toLocaleDateString()}
+                </span>
+              </div>
+            </HeadInfo>
+            <h2>{postData.title}</h2>
+          </div>
+          <div className="right">
+            {user && postData.UserId === user.id ? (
+              <>
+                <Button
+                  placeholder="수정"
+                  size="md"
+                  onClick={onEdit}
+                />
+                <Button
+                  placeholder="삭제"
+                  size="md"
+                  background="point"
+                  onClick={() => onToggling('alert')}
+                />
+              </>
+            ) : null}
+          </div>
+        </Head>
+        <Contents
+          className="tui-style tui-editor-contents"
+          dangerouslySetInnerHTML={{ __html: postData.contents }}
+        />
+      </PostViewWrap>
+      <AlertModal
+        description="정말로 삭제를 하시겠습니까?"
+        visible={toggle && toggle.activeToggle === 'alert'}
+        onCancel={onToggling}
+        onSubmit={onDelete}
       />
-    </PostViewWrap>
+    </>
   );
 };
 

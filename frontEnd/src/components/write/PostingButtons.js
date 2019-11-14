@@ -11,13 +11,17 @@ const PostingButtonsWrap = styled.div`
   }
 `;
 
-const PostingButtons = ({ onPosting, onCancel }) => (
+const PostingButtons = ({
+  onPosting,
+  onCancel,
+  isEditing,
+}) => (
   <PostingButtonsWrap>
     <Button
       onClick={onPosting}
       background="point"
       size="lg"
-      placeholder="글쓰기"
+      placeholder={isEditing ? '수정하기' : '글쓰기'}
     />
     <Button
       onClick={onCancel}

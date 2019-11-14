@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { posting } from '../../models/actions/write';
+import { posting, update } from '../../models/actions/write';
 import PostingButtons from '../../components/write/PostingButtons';
 
 const PostingButtonsContainer = ({ history }) => {
@@ -12,15 +12,26 @@ const PostingButtonsContainer = ({ history }) => {
     hashTags,
     result,
     postingError,
+    editingPostId,
   } = useSelector(({ write }) => ({
     title: write.title,
     contents: write.contents,
     hashTags: write.hashTags,
     result: write.result,
     postingError: write.postingError,
+    editingPostId: write.editingPostId,
   }));
 
   const onPosting = () => {
+    if (editingPostId) {
+      dispatch(update({
+        id: editingPostId,
+        title,
+        contents,
+        hashTags,
+      }))
+    }
+
     dispatch(posting({
       title,
       contents,
@@ -48,6 +59,7 @@ const PostingButtonsContainer = ({ history }) => {
     <PostingButtons
       onPosting={onPosting}
       onCancel={onCancel}
+      isEditing={!!editingPostId}
     />
   );
 };

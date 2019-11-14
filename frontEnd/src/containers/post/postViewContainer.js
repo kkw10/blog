@@ -3,8 +3,11 @@ import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import PostView from '../../components/post/PostView';
 import { readPost } from '../../models/actions/post';
+import { setOriginalPost } from '../../models/actions/write';
+import { toggling } from '../../models/actions/toggle';
+import { remove } from '../../lib/api/post';
 
-const PostViewContainer = ({ match }) => {
+const PostViewContainer = ({ match, history }) => {
   const dispatch = useDispatch();
   const {
     postData,
@@ -17,7 +20,33 @@ const PostViewContainer = ({ match }) => {
     loading: loading['post/READ_POST'],
     user: user.user,
   }));
+  const toggle = useSelector(({ toggle }) => toggle);
   const postId = match.params.PostId;
+
+  const onEdit = () => {
+    const post = {
+      postId: postData.id,
+      title: postData.title,
+      contents: postData.contents,
+      hashTags: [...postData.HashTags].map((v) => v.name),
+    };
+
+    dispatch(setOriginalPost(post));
+    history.push('/write');
+  };
+
+  const onDelete = async () => {
+    try {
+      await remove(postId);
+      history.push('/');
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const onToggling = (type) => {
+    dispatch(toggling(type));
+  };
 
   useEffect(() => {
     dispatch(readPost(postId));
@@ -25,10 +54,14 @@ const PostViewContainer = ({ match }) => {
 
   return (
     <PostView
-      postData={postData}
-      loading={loading}
-      postError={postError}
       user={user}
+      postData={postData}
+      postError={postError}
+      loading={loading}
+      onEdit={onEdit}
+      onDelete={onDelete}
+      toggle={toggle}
+      onToggling={onToggling}
     />
   );
 };

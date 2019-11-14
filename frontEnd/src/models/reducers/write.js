@@ -4,6 +4,9 @@ import {
   POSTING,
   POSTING_SUCCESS,
   POSTING_FAILURE,
+  SET_ORIGINAL_POST,
+  UPDATE_SUCCESS,
+  UPDATE_FAILURE,
 } from '../actions/write';
 
 const initialState = {
@@ -12,6 +15,7 @@ const initialState = {
   hashTags: [],
   result: null,
   postingError: null,
+  editingPostId: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -42,6 +46,24 @@ const reducer = (state = initialState, action) => {
         ...state,
         result: null,
         postingError: action.payload,
+      };
+    case UPDATE_SUCCESS:
+      return {
+        ...state,
+        postingError: null,
+      };
+    case UPDATE_FAILURE:
+      return {
+        ...state,
+        postingError: action.payload,
+      };
+    case SET_ORIGINAL_POST:
+      return {
+        ...state,
+        title: action.payload.title,
+        contents: action.payload.contents,
+        hashTags: action.payload.hashTags,
+        editingPostId: action.payload.postId,
       };
     default:
       return state;

@@ -8,7 +8,7 @@ const StyledButton = styled.button`
   border: 1px solid ${brandingColor.point[6]};
 
   ${props => (
-    props.background && css`
+    props.background === 'point' && css`
       background: ${brandingColor[props.background][7]};
       color: #fff;
       border: 1px solid #fff;

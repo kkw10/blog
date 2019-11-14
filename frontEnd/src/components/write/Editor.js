@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import 'tui-editor/dist/tui-editor.css'; // editor's ui
 import 'tui-editor/dist/tui-editor-contents.css'; // editor's content
 import 'codemirror/lib/codemirror.css'; // codemirror
@@ -111,8 +111,11 @@ const TitleInput = styled.input`
 
 const WriteEditor = ({
   title,
+  contents,
   onChangeField,
 }) => {
+  const mounted = useRef(false);
+
   useEffect(() => {
     const instance = new Editor({
       el: document.querySelector('#tui_editor'),
@@ -121,6 +124,11 @@ const WriteEditor = ({
       height: '500px',
       placeholder: '내용',
     });
+
+    if (contents && !mounted.current) {
+      mounted.current = true;
+      instance.setValue(contents);
+    }
 
     instance.on('change', () => {
       const data = instance.getHtml();
