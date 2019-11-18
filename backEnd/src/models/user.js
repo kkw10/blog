@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
   // 테이블간의 관계 설정
   User.associate = (db) => {
     db.User.hasMany(db.Post);
+    db.User.hasMany(db.Comment);
   };
 
   // Static mehtods

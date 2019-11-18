@@ -68,10 +68,66 @@ exports.write = async (req, res, next) => {
   }
 };
 
+exports.writeComment = async (req, res, next) => {  
+  const post = httpContext.get('post');
+  const user = httpContext.get('user');  
+  
+  try {
+    const newComment = await db.Comment.create({
+      PostId: post.id,
+      UserId: user.id,
+      contents: req.body.contents,
+    })
+
+    const comment = await db.Comment.findOne({
+      where: {
+        id: newComment.id,
+      },
+      include: [{
+        model: db.User,
+        attributes: ['id', 'email', 'nickname'],
+      }],
+    })
+
+    res.json(comment);
+  } catch (e) {
+    console.error(e);
+    return next(e);
+  }
+};
+
 exports.read = async (req, res, next) => {
   const post = httpContext.get('post').dataValues;
   res.status(200).json(post);
 };
+
+exports.readComments = async (req, res, next) => {
+  const post = httpContext.get('post');
+
+  try {
+    const comments = await db.Comment.findAndCountAll({
+      where: {
+        PostId: post.id,
+      },
+      include: [{
+        model: db.User,
+        attributes: ['email', 'nickname']
+      }],
+      distinct: true,
+      order: [['createdAt', 'DESC']],
+    })
+    .then(result => {
+      console.log(result.count);
+      res.set('Comments-Count', result.count);
+      return result.rows;
+    })
+
+    res.json(comments);
+  } catch (e) {
+    console.error(e);
+    return next(e);
+  }
+}
 
 exports.update = async (req, res, next) => {
   const { title, contents, hashTags } = req.body;

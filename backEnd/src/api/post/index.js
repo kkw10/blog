@@ -7,10 +7,19 @@ router.post('/',
   isLoggedIn, 
   postCtrl.write
 );
+router.post('/:id/comment',
+  isLoggedIn,
+  postCtrl.getPostById,
+  postCtrl.writeComment
+);
 router.get('/:id',
   postCtrl.getPostById,
   postCtrl.read
 );
+router.get('/:id/comments',
+  postCtrl.getPostById,
+  postCtrl.readComments
+)
 router.patch('/:id',
   isLoggedIn,
   postCtrl.getPostById,
