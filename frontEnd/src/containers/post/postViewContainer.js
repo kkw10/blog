@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import PostView from '../../components/post/PostView';
 import { readPost } from '../../models/actions/post';
-import { setOriginalPost } from '../../models/actions/write';
+import { setOriginalPost, changeField } from '../../models/actions/write';
 import { toggling } from '../../models/actions/toggle';
 import { remove } from '../../lib/api/post';
 
@@ -44,6 +44,11 @@ const PostViewContainer = ({ match, history }) => {
     }
   };
 
+  const onChangeField = useCallback((payload) => {
+    console.log(payload);
+    dispatch(changeField(payload));
+  }, [dispatch]);
+
   const onToggling = (type) => {
     dispatch(toggling(type));
   };
@@ -62,6 +67,7 @@ const PostViewContainer = ({ match, history }) => {
       onDelete={onDelete}
       toggle={toggle}
       onToggling={onToggling}
+      onChangeField={onChangeField}
     />
   );
 };

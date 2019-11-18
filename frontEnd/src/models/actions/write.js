@@ -13,6 +13,11 @@ export const [
   UPDATE_SUCCESS,
   UPDATE_FAILURE,
 ] = createRequestActionTypes('write/UPDATE');
+export const [
+  COMMENTING,
+  COMMENTING_SUCCESS,
+  COMMENTING_FAILURE,
+] = createRequestActionTypes('write/COMMENTING');
 
 export const initialize = () => ({
   type: INITIALIZE,
@@ -40,7 +45,17 @@ export const posting = ({ title, contents, hashTags }) => ({
   },
 });
 
-export const update = ({ id, title, contents, hashTags }) => ({
+export const commenting = (contents) => ({
+  type: COMMENTING,
+  payload: contents,
+});
+
+export const update = ({
+  id,
+  title,
+  contents,
+  hashTags,
+}) => ({
   type: UPDATE,
   payload: {
     id,
@@ -48,4 +63,4 @@ export const update = ({ id, title, contents, hashTags }) => ({
     contents,
     hashTags,
   },
-})
+});

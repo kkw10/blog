@@ -7,12 +7,15 @@ import {
   SET_ORIGINAL_POST,
   UPDATE_SUCCESS,
   UPDATE_FAILURE,
+  COMMENTING_SUCCESS,
+  COMMENTING_FAILURE,
 } from '../actions/write';
 
 const initialState = {
   title: '',
   contents: '',
   hashTags: [],
+  comment: '',
   result: null,
   postingError: null,
   editingPostId: null,
@@ -46,6 +49,14 @@ const reducer = (state = initialState, action) => {
         ...state,
         result: null,
         postingError: action.payload,
+      };
+    case COMMENTING_SUCCESS:
+      return {
+        ...state,
+      };
+    case COMMENTING_FAILURE:
+      return {
+        ...state,
       };
     case UPDATE_SUCCESS:
       return {

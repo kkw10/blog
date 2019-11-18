@@ -89,6 +89,7 @@ const SubComment = styled.div`
 
 const PostComments = ({
   user,
+  onChangeField,
 }) => {
   useEffect(() => {
     if (!user) return;
@@ -100,7 +101,15 @@ const PostComments = ({
       height: '200px',
       placeholder: '내용',
     });
-  }, [user]);
+
+    instance.on('change', () => {
+      const data = instance.getHtml();
+      onChangeField({
+        key: 'comment',
+        value: data,
+      });
+    });
+  }, [user, onChangeField]);
 
   return (
     <PostCommentsWrap>
@@ -163,7 +172,7 @@ const PostComments = ({
         </CommentsBox>
       </CommentsList>
     </PostCommentsWrap>
-  )
+  );
 };
 
 export default PostComments;

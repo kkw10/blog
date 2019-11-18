@@ -96,6 +96,7 @@ const PostView = ({
   onDelete,
   toggle,
   onToggling,
+  onChangeField,
 }) => {
   if (loading || !postData) {
     return null;
@@ -157,6 +158,7 @@ const PostView = ({
         />
         <PostComments
           user={user}
+          onChangeField={onChangeField}
         />
       </PostViewWrap>
       <AlertModal
