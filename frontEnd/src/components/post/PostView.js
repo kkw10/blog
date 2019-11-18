@@ -4,6 +4,7 @@ import { brandingColor } from '../../lib/styles/branding';
 import Tag from '../common/Tag';
 import Button from '../common/Button';
 import AlertModal from '../common/modal/AlertModal';
+import PostComments from './PostComments';
 
 const PostViewWrap = styled.div`
   margin-top: 2rem;
@@ -11,6 +12,12 @@ const PostViewWrap = styled.div`
   background: #fff;
   border-radius: 5px;
   padding: 1rem;
+  position: relative;
+  overflow: hidden;
+
+  .post-comments-wrap {
+    height: 100%;
+  }
 `;
 
 const Head = styled.div`
@@ -19,8 +26,23 @@ const Head = styled.div`
   margin-bottom: 2rem;
 
   .right {
-    button + button {
-      margin-left: 0.5rem;
+    .flexBox {
+      display: flex;
+      align-items: center;      
+
+      .tools {
+        svg {
+          cursor: pointer;
+          font-size: 20px;
+          margin-right: 1rem;
+          color: ${brandingColor.point[6]};
+        }       
+      }
+      .buttons {
+        button + button {
+          margin-left: 0.5rem;
+        }     
+      }      
     }
   }
 
@@ -110,26 +132,31 @@ const PostView = ({
             <h2>{postData.title}</h2>
           </div>
           <div className="right">
-            {user && postData.UserId === user.id ? (
-              <>
-                <Button
-                  placeholder="수정"
-                  size="md"
-                  onClick={onEdit}
-                />
-                <Button
-                  placeholder="삭제"
-                  size="md"
-                  background="point"
-                  onClick={() => onToggling('alert')}
-                />
-              </>
-            ) : null}
+            <div className="flexBox">
+              {user && postData.UserId === user.id ? (
+                <div className="buttons">
+                  <Button
+                    placeholder="수정"
+                    size="md"
+                    onClick={onEdit}
+                  />
+                  <Button
+                    placeholder="삭제"
+                    size="md"
+                    background="point"
+                    onClick={() => onToggling('alert')}
+                  />
+                </div>
+              ) : null}
+            </div>
           </div>
         </Head>
         <Contents
           className="tui-style tui-editor-contents"
           dangerouslySetInnerHTML={{ __html: postData.contents }}
+        />
+        <PostComments
+          user={user}
         />
       </PostViewWrap>
       <AlertModal
