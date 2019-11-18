@@ -18,6 +18,7 @@ const initialState = {
   comment: '',
   result: null,
   postingError: null,
+  commentingError: null,
   editingPostId: null,
 };
 
@@ -53,10 +54,14 @@ const reducer = (state = initialState, action) => {
     case COMMENTING_SUCCESS:
       return {
         ...state,
+        result: action.payload,
+        commentingError: null,
       };
     case COMMENTING_FAILURE:
       return {
         ...state,
+        result: null,
+        commentingError: action.payload,
       };
     case UPDATE_SUCCESS:
       return {

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import {
   AiFillDislike,
@@ -89,27 +89,49 @@ const SubComment = styled.div`
 
 const PostComments = ({
   user,
+  commentsData,
+  commentError,
   onChangeField,
+  onSubmit,
+  clearedForm,
 }) => {
+  const mounted = useRef(false);
+  const instance = useRef(null);
+
+  if (commentError) {
+    return (
+      <PostCommentsWrap>
+        {commentError}
+      </PostCommentsWrap>
+    );
+  }
+
   useEffect(() => {
     if (!user) return;
 
-    const instance = new Editor({
-      el: document.querySelector('#tui_editor'),
-      initialEditType: 'wysiwyg',
-      previewStyle: 'vertical',
-      height: '200px',
-      placeholder: '내용',
-    });
-
-    instance.on('change', () => {
-      const data = instance.getHtml();
-      onChangeField({
-        key: 'comment',
-        value: data,
+    if (!mounted.current) {
+      mounted.current = true;
+      instance.current = new Editor({
+        el: document.querySelector('#tui_editor'),
+        initialEditType: 'wysiwyg',
+        previewStyle: 'vertical',
+        height: '200px',
+        placeholder: '내용',
       });
-    });
-  }, [user, onChangeField]);
+
+      instance.current.on('change', () => {
+        const data = instance.current.getHtml();
+        onChangeField({
+          key: 'comment',
+          value: data,
+        });
+      });
+    }
+
+    if (mounted.current && clearedForm) {
+      instance.current.setValue('');
+    }
+  }, [user, onChangeField, clearedForm]);
 
   return (
     <PostCommentsWrap>
@@ -120,56 +142,32 @@ const PostComments = ({
             <div className="button">
               <Button
                 placeholder="댓글"
-                size="lg"
+                size="mx"
                 background="point"
+                onClick={(e) => onSubmit(e)}
               />
             </div>
           </Form>
         </>
       )}
       <CommentsList>
-        <CommentsBox>
-          <div className="info">
-            <b>TESTER1</b>
-            <span>2019. 11. 14.</span>
-          </div>
-          <div className="text">
-            1등입니다.
-          </div>
-          <div className="tools">
-            <AiFillLike />
-            <AiFillDislike />
-            <SubComment>댓글</SubComment>
-          </div>
-        </CommentsBox>
-        <CommentsBox>
-          <div className="info">
-            <b>TESTER1</b>
-            <span>2019. 11. 14.</span>
-          </div>
-          <div className="text">
-            2등입니다.
-          </div>
-          <div className="tools">
-            <AiFillLike />
-            <AiFillDislike />
-            <SubComment>댓글</SubComment>
-          </div>
-        </CommentsBox>
-        <CommentsBox>
-          <div className="info">
-            <b>TESTER1</b>
-            <span>2019. 11. 14.</span>
-          </div>
-          <div className="text">
-            3등입니다.
-          </div>
-          <div className="tools">
-            <AiFillLike />
-            <AiFillDislike />
-            <SubComment>댓글</SubComment>
-          </div>
-        </CommentsBox>
+        {commentsData.map((comment) => (
+          <CommentsBox key={comment.id}>
+            <div className="info">
+              <b>{comment.User.nickname}</b>
+              <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
+            </div>
+            <div
+              className="text tui-style tui-editor-contents"
+              dangerouslySetInnerHTML={{ __html: comment.contents }}
+            />
+            <div className="tools">
+              <AiFillLike />
+              <AiFillDislike />
+              <SubComment>댓글</SubComment>
+            </div>
+          </CommentsBox>
+        ))}
       </CommentsList>
     </PostCommentsWrap>
   );

@@ -4,7 +4,7 @@ const postCtrl = require('./post.ctrl');
 const isLoggedIn = require('../../lib/isLoggedIn');
 
 router.post('/', 
-  isLoggedIn, 
+  isLoggedIn,
   postCtrl.write
 );
 router.post('/:id/comment',
@@ -14,6 +14,7 @@ router.post('/:id/comment',
 );
 router.get('/:id',
   postCtrl.getPostById,
+  postCtrl.getCommentsInPost,
   postCtrl.read
 );
 router.get('/:id/comments',

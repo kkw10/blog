@@ -88,17 +88,21 @@ const Contents = styled.div`
 `;
 
 const PostView = ({
-  postData,
+  postResult,
+  commentsResult,
   postError,
+  commentError,
   loading,
   user,
   onEdit,
   onDelete,
+  onSubmit,
   toggle,
   onToggling,
   onChangeField,
+  clearedForm,
 }) => {
-  if (loading || !postData) {
+  if (loading || !postResult) {
     return null;
   }
 
@@ -117,24 +121,24 @@ const PostView = ({
           <div className="left">
             <HeadInfo>
               <ul className="tags">
-                {postData.HashTags.map((hashTag) => (
+                {postResult.HashTags.map((hashTag) => (
                   <li className="tag" key="tag">
                     <Tag name={hashTag.name} />
                   </li>
                 ))}
               </ul>
               <div className="auther">
-                <b>{postData.User.nickname}</b>
+                <b>{postResult.User.nickname}</b>
                 <span>
-                  {new Date(postData.createdAt).toLocaleDateString()}
+                  {new Date(postResult.createdAt).toLocaleDateString()}
                 </span>
               </div>
             </HeadInfo>
-            <h2>{postData.title}</h2>
+            <h2>{postResult.title}</h2>
           </div>
           <div className="right">
             <div className="flexBox">
-              {user && postData.UserId === user.id ? (
+              {user && postResult.UserId === user.id ? (
                 <div className="buttons">
                   <Button
                     placeholder="수정"
@@ -154,11 +158,15 @@ const PostView = ({
         </Head>
         <Contents
           className="tui-style tui-editor-contents"
-          dangerouslySetInnerHTML={{ __html: postData.contents }}
+          dangerouslySetInnerHTML={{ __html: postResult.contents }}
         />
         <PostComments
           user={user}
+          commentsData={commentsResult}
+          commentError={commentError}
           onChangeField={onChangeField}
+          onSubmit={onSubmit}
+          clearedForm={clearedForm}
         />
       </PostViewWrap>
       <AlertModal

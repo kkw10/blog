@@ -29,6 +29,41 @@ exports.getPostById = async (req, res, next) => {
   }
 }
 
+exports.getCommentsInPost = async (req, res, next) => {
+  console.log('@#@#@#@#@#@#')
+
+  const post = httpContext.get('post').dataValues;
+
+  console.log(post);
+
+  try {
+    const comments = await db.Comment.findAndCountAll({
+      where: {
+        PostId: post.id,
+      },
+      include: [{
+        model: db.User,
+        attributes: ['email', 'nickname']
+      }],
+      distinct: true,
+      order: [['createdAt', 'DESC']],
+    })
+    .then(result => {
+      console.log(result.count);
+      res.set('Comments-Count', result.count);
+      return result.rows;
+    });
+
+    httpContext.set('comments', comments);
+
+    console.log("DONE!!!!!!!!")
+    return next();
+  } catch (e) {
+    console.error(e);
+    return next(e);
+  }  
+}
+
 exports.isMyPost = (req, res, next) => {
   const user = httpContext.get('user');
   const post = httpContext.get('post').dataValues;
@@ -98,7 +133,17 @@ exports.writeComment = async (req, res, next) => {
 
 exports.read = async (req, res, next) => {
   const post = httpContext.get('post').dataValues;
-  res.status(200).json(post);
+  const comments = httpContext.get('comments');
+
+  const data = {
+    post,
+    comments,
+  }
+
+  console.log('@#@#@##@#@@#')
+  console.log(data);
+
+  res.status(200).json(data);
 };
 
 exports.readComments = async (req, res, next) => {

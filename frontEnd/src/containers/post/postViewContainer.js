@@ -2,33 +2,48 @@ import React, { useEffect, useCallback } from 'react';
 import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import PostView from '../../components/post/PostView';
-import { readPost } from '../../models/actions/post';
-import { setOriginalPost, changeField } from '../../models/actions/write';
+import { readPost, readComments, clearForm } from '../../models/actions/post';
+import {
+  setOriginalPost,
+  changeField,
+  commenting,
+  initialize,
+} from '../../models/actions/write';
 import { toggling } from '../../models/actions/toggle';
 import { remove } from '../../lib/api/post';
 
 const PostViewContainer = ({ match, history }) => {
   const dispatch = useDispatch();
   const {
-    postData,
+    postResult,
+    commentsResult,
     postError,
+    commentError,
     loading,
     user,
+    clearedForm,
   } = useSelector(({ post, loading, user }) => ({
-    postData: post.result,
+    postResult: post.postResult,
+    commentsResult: post.commentsResult,
     postError: post.postError,
+    commentError: post.commentError,
     loading: loading['post/READ_POST'],
     user: user.user,
+    clearedForm: post.clearedForm,
   }));
   const toggle = useSelector(({ toggle }) => toggle);
+  const { commentContent, writeResult } = useSelector(({ write }) => ({
+    commentContent: write.comment,
+    writeResult: write.result,
+  }));
   const postId = match.params.PostId;
 
   const onEdit = () => {
     const post = {
-      postId: postData.id,
-      title: postData.title,
-      contents: postData.contents,
-      hashTags: [...postData.HashTags].map((v) => v.name),
+      postId: postResult.id,
+      title: postResult.title,
+      contents: postResult.contents,
+      hashTags: [...postResult.HashTags].map((v) => v.name),
     };
 
     dispatch(setOriginalPost(post));
@@ -44,8 +59,21 @@ const PostViewContainer = ({ match, history }) => {
     }
   };
 
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    if (!commentContent) return;
+
+    const comment = {
+      postId,
+      contents: commentContent,
+    };
+
+    dispatch(commenting(comment));
+    dispatch(clearForm());
+  };
+
   const onChangeField = useCallback((payload) => {
-    console.log(payload);
     dispatch(changeField(payload));
   }, [dispatch]);
 
@@ -57,17 +85,29 @@ const PostViewContainer = ({ match, history }) => {
     dispatch(readPost(postId));
   }, [dispatch, postId]);
 
+  useEffect(() => {
+    if (writeResult) {
+      dispatch(readComments(postId));
+      dispatch(initialize());
+      dispatch(clearForm());
+    }
+  }, [dispatch, writeResult]);
+
   return (
     <PostView
       user={user}
-      postData={postData}
+      postResult={postResult}
+      commentsResult={commentsResult}
       postError={postError}
+      commentError={commentError}
       loading={loading}
       onEdit={onEdit}
       onDelete={onDelete}
+      onSubmit={onSubmit}
       toggle={toggle}
       onToggling={onToggling}
       onChangeField={onChangeField}
+      clearedForm={clearedForm}
     />
   );
 };

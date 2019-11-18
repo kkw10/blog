@@ -45,9 +45,9 @@ export const posting = ({ title, contents, hashTags }) => ({
   },
 });
 
-export const commenting = (contents) => ({
+export const commenting = (comment) => ({
   type: COMMENTING,
-  payload: contents,
+  payload: comment,
 });
 
 export const update = ({
