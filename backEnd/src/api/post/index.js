@@ -12,6 +12,16 @@ router.post('/:id/comment',
   postCtrl.getPostById,
   postCtrl.writeComment
 );
+router.post('/:id/comment/:commentId/up',
+  isLoggedIn,
+  postCtrl.getComment,
+  postCtrl.thumbsUp,
+);
+router.post('/:id/comment/:commentId/down',
+  isLoggedIn,
+  postCtrl.getComment,
+  postCtrl.thumbsDown,
+);
 router.get('/:id',
   postCtrl.getPostById,
   postCtrl.getCommentsInPost,

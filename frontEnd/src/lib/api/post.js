@@ -23,3 +23,11 @@ export const update = ({ id, title, contents, hashTags }) => (
 export const remove = (id) => (
   client.delete(`/api/post/${id}`)
 );
+
+export const commentUp = ({ postId, commentId }) => (
+  client.post(`/api/post/${postId}/comment/${commentId}/up`)
+);
+
+export const commentDown = ({ postId, commentId }) => (
+  client.post(`/api/post/${postId}/comment/${commentId}/down`)
+);

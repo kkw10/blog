@@ -101,6 +101,8 @@ const PostView = ({
   onToggling,
   onChangeField,
   clearedForm,
+  onThumbsUp,
+  onThumbsDown,
 }) => {
   if (loading || !postResult) {
     return null;
@@ -167,6 +169,8 @@ const PostView = ({
           onChangeField={onChangeField}
           onSubmit={onSubmit}
           clearedForm={clearedForm}
+          onThumbsUp={onThumbsUp}
+          onThumbsDown={onThumbsDown}
         />
       </PostViewWrap>
       <AlertModal

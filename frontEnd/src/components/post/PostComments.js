@@ -74,17 +74,27 @@ const CommentsBox = styled.div`
 
   .tools {
     display: flex;
+
     svg {
       font-size: 16px;
-      color: ${brandingColor.common[4]};
       cursor: pointer;
       margin-right: 0.5rem;
+    }
+    
+    span {
+      display: inline-block;
+      margin-right: 1rem;
+      color: ${brandingColor.common[4]};
     }
   }
 `;
 
 const SubComment = styled.div`
   color: ${brandingColor.common[4]};
+`;
+
+const SvgWrap = styled.div`
+  color: ${(props) => (props.fill === 'point' ? brandingColor.main[5] : brandingColor.common[4])};
 `;
 
 const PostComments = ({
@@ -94,6 +104,8 @@ const PostComments = ({
   onChangeField,
   onSubmit,
   clearedForm,
+  onThumbsUp,
+  onThumbsDown,
 }) => {
   const mounted = useRef(false);
   const instance = useRef(null);
@@ -151,23 +163,33 @@ const PostComments = ({
         </>
       )}
       <CommentsList>
-        {commentsData.map((comment) => (
-          <CommentsBox key={comment.id}>
-            <div className="info">
-              <b>{comment.User.nickname}</b>
-              <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
-            </div>
-            <div
-              className="text tui-style tui-editor-contents"
-              dangerouslySetInnerHTML={{ __html: comment.contents }}
-            />
-            <div className="tools">
-              <AiFillLike />
-              <AiFillDislike />
-              <SubComment>댓글</SubComment>
-            </div>
-          </CommentsBox>
-        ))}
+        {commentsData.map((comment) => {
+          const isLiked = user && comment.Likers && comment.Likers.find((v) => v.id === user.id);
+          const isDisliked = user && comment.Dislikers && comment.Dislikers.find((v) => v.id === user.id);
+          return (
+            <CommentsBox key={comment.id}>
+              <div className="info">
+                <b>{comment.User.nickname}</b>
+                <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
+              </div>
+              <div
+                className="text tui-style tui-editor-contents"
+                dangerouslySetInnerHTML={{ __html: comment.contents }}
+              />
+              <div className="tools">
+                <SvgWrap fill={isLiked ? 'point' : 'common'}>
+                  <AiFillLike onClick={() => onThumbsUp(comment.id)} />
+                </SvgWrap>
+                <span>{comment.Likers && (comment.Likers.length) || 0}</span>
+                <SvgWrap fill={isDisliked ? 'point' : 'common'}>
+                  <AiFillDislike onClick={() => onThumbsDown(comment.id)} />
+                </SvgWrap>
+                <span>{comment.Dislikers && (comment.Dislikers.length) || 0}</span>
+                <SubComment>댓글</SubComment>
+              </div>
+            </CommentsBox>
+          );
+        })}
       </CommentsList>
     </PostCommentsWrap>
   );

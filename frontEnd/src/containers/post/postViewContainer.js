@@ -2,7 +2,13 @@ import React, { useEffect, useCallback } from 'react';
 import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import PostView from '../../components/post/PostView';
-import { readPost, readComments, clearForm } from '../../models/actions/post';
+import {
+  readPost,
+  readComments,
+  clearForm,
+  thumbsUp,
+  thumbsDown,
+} from '../../models/actions/post';
 import {
   setOriginalPost,
   changeField,
@@ -81,6 +87,20 @@ const PostViewContainer = ({ match, history }) => {
     dispatch(toggling(type));
   };
 
+  const onThumbsUp = useCallback((payload) => {
+    dispatch(thumbsUp({
+      postId,
+      commentId: payload,
+    }));
+  }, [dispatch]);
+
+  const onThumbsDown = useCallback((payload) => {
+    dispatch(thumbsDown({
+      postId,
+      commentId: payload,
+    }));
+  }, [dispatch]);
+
   useEffect(() => {
     dispatch(readPost(postId));
   }, [dispatch, postId]);
@@ -108,6 +128,8 @@ const PostViewContainer = ({ match, history }) => {
       onToggling={onToggling}
       onChangeField={onChangeField}
       clearedForm={clearedForm}
+      onThumbsUp={onThumbsUp}
+      onThumbsDown={onThumbsDown}
     />
   );
 };

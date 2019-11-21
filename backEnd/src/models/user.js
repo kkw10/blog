@@ -25,7 +25,9 @@ module.exports = (sequelize, DataTypes) => {
   // 테이블간의 관계 설정
   User.associate = (db) => {
     db.User.hasMany(db.Post);
-    db.User.hasMany(db.Comment);
+    db.User.hasMany(db.Comment, { as: 'comments' });
+    db.User.belongsToMany(db.Comment, { through: 'CommentsLike', as: 'Likers', foreignKey: 'LikersId' });
+    db.User.belongsToMany(db.Comment, { through: 'CommentsDislike', as: 'Dislikers', foreignKey: 'DislikersId' });    
   };
 
   // Static mehtods

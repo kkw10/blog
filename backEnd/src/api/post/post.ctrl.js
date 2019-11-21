@@ -30,39 +30,67 @@ exports.getPostById = async (req, res, next) => {
 }
 
 exports.getCommentsInPost = async (req, res, next) => {
-  console.log('@#@#@#@#@#@#')
-
   const post = httpContext.get('post').dataValues;
-
-  console.log(post);
+  // const user = httpContext.get('user');
 
   try {
-    const comments = await db.Comment.findAndCountAll({
+    let comments = await db.Comment.findAndCountAll({
       where: {
         PostId: post.id,
       },
       include: [{
         model: db.User,
         attributes: ['email', 'nickname']
+      },{
+        model: db.User,
+        through: 'CommentsLike',
+        as: 'Likers',
       }],
       distinct: true,
       order: [['createdAt', 'DESC']],
     })
     .then(result => {
-      console.log(result.count);
       res.set('Comments-Count', result.count);
       return result.rows;
     });
 
-    httpContext.set('comments', comments);
-
-    console.log("DONE!!!!!!!!")
+    await httpContext.set('comments', comments);
     return next();
   } catch (e) {
     console.error(e);
     return next(e);
   }  
 }
+
+exports.getComment = async (req, res, next) => {
+  const commentId = req.params.commentId;
+
+  try {
+    const comment = await db.Comment.findOne({
+      where: {
+        id: commentId,
+      },
+      include: [{
+        model: db.User,
+        attributes: ['email', 'nickname']
+      },{
+        model: db.User,
+        through: 'CommentsLike',
+        as: 'Likers',
+      }, {
+        model: db.User,
+        through: 'CommentsDislike',
+        as: 'Dislikers',
+      }],      
+    })
+
+    httpContext.set('comment', comment);
+    return next();
+  } catch (e) {
+    console.error(e);
+    return next(e);
+  };
+};
 
 exports.isMyPost = (req, res, next) => {
   const user = httpContext.get('user');
@@ -131,6 +159,115 @@ exports.writeComment = async (req, res, next) => {
   }
 };
 
+exports.thumbsUp = async (req, res, next) => {
+  const user = httpContext.get('user');
+  const comment = httpContext.get('comment');
+
+  try {
+    const isDisLiked = await comment.getDislikers({
+      where: {
+        id: user.id
+      },
+      attributes: ['id'],
+    })
+
+    if (isDisLiked) {
+      await comment.removeDislikers([user.id]);
+    }
+
+    const isLiked = await comment.getLikers({
+      where: {
+        id: user.id
+      },
+      attributes: ['id'],
+    });
+
+    if (isLiked[0]) {
+      await comment.removeLikers([user.id]);
+    } else {
+      await comment.addLikers(user.id);
+    }
+
+    const newComment = await db.Comment.findOne({
+      where: {
+        id: comment.id,
+      },
+      include: [{
+        model: db.User,
+        attributes: ['email', 'nickname']
+      },{
+        model: db.User,
+        through: 'CommentsLike',
+        as: 'Likers',
+      },{
+        model: db.User,
+        through: 'CommentsDislike',
+        as: 'Dislikers',
+      }],      
+    })
+
+    return res.json(newComment);    
+  } catch (e) {
+    console.error(e);
+    return next(e);
+  }
+};
+
+exports.thumbsDown = async (req, res, next) => {
+  console.log('thumbsDown');
+  const user = httpContext.get('user');
+  const comment = httpContext.get('comment');
+
+  try {
+    const isLiked = await comment.getLikers({
+      where: {
+        id: user.id
+      },
+      attributes: ['id'],
+    })
+
+    if (isLiked) {
+      await comment.removeLikers([user.id]);
+    }
+
+    const isDisliked = await comment.getDislikers({
+      where: {
+        id: user.id
+      },
+      attributes: ['id'],
+    });
+
+    if (isDisliked[0]) {
+      await comment.removeDislikers([user.id]);
+    } else {
+      await comment.addDislikers(user.id);
+    }
+
+    const newComment = await db.Comment.findOne({
+      where: {
+        id: comment.id,
+      },
+      include: [{
+        model: db.User,
+        attributes: ['email', 'nickname']
+      },{
+        model: db.User,
+        through: 'CommentsLike',
+        as: 'Likers',
+      }, {
+        model: db.User,
+        through: 'CommentsDislike',
+        as: 'Dislikers',
+      }],      
+    })
+
+    return res.json(newComment);    
+  } catch (e) {
+    console.error(e);
+    return next(e);
+  }
+};
+
 exports.read = async (req, res, next) => {
   const post = httpContext.get('post').dataValues;
   const comments = httpContext.get('comments');
@@ -139,9 +276,6 @@ exports.read = async (req, res, next) => {
     post,
     comments,
   }
-
-  console.log('@#@#@##@#@@#')
-  console.log(data);
 
   res.status(200).json(data);
 };
