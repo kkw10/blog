@@ -13,6 +13,10 @@ exports.getPostById = async (req, res, next) => {
       }, {
         model: db.HashTag,
         attributes: ['name']
+      }, {
+        model: db.User,
+        through: 'RecomendPost',
+        as: 'Recomenders',
       }],
     })
   
@@ -45,6 +49,7 @@ exports.getCommentsInPost = async (req, res, next) => {
         model: db.User,
         through: 'CommentsLike',
         as: 'Likers',
+        attributes: ['id', 'email', 'nickname']
       }],
       distinct: true,
       order: [['createdAt', 'DESC']],
@@ -77,10 +82,12 @@ exports.getComment = async (req, res, next) => {
         model: db.User,
         through: 'CommentsLike',
         as: 'Likers',
+        attributes: ['id', 'email', 'nickname']
       }, {
         model: db.User,
         through: 'CommentsDislike',
         as: 'Dislikers',
+        attributes: ['id', 'email', 'nickname']
       }],      
     })
 
@@ -159,115 +166,6 @@ exports.writeComment = async (req, res, next) => {
   }
 };
 
-exports.thumbsUp = async (req, res, next) => {
-  const user = httpContext.get('user');
-  const comment = httpContext.get('comment');
-
-  try {
-    const isDisLiked = await comment.getDislikers({
-      where: {
-        id: user.id
-      },
-      attributes: ['id'],
-    })
-
-    if (isDisLiked) {
-      await comment.removeDislikers([user.id]);
-    }
-
-    const isLiked = await comment.getLikers({
-      where: {
-        id: user.id
-      },
-      attributes: ['id'],
-    });
-
-    if (isLiked[0]) {
-      await comment.removeLikers([user.id]);
-    } else {
-      await comment.addLikers(user.id);
-    }
-
-    const newComment = await db.Comment.findOne({
-      where: {
-        id: comment.id,
-      },
-      include: [{
-        model: db.User,
-        attributes: ['email', 'nickname']
-      },{
-        model: db.User,
-        through: 'CommentsLike',
-        as: 'Likers',
-      },{
-        model: db.User,
-        through: 'CommentsDislike',
-        as: 'Dislikers',
-      }],      
-    })
-
-    return res.json(newComment);    
-  } catch (e) {
-    console.error(e);
-    return next(e);
-  }
-};
-
-exports.thumbsDown = async (req, res, next) => {
-  console.log('thumbsDown');
-  const user = httpContext.get('user');
-  const comment = httpContext.get('comment');
-
-  try {
-    const isLiked = await comment.getLikers({
-      where: {
-        id: user.id
-      },
-      attributes: ['id'],
-    })
-
-    if (isLiked) {
-      await comment.removeLikers([user.id]);
-    }
-
-    const isDisliked = await comment.getDislikers({
-      where: {
-        id: user.id
-      },
-      attributes: ['id'],
-    });
-
-    if (isDisliked[0]) {
-      await comment.removeDislikers([user.id]);
-    } else {
-      await comment.addDislikers(user.id);
-    }
-
-    const newComment = await db.Comment.findOne({
-      where: {
-        id: comment.id,
-      },
-      include: [{
-        model: db.User,
-        attributes: ['email', 'nickname']
-      },{
-        model: db.User,
-        through: 'CommentsLike',
-        as: 'Likers',
-      }, {
-        model: db.User,
-        through: 'CommentsDislike',
-        as: 'Dislikers',
-      }],      
-    })
-
-    return res.json(newComment);    
-  } catch (e) {
-    console.error(e);
-    return next(e);
-  }
-};
-
 exports.read = async (req, res, next) => {
   const post = httpContext.get('post').dataValues;
   const comments = httpContext.get('comments');
@@ -295,10 +193,12 @@ exports.readComments = async (req, res, next) => {
         model: db.User,
         through: 'CommentsLike',
         as: 'Likers',
+        attributes: ['id', 'email', 'nickname']
       }, {
         model: db.User,
         through: 'CommentsDislike',
         as: 'Dislikers',
+        attributes: ['id', 'email', 'nickname']
       }],
       distinct: true,
       order: [['createdAt', 'DESC']],
@@ -372,6 +272,146 @@ exports.delete = async (req, res, next) => {
     });
 
     res.status(200).send('삭제가 완료되었습니다.');
+  } catch (e) {
+    console.error(e);
+    return next(e);
+  }
+};
+
+exports.recomendPost = async (req, res, next) => {
+  const user = httpContext.get('user');
+  const post = httpContext.get('post');
+  
+  try {
+    const isRecomended = await post.getRecomenders({
+      where: {
+        id: user.id,
+      },
+      attributes: ['id'],
+    })
+
+    if (isRecomended[0]) {
+      await post.removeRecomenders(user.id);
+    } else {
+      await post.addRecomenders(user.id);
+    }
+
+    const newRecomenders = await post.getRecomenders();
+
+    res.json(newRecomenders);
+  } catch (e) {
+    console.error(e);
+    return next(e);
+  }
+}
+
+exports.thumbsUp = async (req, res, next) => {
+  const user = httpContext.get('user');
+  const comment = httpContext.get('comment');
+
+  try {
+    const isDisLiked = await comment.getDislikers({
+      where: {
+        id: user.id
+      },
+      attributes: ['id'],
+    })
+
+    if (isDisLiked) {
+      await comment.removeDislikers([user.id]);
+    }
+
+    const isLiked = await comment.getLikers({
+      where: {
+        id: user.id
+      },
+      attributes: ['id'],
+    });
+
+    if (isLiked[0]) {
+      await comment.removeLikers([user.id]);
+    } else {
+      await comment.addLikers(user.id);
+    }
+
+    const newComment = await db.Comment.findOne({
+      where: {
+        id: comment.id,
+      },
+      include: [{
+        model: db.User,
+        attributes: ['email', 'nickname']
+      },{
+        model: db.User,
+        through: 'CommentsLike',
+        as: 'Likers',
+        attributes: ['id', 'email', 'nickname']
+      },{
+        model: db.User,
+        through: 'CommentsDislike',
+        as: 'Dislikers',
+        attributes: ['id', 'email', 'nickname']
+      }],      
+    })
+
+    return res.json(newComment);    
+  } catch (e) {
+    console.error(e);
+    return next(e);
+  }
+};
+
+exports.thumbsDown = async (req, res, next) => {
+  console.log('thumbsDown');
+  const user = httpContext.get('user');
+  const comment = httpContext.get('comment');
+
+  try {
+    const isLiked = await comment.getLikers({
+      where: {
+        id: user.id
+      },
+      attributes: ['id'],
+    })
+
+    if (isLiked) {
+      await comment.removeLikers([user.id]);
+    }
+
+    const isDisliked = await comment.getDislikers({
+      where: {
+        id: user.id
+      },
+      attributes: ['id'],
+    });
+
+    if (isDisliked[0]) {
+      await comment.removeDislikers([user.id]);
+    } else {
+      await comment.addDislikers(user.id);
+    }
+
+    const newComment = await db.Comment.findOne({
+      where: {
+        id: comment.id,
+      },
+      include: [{
+        model: db.User,
+        attributes: ['email', 'nickname']
+      },{
+        model: db.User,
+        through: 'CommentsLike',
+        as: 'Likers',
+        attributes: ['id', 'email', 'nickname']
+      }, {
+        model: db.User,
+        through: 'CommentsDislike',
+        as: 'Dislikers',
+        attributes: ['id', 'email', 'nickname']
+      }],      
+    })
+
+    return res.json(newComment);    
   } catch (e) {
     console.error(e);
     return next(e);

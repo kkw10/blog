@@ -48,7 +48,9 @@ const PostBoxWrap = styled.div`
       &:last-child {
         margin-right: 0;
       }
-
+      &.fill {
+        border-color: ${brandingColor.green[5]}
+      }
       .numb {
         margin-bottom: 0.5rem;
       }
@@ -95,10 +97,10 @@ const PostBox = ({ postData }) => {
       <div className="left">
         <ul>
           <li>
-            <div className="numb">0</div>
+            <div className="numb">{postData.Recomenders.length}</div>
             <div>좋아요</div>
           </li>
-          <li>
+          <li className={postData.Comments.length > 0 ? 'fill' : null}>
             <div className="numb">{postData.Comments.length}</div>
             <div>댓글</div>
           </li>

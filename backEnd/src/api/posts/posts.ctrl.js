@@ -4,10 +4,6 @@ exports.list = async (req, res, next) => {
   let pageNum = req.query.page || 1;
   let offset = 0;
 
-  console.log('@@@@@@@@@@@@@@')
-  console.log(req.query);
-  console.log(`pageNum ${pageNum}`)
-
   if (pageNum < 1) {
     res.status(400).send('요청하신 페이지가 존재하지 않습니다.');
   }
@@ -15,8 +11,6 @@ exports.list = async (req, res, next) => {
   if (pageNum > 1) {
     offset = 10 * (pageNum - 1)
   }
-
-  console.log(`@@@@@ [offset] => ${offset}`);
   
   try {
     const posts = await db.Post.findAndCountAll({
@@ -29,6 +23,11 @@ exports.list = async (req, res, next) => {
       }, {
         model: db.Comment,
         attributes: ['id'],
+      }, {
+        model: db.User,
+        through: 'RecomendPost',
+        as: 'Recomenders',
+        attributes: ['id', 'email', 'nickname']
       }],
       distinct: true, // result.count 오류 해결 
       offset: offset,

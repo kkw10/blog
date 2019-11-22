@@ -9,12 +9,15 @@ import {
   THUMBS_UP_FAILURE,
   THUMBS_DOWN_SUCCESS,
   THUMBS_DOWN_FAILURE,
+  RECOMEND_SUCCESS,
+  RECOMEND_FAILURE,
 } from '../actions/post';
 
 const initialState = {
   postResult: null,
   commentsResult: null,
   postError: null,
+  recomendError: null,
   commentError: null,
   thumbsError: null,
   clearedForm: false,
@@ -73,6 +76,14 @@ const reducer = (state = initialState, action) => {
         thumbsError: null,
       };
     }
+    case RECOMEND_SUCCESS:
+      return {
+        ...state,
+        postResult: {
+          ...state.postResult,
+          Recomenders: action.payload,
+        }
+      };
     case THUMBS_DOWN_SUCCESS: {
       const newResult = [
         ...state.commentsResult,
@@ -89,6 +100,11 @@ const reducer = (state = initialState, action) => {
         thumbsError: null,
       };
     }
+    case RECOMEND_FAILURE:
+      return {
+        ...state,
+        recomendError: action.payload,
+      }
     case THUMBS_UP_FAILURE:
       return {
         ...state,

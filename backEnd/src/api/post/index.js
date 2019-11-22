@@ -7,6 +7,11 @@ router.post('/',
   isLoggedIn,
   postCtrl.write
 );
+router.post('/:id/recomend',
+  isLoggedIn,
+  postCtrl.getPostById,
+  postCtrl.recomendPost,
+)
 router.post('/:id/comment',
   isLoggedIn,
   postCtrl.getPostById,

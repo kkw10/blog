@@ -1,5 +1,5 @@
 import React from 'react';
-import { AiOutlineStar } from 'react-icons/ai';
+import { AiOutlineStar, AiFillStar } from 'react-icons/ai';
 import styled from 'styled-components';
 import { brandingColor } from '../../lib/styles/branding';
 import Tag from '../common/Tag';
@@ -93,7 +93,11 @@ const VoteButton = styled.button`
   padding: 0 0.7rem;
   border: 1px solid ${brandingColor.point[6]};
   border-radius: 5px;
-  color: ${brandingColor.common[5]};
+  color: ${(props) => (
+    props.fill === 'true'
+      ? brandingColor.main[5]
+      : brandingColor.common[5]
+  )};
 
   span {
     font-size: 13px;
@@ -120,6 +124,7 @@ const PostView = ({
   onToggling,
   onChangeField,
   clearedForm,
+  onRecomend,
   onThumbsUp,
   onThumbsDown,
   onRefresh,
@@ -135,6 +140,10 @@ const PostView = ({
       </PostViewWrap>
     );
   }
+
+  const isRecomended = user
+    && postResult.Recomenders
+    && postResult.Recomenders.find((v) => v.id === user.id);
 
   return (
     <>
@@ -161,9 +170,16 @@ const PostView = ({
           <div className="right">
             <div className="flexBox">
               <div className="buttons">
-                <VoteButton>
-                  <AiOutlineStar />
-                  <span>0</span>
+                <VoteButton
+                  onClick={onRecomend}
+                  fill={isRecomended ? 'true' : 'false'}
+                >
+                  {isRecomended ? (
+                    <AiFillStar />
+                  ) : (
+                    <AiOutlineStar />
+                  )}
+                  <span>{postResult.Recomenders && (postResult.Recomenders.length) || 0}</span>
                 </VoteButton>
                 {user && postResult.UserId === user.id ? (
                   <>

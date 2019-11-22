@@ -8,6 +8,7 @@ import {
   clearForm,
   thumbsUp,
   thumbsDown,
+  recomend,
 } from '../../models/actions/post';
 import {
   setOriginalPost,
@@ -87,6 +88,10 @@ const PostViewContainer = ({ match, history }) => {
     dispatch(toggling(type));
   };
 
+  const onRecomend = useCallback(() => {
+    dispatch(recomend(postId));
+  }, [dispatch]);
+
   const onThumbsUp = useCallback((payload) => {
     dispatch(thumbsUp({
       postId,
@@ -103,7 +108,7 @@ const PostViewContainer = ({ match, history }) => {
 
   const onRefresh = useCallback(() => {
     dispatch(readComments(postId));
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(readPost(postId));
@@ -132,6 +137,7 @@ const PostViewContainer = ({ match, history }) => {
       onToggling={onToggling}
       onChangeField={onChangeField}
       clearedForm={clearedForm}
+      onRecomend={onRecomend}
       onThumbsUp={onThumbsUp}
       onThumbsDown={onThumbsDown}
       onRefresh={onRefresh}

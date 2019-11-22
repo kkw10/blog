@@ -12,6 +12,11 @@ export const [
 ] = createRequestActionTypes('post/READ_COMMENTS');
 export const CLEAR_FORM = 'post/CLEAR_FORM';
 export const [
+  RECOMEND,
+  RECOMEND_SUCCESS,
+  RECOMEND_FAILURE,
+] = createRequestActionTypes('post/RECOMEND');
+export const [
   THUMBS_UP,
   THUMBS_UP_SUCCESS,
   THUMBS_UP_FAILURE,
@@ -34,6 +39,11 @@ export const readComments = (id) => ({
 
 export const clearForm = () => ({
   type: CLEAR_FORM,
+});
+
+export const recomend = (postId) => ({
+  type: RECOMEND,
+  payload: postId,
 });
 
 export const thumbsUp = ({ postId, commentId }) => ({
