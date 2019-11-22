@@ -1,4 +1,5 @@
 import React from 'react';
+import { AiOutlineStar } from 'react-icons/ai';
 import styled from 'styled-components';
 import { brandingColor } from '../../lib/styles/branding';
 import Tag from '../common/Tag';
@@ -39,6 +40,7 @@ const Head = styled.div`
         }       
       }
       .buttons {
+        display: flex;
         button + button {
           margin-left: 0.5rem;
         }     
@@ -80,6 +82,23 @@ const HeadInfo = styled.div`
       font-size: 13px;
       font-weight: normal;
     }
+  }
+`;
+
+const VoteButton = styled.button`
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  height: 28px;
+  padding: 0 0.7rem;
+  border: 1px solid ${brandingColor.point[6]};
+  border-radius: 5px;
+  color: ${brandingColor.common[5]};
+
+  span {
+    font-size: 13px;
+    margin-left: 0.3rem;
+    color: ${brandingColor.common[5]};
   }
 `;
 
@@ -141,21 +160,28 @@ const PostView = ({
           </div>
           <div className="right">
             <div className="flexBox">
-              {user && postResult.UserId === user.id ? (
-                <div className="buttons">
-                  <Button
-                    placeholder="수정"
-                    size="md"
-                    onClick={onEdit}
-                  />
-                  <Button
-                    placeholder="삭제"
-                    size="md"
-                    background="point"
-                    onClick={() => onToggling('alert')}
-                  />
-                </div>
-              ) : null}
+              <div className="buttons">
+                <VoteButton>
+                  <AiOutlineStar />
+                  <span>0</span>
+                </VoteButton>
+                {user && postResult.UserId === user.id ? (
+                  <>
+                    <Button
+                      placeholder="수정"
+                      size="md"
+                      onClick={onEdit}
+                    />
+                    <Button
+                      placeholder="삭제"
+                      size="md"
+                      background="point"
+                      onClick={() => onToggling('alert')}
+                    />
+                  </>
+                ) : null}
+              </div>
+
             </div>
           </div>
         </Head>
