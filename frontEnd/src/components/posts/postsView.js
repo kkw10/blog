@@ -25,8 +25,31 @@ const PostsViewWrap = styled.div`
 
 const PostBoxWrap = styled.div`
   padding: 1rem;
+  padding-left: 0;
   overflow: hidden;
   border-bottom: 1px solid ${brandingColor.common[2]};
+  display: flex;
+  align-items: center;
+
+  .left ul {
+    display: flex;
+    margin-right: 1rem;
+    font-size: 12px;
+    color: ${brandingColor.common[5]};
+
+    li {
+      width: 50px;
+      text-align: center;
+      padding: 0.3rem;
+      border: 1px solid ${brandingColor.common[3]};
+      border-radius: 5px;
+      font-weight: bold;
+
+      .numb {
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
 
   h3 {
     color: ${brandingColor.point[5]};
@@ -65,19 +88,29 @@ const PostBoxWrap = styled.div`
 const PostBox = ({ postData }) => {
   return (
     <PostBoxWrap>
-      <h3>
-        <Link to={`/post/${postData.UserId}/${postData.id}`}>{postData.title}</Link>
-      </h3>
-      <ul className="tags">
-        {postData.HashTags.map((tag) => (
-          <li key={tag.name}>
-            <Tag name={tag.name} />
+      <div className="left">
+        <ul>
+          <li>
+            <div className="numb">{postData.Comments.length}</div>
+            <div>댓글</div>
           </li>
-        ))}
-      </ul>
-      <div className="date">
-        <b>{postData.User.nickname}</b>
-        {new Date(postData.updatedAt).toLocaleDateString()}
+        </ul>
+      </div>
+      <div className="right">
+        <h3>
+          <Link to={`/post/${postData.UserId}/${postData.id}`}>{postData.title}</Link>
+        </h3>
+        <ul className="tags">
+          {postData.HashTags.map((tag) => (
+            <li key={tag.name}>
+              <Tag name={tag.name} />
+            </li>
+          ))}
+        </ul>
+        <div className="date">
+          <b>{postData.User.nickname}</b>
+          {new Date(postData.updatedAt).toLocaleDateString()}
+        </div>
       </div>
     </PostBoxWrap>
   );

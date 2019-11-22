@@ -26,6 +26,9 @@ exports.list = async (req, res, next) => {
       }, {
         model: db.HashTag,
         attributes: ['name']
+      }, {
+        model: db.Comment,
+        attributes: ['id'],
       }],
       distinct: true, // result.count 오류 해결 
       offset: offset,
@@ -33,10 +36,9 @@ exports.list = async (req, res, next) => {
       order: [['createdAt', 'DESC']],
     })
     .then(result => {
-      console.log(result.count);
       res.set('Last-Page', Math.ceil(result.count / 10));
       return result.rows;
-    });
+    });   
 
     res.status(200).json(posts);
 
