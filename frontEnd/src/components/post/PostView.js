@@ -103,6 +103,7 @@ const PostView = ({
   clearedForm,
   onThumbsUp,
   onThumbsDown,
+  onRefresh,
 }) => {
   if (loading || !postResult) {
     return null;
@@ -171,6 +172,7 @@ const PostView = ({
           clearedForm={clearedForm}
           onThumbsUp={onThumbsUp}
           onThumbsDown={onThumbsDown}
+          onRefresh={onRefresh}
         />
       </PostViewWrap>
       <AlertModal

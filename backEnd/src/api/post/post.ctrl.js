@@ -291,12 +291,19 @@ exports.readComments = async (req, res, next) => {
       include: [{
         model: db.User,
         attributes: ['email', 'nickname']
+      }, {
+        model: db.User,
+        through: 'CommentsLike',
+        as: 'Likers',
+      }, {
+        model: db.User,
+        through: 'CommentsDislike',
+        as: 'Dislikers',
       }],
       distinct: true,
       order: [['createdAt', 'DESC']],
     })
     .then(result => {
-      console.log(result.count);
       res.set('Comments-Count', result.count);
       return result.rows;
     })

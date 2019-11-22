@@ -101,6 +101,10 @@ const PostViewContainer = ({ match, history }) => {
     }));
   }, [dispatch]);
 
+  const onRefresh = useCallback(() => {
+    dispatch(readComments(postId));
+  }, []);
+
   useEffect(() => {
     dispatch(readPost(postId));
   }, [dispatch, postId]);
@@ -130,6 +134,7 @@ const PostViewContainer = ({ match, history }) => {
       clearedForm={clearedForm}
       onThumbsUp={onThumbsUp}
       onThumbsDown={onThumbsDown}
+      onRefresh={onRefresh}
     />
   );
 };

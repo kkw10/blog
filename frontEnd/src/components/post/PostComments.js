@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import {
   AiFillDislike,
@@ -106,9 +106,11 @@ const PostComments = ({
   clearedForm,
   onThumbsUp,
   onThumbsDown,
+  onRefresh,
 }) => {
   const mounted = useRef(false);
   const instance = useRef(null);
+  const [test, setTest] = useState('새로고침');
 
   if (commentError) {
     return (
@@ -117,6 +119,15 @@ const PostComments = ({
       </PostCommentsWrap>
     );
   }
+
+  const onClick = useCallback((e) => {
+    e.preventDefault();
+    if (test === '댓글') {
+      onSubmit(e);
+      return;
+    };
+    onRefresh();
+  }, [onSubmit, onRefresh]);
 
   useEffect(() => {
     if (!user) return;
@@ -133,6 +144,13 @@ const PostComments = ({
 
       instance.current.on('change', () => {
         const data = instance.current.getHtml();
+
+        if (data) {
+          setTest('댓글');
+        } else {
+          setTest('새로고침');
+        }
+
         onChangeField({
           key: 'comment',
           value: data,
@@ -153,10 +171,10 @@ const PostComments = ({
             <div id="tui_editor" />
             <div className="button">
               <Button
-                placeholder="댓글"
+                placeholder={test}
                 size="mx"
                 background="point"
-                onClick={(e) => onSubmit(e)}
+                onClick={onClick}
               />
             </div>
           </Form>
