@@ -1,16 +1,25 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import styled from 'styled-components';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+} from 'react';
 import {
   AiFillDislike,
   AiFillLike,
 } from 'react-icons/ai';
+import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components';
+import { IoIosMore } from 'react-icons/io';
 import 'tui-editor/dist/tui-editor.css'; // editor's ui
 import 'tui-editor/dist/tui-editor-contents.css'; // editor's content
 import 'codemirror/lib/codemirror.css'; // codemirror
 import 'highlight.js/styles/github.css'; // code block highlight
 import Editor from 'tui-editor';
+import { toggling } from '../../models/actions/toggle';
 import { brandingColor } from '../../lib/styles/branding';
 import Button from '../common/Button';
+import DropBox from '../common/dropbox';
 
 const PostCommentsWrap = styled.div`
 
@@ -56,18 +65,6 @@ const CommentsBox = styled.div`
   padding: 1rem 0;
   border-bottom: 1px solid ${brandingColor.common[2]};
 
-  .info {
-    color: ${brandingColor.common[6]};
-
-    b::after {
-      content: '/';
-      display: inline-block;
-      margin: 0 5px;
-      font-size: 13px;
-      font-weight: normal;
-    }
-  }
-
   .text {
     margin: 1rem 0;
   }
@@ -85,6 +82,49 @@ const CommentsBox = styled.div`
       display: inline-block;
       margin-right: 1rem;
       color: ${brandingColor.common[4]};
+    }
+  }
+`;
+
+const Head = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .info {
+    font-size: 13px;
+    color: ${brandingColor.common[6]};
+    b::after {
+      content: '/';
+      display: inline-block;
+      margin: 0 5px;
+      font-weight: normal;
+    }
+  }
+  .more {
+    color: ${brandingColor.common[6]};
+    font-size: 20px;
+    position: relative;
+    svg {
+      cursor: pointer;
+    }
+  }
+`;
+
+const MoreBox = styled.ul`
+  width: 60px;
+  text-align: center;
+  font-size: 12px;
+  li {
+    margin-bottom: 0.5rem;
+    padding: 0.3rem;
+    cursor: pointer;
+    &:hover {
+      background: ${brandingColor.point[5]};
+      color: #fff;
+    }
+    &:last-child {
+      margin-bottom: 0;
     }
   }
 `;
@@ -108,6 +148,8 @@ const PostComments = ({
   onThumbsDown,
   onRefresh,
 }) => {
+  const dispatch = useDispatch();
+  const toggle = useSelector(({ toggle }) => (toggle));
   const mounted = useRef(false);
   const instance = useRef(null);
   const [test, setTest] = useState('새로고침');
@@ -125,9 +167,13 @@ const PostComments = ({
     if (test === '댓글') {
       onSubmit(e);
       return;
-    };
+    }
     onRefresh();
   }, [onSubmit, onRefresh]);
+
+  const commentMoreToggle = useCallback((id) => {
+    dispatch(toggling(`commentMore-${id}`));
+  }, [dispatch]);
 
   useEffect(() => {
     if (!user) return;
@@ -186,10 +232,26 @@ const PostComments = ({
           const isDisliked = user && comment.Dislikers && comment.Dislikers.find((v) => v.id === user.id);
           return (
             <CommentsBox key={comment.id}>
-              <div className="info">
-                <b>{comment.User.nickname}</b>
-                <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
-              </div>
+              <Head>
+                <div className="info">
+                  <b>{comment.User.nickname}</b>
+                  <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
+                </div>
+                <div className="more">
+                  <IoIosMore
+                    onClick={() => commentMoreToggle(comment.id)}
+                  />
+                  <DropBox
+                    visible={toggle.activeToggle === `commentMore-${comment.id}`}
+                    top="20px"
+                  >
+                    <MoreBox>
+                      <li>수정</li>
+                      <li>삭제</li>
+                    </MoreBox>
+                  </DropBox>
+                </div>
+              </Head>
               <div
                 className="text tui-style tui-editor-contents"
                 dangerouslySetInnerHTML={{ __html: comment.contents }}
