@@ -13,6 +13,8 @@ import {
   RECOMEND_FAILURE,
   DELETE_COMMENT_SUCCESS,
   DELETE_COMMENT_FAILURE,
+  UPDATE_COMMENT_SUCCESS,
+  UPDATE_COMMENT_FAILURE,
 } from '../actions/post';
 
 const initialState = {
@@ -127,6 +129,24 @@ const reducer = (state = initialState, action) => {
       };
     }
     case DELETE_COMMENT_FAILURE:
+      return {
+        ...state,
+        commentError: action.payload,
+      };
+    case UPDATE_COMMENT_SUCCESS: {
+      const targetIndex = [...state.commentsResult].findIndex((comment) => (
+        comment.id === action.payload.id
+      ));
+      const updatedComments = [...state.commentsResult];
+      updatedComments[targetIndex].contents = action.payload.contents;
+
+      return {
+        ...state,
+        commentsResult: updatedComments,
+        commentError: null,
+      };
+    }
+    case UPDATE_COMMENT_FAILURE:
       return {
         ...state,
         commentError: action.payload,

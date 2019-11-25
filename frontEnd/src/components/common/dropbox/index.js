@@ -10,6 +10,7 @@ const DropBoxWrap = styled.div`
   box-shadow: 0px 0px 8px rgba(0,0,0,0.125);
   padding: 0.5rem 0;
   font-size: 14px;
+  z-index: 999;
 `;
 
 const DropBox = ({

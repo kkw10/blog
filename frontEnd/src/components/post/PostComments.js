@@ -20,9 +20,20 @@ import { toggling } from '../../models/actions/toggle';
 import { brandingColor } from '../../lib/styles/branding';
 import Button from '../common/Button';
 import DropBox from '../common/dropbox';
+import { clearForm } from '../../models/actions/post';
 
 const PostCommentsWrap = styled.div`
+  .tui-editor-defaultUI {
+    border-radius: 5px;
+  }
 
+  .tui-editor-defaultUI-toolbar {
+    border-radius: 5px 5px 0 0;
+  }
+
+  .te-ww-container {
+    border-radius: 0 0 5px 5px;
+  }
 `;
 
 const Form = styled.form`
@@ -33,19 +44,6 @@ const Form = styled.form`
   margin-top: 2rem;
   border-top: 1px solid ${brandingColor.common[2]};
   padding-top: 2rem;
-
-  .tui-editor-defaultUI {
-    border-radius: 5px;
-  }
-
-  .tui-editor-defaultUI-toolbar {
-    border-radius: 5px 5px 0 0;
-    background: ${brandingColor.common[0]};
-  }
-
-  .te-ww-container {
-    border-radius: 0 0 5px 5px;
-  }
 
   .button {
     text-align: right;
@@ -111,6 +109,27 @@ const Head = styled.div`
   }
 `;
 
+const Content = styled.div`
+  .editingArea {
+    overflow: hidden;
+    margin: 1rem 0;
+  };
+
+  #tui_updater {
+    .te-mode-switch-section {
+      display: none!important;
+    }
+  };
+
+  .buttons {
+    float: right;
+    margin-top: 0.5rem;
+    button + button {
+      margin-left: 0.5rem;
+    }
+  };
+`;
+
 const MoreBox = styled.ul`
   width: 60px;
   text-align: center;
@@ -144,15 +163,24 @@ const PostComments = ({
   onChangeField,
   onSubmit,
   clearedForm,
+  onEditComment,
+  editingCommentData,
+  onEditCancel,
   onThumbsUp,
   onThumbsDown,
   onDeleteComment,
+  onUpdateComment,
   onRefresh,
 }) => {
   const dispatch = useDispatch();
   const toggle = useSelector(({ toggle }) => (toggle));
   const mounted = useRef(false);
+  const mountedComment = useRef(commentsData.reduce((acc, cur) => {
+    acc[`${cur.id}`] = false;
+    return acc;
+  }, {}));
   const instance = useRef(null);
+  const updateInstance = useRef(null);
   const [test, setTest] = useState('새로고침');
 
   if (commentError) {
@@ -176,7 +204,27 @@ const PostComments = ({
     dispatch(toggling(`commentMore-${id}`));
   }, [dispatch]);
 
-  useEffect(() => {
+  const onEditCommentClick = useCallback((commentId) => {
+    onEditComment(commentId);
+    dispatch(toggling(`commentMore-${commentId}`));
+  }, [dispatch, onEditComment]);
+
+  const onDeleteCommentClick = useCallback((commentId) => {
+    onDeleteComment(commentId);
+    dispatch(toggling(`commentMore-${commentId}`));
+  }, [dispatch, onDeleteComment]);
+
+  const onUpdateCommentClick = useCallback((commentId) => {
+    onUpdateComment(commentId);
+    mountedComment.current[commentId] = false;
+  }, [onUpdateComment]);
+
+  const onEditCancelClick = useCallback((commentId) => {
+    onEditCancel();
+    mountedComment.current[commentId] = false;
+  });
+
+  useEffect(() => { // 포스트 댓글 작성 에디터
     if (!user) return;
 
     if (!mounted.current) {
@@ -209,6 +257,33 @@ const PostComments = ({
       instance.current.setValue('');
     }
   }, [user, onChangeField, clearedForm]);
+
+  useEffect(() => { // 댓글 수정 관련 에디터
+    const target = editingCommentData.id;
+    if (!target) return;
+
+    if (!mountedComment.current[target]) {
+      mountedComment.current[target] = true;
+      updateInstance.current = new Editor({
+        el: document.querySelector(`#tui_updater${editingCommentData.id}`),
+        initialEditType: 'wysiwyg',
+        previewStyle: 'vertical',
+        height: '200px',
+      });
+
+      updateInstance.current.setValue(editingCommentData.contents);
+
+      updateInstance.current.on('change', () => {
+        const data = updateInstance.current.getHtml();
+
+        onChangeField({
+          key: 'comment',
+          value: data,
+        });
+      });
+    }
+
+  }, [editingCommentData, onChangeField]);
 
   return (
     <PostCommentsWrap>
@@ -247,16 +322,37 @@ const PostComments = ({
                     top="20px"
                   >
                     <MoreBox>
-                      <li>수정</li>
-                      <li onClick={() => onDeleteComment(comment.id)}>삭제</li>
+                      <li onClick={() => onEditCommentClick(comment.id)}>수정</li>
+                      <li onClick={() => onDeleteCommentClick(comment.id)}>삭제</li>
                     </MoreBox>
                   </DropBox>
                 </div>
               </Head>
-              <div
-                className="text tui-style tui-editor-contents"
-                dangerouslySetInnerHTML={{ __html: comment.contents }}
-              />
+              <Content>
+                {editingCommentData.id && editingCommentData.id === comment.id ? (
+                  <div className="editingArea">
+                    <div id={`tui_updater${comment.id}`} />
+                    <div className="buttons">
+                      <Button
+                        placeholder="수정"
+                        size="md"
+                        background="point"
+                        onClick={() => onUpdateCommentClick(comment.id)}
+                      />
+                      <Button
+                        placeholder="취소"
+                        size="md"
+                        onClick={() => onEditCancelClick(comment.id)}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    className="text tui-style tui-editor-contents"
+                    dangerouslySetInnerHTML={{ __html: comment.contents }}
+                  />
+                )}
+              </Content>
               <div className="tools">
                 <SvgWrap fill={isLiked ? 'point' : 'common'}>
                   <AiFillLike onClick={() => onThumbsUp(comment.id)} />

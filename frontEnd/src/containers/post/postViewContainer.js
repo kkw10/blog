@@ -10,12 +10,14 @@ import {
   thumbsDown,
   recomend,
   deleteComment,
+  updateComment,
 } from '../../models/actions/post';
 import {
+  initialize,
   setOriginalPost,
+  setOriginalComment,
   changeField,
   commenting,
-  initialize,
 } from '../../models/actions/write';
 import { toggling } from '../../models/actions/toggle';
 import { remove } from '../../lib/api/post';
@@ -40,9 +42,17 @@ const PostViewContainer = ({ match, history }) => {
     clearedForm: post.clearedForm,
   }));
   const toggle = useSelector(({ toggle }) => toggle);
-  const { commentContent, writeResult } = useSelector(({ write }) => ({
+  const {
+    commentContent,
+    writeResult,
+    editingCommentData,
+  } = useSelector(({ write }) => ({
     commentContent: write.comment,
     writeResult: write.result,
+    editingCommentData: {
+      contents: write.comment,
+      id: write.editingCommentId,
+    },
   }));
   const postId = match.params.PostId;
 
@@ -57,6 +67,15 @@ const PostViewContainer = ({ match, history }) => {
     dispatch(setOriginalPost(post));
     history.push('/write');
   };
+
+  const onEditComment = useCallback((id) => {
+    const targetComment = commentsResult.filter((comment) => comment.id === id)[0];
+    const data = {
+      contents: targetComment.contents,
+      id,
+    };
+    dispatch(setOriginalComment(data));
+  }, [dispatch, commentsResult]);
 
   const onDelete = async () => {
     try {
@@ -85,37 +104,50 @@ const PostViewContainer = ({ match, history }) => {
     dispatch(changeField(payload));
   }, [dispatch]);
 
-  const onToggling = (type) => {
+  const onToggling = useCallback((type) => {
     dispatch(toggling(type));
-  };
+  }, [dispatch]);
 
   const onRecomend = useCallback(() => {
     dispatch(recomend(postId));
   }, [dispatch]);
 
-  const onThumbsUp = useCallback((payload) => {
+  const onThumbsUp = useCallback((commentId) => {
     dispatch(thumbsUp({
       postId,
-      commentId: payload,
+      commentId,
     }));
   }, [dispatch]);
 
-  const onThumbsDown = useCallback((payload) => {
+  const onThumbsDown = useCallback((commentId) => {
     dispatch(thumbsDown({
       postId,
-      commentId: payload,
+      commentId,
     }));
   }, [dispatch]);
 
-  const onDeleteComment = useCallback((payload) => {
+  const onDeleteComment = useCallback((commentId) => {
     dispatch(deleteComment({
       postId,
-      commentId: payload,
+      commentId,
     }));
   }, [dispatch]);
+
+  const onUpdateComment = useCallback((commentId) => {
+    dispatch(updateComment({
+      postId,
+      commentId,
+      contents: commentContent,
+    }));
+    dispatch(initialize());
+  }, [dispatch, commentContent]);
 
   const onRefresh = useCallback(() => {
     dispatch(readComments(postId));
+  }, [dispatch]);
+
+  const onEditCancel = useCallback(() => {
+    dispatch(initialize());
   }, [dispatch]);
 
   useEffect(() => {
@@ -139,6 +171,9 @@ const PostViewContainer = ({ match, history }) => {
       commentError={commentError}
       loading={loading}
       onEdit={onEdit}
+      onEditComment={onEditComment}
+      onEditCancel={onEditCancel}
+      editingCommentData={editingCommentData}
       onDelete={onDelete}
       onSubmit={onSubmit}
       toggle={toggle}
@@ -149,6 +184,7 @@ const PostViewContainer = ({ match, history }) => {
       onThumbsUp={onThumbsUp}
       onThumbsDown={onThumbsDown}
       onDeleteComment={onDeleteComment}
+      onUpdateComment={onUpdateComment}
       onRefresh={onRefresh}
     />
   );

@@ -3,6 +3,7 @@ import { createRequestActionTypes } from '../sagas/createRequestSaga';
 export const INITIALIZE = 'write/INITIALIZE';
 export const CHANGE_FIELD = 'write/CHANGE_FIELD';
 export const SET_ORIGINAL_POST = 'write/SET_ORIGINAL_POST';
+export const SET_ORIGINAL_COMMENT = 'write/SET_ORIGINAL_COMMENT';
 export const [
   POSTING,
   POSTING_SUCCESS,
@@ -35,6 +36,11 @@ export const setOriginalPost = (post) => ({
   type: SET_ORIGINAL_POST,
   payload: post,
 });
+
+export const setOriginalComment = (comment) => ({
+  type: SET_ORIGINAL_COMMENT,
+  payload: comment,
+})
 
 export const posting = ({ title, contents, hashTags }) => ({
   type: POSTING,

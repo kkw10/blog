@@ -5,6 +5,7 @@ import {
   POSTING_SUCCESS,
   POSTING_FAILURE,
   SET_ORIGINAL_POST,
+  SET_ORIGINAL_COMMENT,
   UPDATE_SUCCESS,
   UPDATE_FAILURE,
   COMMENTING_SUCCESS,
@@ -20,6 +21,7 @@ const initialState = {
   postingError: null,
   commentingError: null,
   editingPostId: null,
+  editingCommentId: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -80,6 +82,12 @@ const reducer = (state = initialState, action) => {
         contents: action.payload.contents,
         hashTags: action.payload.hashTags,
         editingPostId: action.payload.postId,
+      };
+    case SET_ORIGINAL_COMMENT:
+      return {
+        ...state,
+        comment: action.payload.contents,
+        editingCommentId: action.payload.id,
       };
     default:
       return state;

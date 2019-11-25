@@ -31,6 +31,11 @@ export const [
   DELETE_COMMENT_SUCCESS,
   DELETE_COMMENT_FAILURE,
 ] = createRequestActionTypes('post/DELETE_COMMENT');
+export const [
+  UPDATE_COMMENT,
+  UPDATE_COMMENT_SUCCESS,
+  UPDATE_COMMENT_FAILURE,
+] = createRequestActionTypes('post/UPDATE_COMMENT');
 
 export const readPost = (id) => ({
   type: READ_POST,
@@ -72,5 +77,14 @@ export const deleteComment = ({ postId, commentId }) => ({
   payload: {
     postId,
     commentId,
+  },
+});
+
+export const updateComment = ({ postId, commentId, contents }) => ({
+  type: UPDATE_COMMENT,
+  payload: {
+    postId,
+    commentId,
+    contents,
   },
 });

@@ -42,6 +42,11 @@ router.patch('/:id',
   postCtrl.isMyPost,
   postCtrl.update
 );
+router.patch('/:id/:commentId',
+  isLoggedIn,
+  postCtrl.getComment,
+  postCtrl.updateComment,
+);
 router.delete('/:id',
   isLoggedIn,
   postCtrl.getPostById,

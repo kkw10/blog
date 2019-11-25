@@ -118,6 +118,9 @@ const PostView = ({
   loading,
   user,
   onEdit,
+  onEditComment,
+  editingCommentData,
+  onEditCancel,
   onDelete,
   onSubmit,
   toggle,
@@ -128,6 +131,7 @@ const PostView = ({
   onThumbsUp,
   onThumbsDown,
   onDeleteComment,
+  onUpdateComment,
   onRefresh,
 }) => {
   if (loading || !postResult) {
@@ -213,9 +217,13 @@ const PostView = ({
           onChangeField={onChangeField}
           onSubmit={onSubmit}
           clearedForm={clearedForm}
+          onEditComment={onEditComment}
+          editingCommentData={editingCommentData}
+          onEditCancel={onEditCancel}
           onThumbsUp={onThumbsUp}
           onThumbsDown={onThumbsDown}
           onDeleteComment={onDeleteComment}
+          onUpdateComment={onUpdateComment}
           onRefresh={onRefresh}
         />
       </PostViewWrap>

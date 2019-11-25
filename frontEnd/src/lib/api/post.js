@@ -20,6 +20,10 @@ export const update = ({ id, title, contents, hashTags }) => (
   client.patch(`/api/post/${id}`, { title, contents, hashTags })
 );
 
+export const updateComment = ({ postId, commentId, contents }) => (
+  client.patch(`/api/post/${postId}/${commentId}`, { contents })
+);
+
 export const remove = (id) => (
   client.delete(`/api/post/${id}`)
 );
