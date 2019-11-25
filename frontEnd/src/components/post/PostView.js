@@ -127,6 +127,7 @@ const PostView = ({
   onRecomend,
   onThumbsUp,
   onThumbsDown,
+  onDeleteComment,
   onRefresh,
 }) => {
   if (loading || !postResult) {
@@ -214,6 +215,7 @@ const PostView = ({
           clearedForm={clearedForm}
           onThumbsUp={onThumbsUp}
           onThumbsDown={onThumbsDown}
+          onDeleteComment={onDeleteComment}
           onRefresh={onRefresh}
         />
       </PostViewWrap>

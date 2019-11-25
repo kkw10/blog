@@ -9,6 +9,7 @@ import {
   thumbsUp,
   thumbsDown,
   recomend,
+  deleteComment,
 } from '../../models/actions/post';
 import {
   setOriginalPost,
@@ -106,6 +107,13 @@ const PostViewContainer = ({ match, history }) => {
     }));
   }, [dispatch]);
 
+  const onDeleteComment = useCallback((payload) => {
+    dispatch(deleteComment({
+      postId,
+      commentId: payload,
+    }));
+  }, [dispatch]);
+
   const onRefresh = useCallback(() => {
     dispatch(readComments(postId));
   }, [dispatch]);
@@ -140,6 +148,7 @@ const PostViewContainer = ({ match, history }) => {
       onRecomend={onRecomend}
       onThumbsUp={onThumbsUp}
       onThumbsDown={onThumbsDown}
+      onDeleteComment={onDeleteComment}
       onRefresh={onRefresh}
     />
   );

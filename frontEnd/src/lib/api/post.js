@@ -24,6 +24,10 @@ export const remove = (id) => (
   client.delete(`/api/post/${id}`)
 );
 
+export const removeComment = ({ postId, commentId }) => (
+  client.delete(`/api/post/${postId}/${commentId}`)
+)
+
 export const recomend = (postId) => (
   client.post(`/api/post/${postId}/recomend`)
 );

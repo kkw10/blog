@@ -26,6 +26,11 @@ export const [
   THUMBS_DOWN_SUCCESS,
   THUMBS_DOWN_FAILURE,
 ] = createRequestActionTypes('post/THUMBS_DOWN');
+export const [
+  DELETE_COMMENT,
+  DELETE_COMMENT_SUCCESS,
+  DELETE_COMMENT_FAILURE,
+] = createRequestActionTypes('post/DELETE_COMMENT');
 
 export const readPost = (id) => ({
   type: READ_POST,
@@ -56,6 +61,14 @@ export const thumbsUp = ({ postId, commentId }) => ({
 
 export const thumbsDown = ({ postId, commentId }) => ({
   type: THUMBS_DOWN,
+  payload: {
+    postId,
+    commentId,
+  },
+});
+
+export const deleteComment = ({ postId, commentId }) => ({
+  type: DELETE_COMMENT,
   payload: {
     postId,
     commentId,

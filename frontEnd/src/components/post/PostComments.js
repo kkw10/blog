@@ -146,6 +146,7 @@ const PostComments = ({
   clearedForm,
   onThumbsUp,
   onThumbsDown,
+  onDeleteComment,
   onRefresh,
 }) => {
   const dispatch = useDispatch();
@@ -247,7 +248,7 @@ const PostComments = ({
                   >
                     <MoreBox>
                       <li>수정</li>
-                      <li>삭제</li>
+                      <li onClick={() => onDeleteComment(comment.id)}>삭제</li>
                     </MoreBox>
                   </DropBox>
                 </div>

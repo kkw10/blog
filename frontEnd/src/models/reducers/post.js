@@ -11,6 +11,8 @@ import {
   THUMBS_DOWN_FAILURE,
   RECOMEND_SUCCESS,
   RECOMEND_FAILURE,
+  DELETE_COMMENT_SUCCESS,
+  DELETE_COMMENT_FAILURE,
 } from '../actions/post';
 
 const initialState = {
@@ -82,7 +84,7 @@ const reducer = (state = initialState, action) => {
         postResult: {
           ...state.postResult,
           Recomenders: action.payload,
-        }
+        },
       };
     case THUMBS_DOWN_SUCCESS: {
       const newResult = [
@@ -104,7 +106,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         recomendError: action.payload,
-      }
+      };
     case THUMBS_UP_FAILURE:
       return {
         ...state,
@@ -114,6 +116,20 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         thumbsError: action.payload,
+      };
+    case DELETE_COMMENT_SUCCESS: {
+      let newComments = [...state.commentsResult];
+      newComments = newComments.filter((comment) => comment.id !== action.payload);
+      return {
+        ...state,
+        commentsResult: newComments,
+        commentError: null,
+      };
+    }
+    case DELETE_COMMENT_FAILURE:
+      return {
+        ...state,
+        commentError: action.payload,
       };
     default:
       return state;

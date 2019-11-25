@@ -48,5 +48,10 @@ router.delete('/:id',
   postCtrl.isMyPost,
   postCtrl.delete
 );
+router.delete('/:id/:commentId',
+  isLoggedIn,
+  postCtrl.getComment,
+  postCtrl.deleteComment
+)
 
 module.exports = router;

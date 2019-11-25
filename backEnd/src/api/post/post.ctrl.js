@@ -278,6 +278,28 @@ exports.delete = async (req, res, next) => {
   }
 };
 
+exports.deleteComment = async (req, res, next) => {
+  const user = httpContext.get('user');
+  const targetComment = httpContext.get('comment');
+  try  {
+    if (user.id !== targetComment.UserId) {
+      res.status(401).send('[Unauthorized]: 권한이 없는 사용자 입니다.');
+      return;
+    }
+
+    await db.Comment.destroy({
+      where: {
+        id: targetComment.id,
+      }
+    })
+
+    res.json(targetComment.id);
+  } catch (e) {
+    console.error(e);
+    return next(e);
+  }
+}
+
 exports.recomendPost = async (req, res, next) => {
   const user = httpContext.get('user');
   const post = httpContext.get('post');
