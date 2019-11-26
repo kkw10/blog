@@ -313,20 +313,22 @@ const PostComments = ({
                   <b>{comment.User.nickname}</b>
                   <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
                 </div>
-                <div className="more">
-                  <IoIosMore
-                    onClick={() => commentMoreToggle(comment.id)}
-                  />
-                  <DropBox
-                    visible={toggle.activeToggle === `commentMore-${comment.id}`}
-                    top="20px"
-                  >
-                    <MoreBox>
-                      <li onClick={() => onEditCommentClick(comment.id)}>수정</li>
-                      <li onClick={() => onDeleteCommentClick(comment.id)}>삭제</li>
-                    </MoreBox>
-                  </DropBox>
-                </div>
+                {comment.UserId === user.id ? (
+                  <div className="more">
+                    <IoIosMore
+                      onClick={() => commentMoreToggle(comment.id)}
+                    />
+                    <DropBox
+                      visible={toggle.activeToggle === `commentMore-${comment.id}`}
+                      top="20px"
+                    >
+                      <MoreBox>
+                        <li onClick={() => onEditCommentClick(comment.id)}>수정</li>
+                        <li onClick={() => onDeleteCommentClick(comment.id)}>삭제</li>
+                      </MoreBox>
+                    </DropBox>
+                  </div>
+                ) : null}
               </Head>
               <Content>
                 {editingCommentData.id && editingCommentData.id === comment.id ? (
