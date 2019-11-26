@@ -68,6 +68,7 @@ const reducer = (state = initialState, action) => {
     case UPDATE_SUCCESS:
       return {
         ...state,
+        result: action.payload,
         postingError: null,
       };
     case UPDATE_FAILURE:

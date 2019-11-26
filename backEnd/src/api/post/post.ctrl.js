@@ -217,7 +217,8 @@ exports.readComments = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
   const { title, contents, hashTags } = req.body;
-  const id = req.params.id;
+  const postId = req.params.id;
+  const user = httpContext.get('user');
 
   try {
     const updatedPost = await db.Post.update({
@@ -225,11 +226,11 @@ exports.update = async (req, res, next) => {
       contents: contents,
     }, {
       returning: true,
-      where: { id: id },
+      where: { id: postId },
     })
     .then(() => {
       const post = db.Post.findOne({
-        where: { id },
+        where: { id: postId },
         include: [{
           model: db.User,
           attributes: ['email', 'nickname']
@@ -252,7 +253,10 @@ exports.update = async (req, res, next) => {
     await updatedPost.setHashTags([]); // 기존 연결관계 초기화
     await updatedPost.addHashTag(updatedTags.map((updatedTag) => updatedTag[0]));
 
-    res.status(200).send('수정이 완료되었습니다.');
+    res.json({
+      UserId: user.id,
+      id: postId
+    });
   } catch(e) {
     console.error(e);
     return next(e);

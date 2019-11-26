@@ -29,7 +29,9 @@ const PostingButtonsContainer = ({ history }) => {
         title,
         contents,
         hashTags,
-      }))
+      }));
+
+      return;
     }
 
     dispatch(posting({
@@ -45,8 +47,6 @@ const PostingButtonsContainer = ({ history }) => {
 
   useEffect(() => {
     if (result) {
-      console.log('@@@@@ 다음은 포스팅 요청 결과입니다.');
-      console.log(result);
       history.push(`/post/${result.UserId}/${result.id}`);
     }
 
