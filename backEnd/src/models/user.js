@@ -16,9 +16,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(100),
       allowNull: false
     },
-    location: {
-      type: DataTypes.STRING(100),
-    },
     portrait: {
       type: DataTypes.STRING(100),
     },
@@ -30,7 +27,16 @@ module.exports = (sequelize, DataTypes) => {
     },
     descipt: {
       type: DataTypes.TEXT,
-    }
+    },
+    location: {
+      type: DataTypes.STRING(100),
+    },
+    favorite: {
+      type: DataTypes.STRING(100),
+    },
+    contact: {
+      type: DataTypes.STRING(100),
+    },
   }, {
     // mysql에 한글을 저장하기 위한 옵션
     charset: 'utf8',

@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const httpContext = require('express-http-context');
 const db = require('./models');
 const authAPIRouter = require('./api/auth');
+const profileAPIRouter = require('./api/profile');
 const postAPIRouter = require('./api/post');
 const postsAPIRouter = require('./api/posts');
 const jwtMiddleware = require('./lib/jwtMiddleware');
@@ -24,6 +25,7 @@ app.use(jwtMiddleware);
 
 // API 설정
 app.use('/api/auth', authAPIRouter);
+app.use('/api/profile', profileAPIRouter);
 app.use('/api/post', postAPIRouter);
 app.use('/api/posts', postsAPIRouter);
 
