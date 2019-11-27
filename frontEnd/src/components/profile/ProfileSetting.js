@@ -70,14 +70,19 @@ const InputArea = styled.div`
   }
 `;
 
-const ProfileSetting = () => {
+const ProfileSetting = ({
+  portraitEl,
+  onChangePortrait,
+  onClickPortrait,
+  onChangeField,
+}) => {
   return (
     <ProfileSettingWrap>
       <h2>프로필 수정</h2>
       <form encType="multipart/form-data">
         <div className="flexWrap">
           <ImageArea>
-            <input type="file" hidden />
+            <input type="file" hidden ref={portraitEl} onChange={(e) => onChangePortrait(e)} />
             <div className="mirror">
               <img src="https://consequenceofsound.net/wp-content/uploads/2019/02/imagine-dragons-reynolds-responds-nickelback-comparison.png?w=807" alt="" />
             </div>
@@ -85,31 +90,56 @@ const ProfileSetting = () => {
               placeholder="이미지 업로드"
               size="mx"
               background="point"
+              onClick={(e) => onClickPortrait(e)}
             />
           </ImageArea>
           <InputArea>
             <fieldset>
-              <label htmlFor="">
+              <label htmlFor="user_title">
                 <p>제목</p>
-                <input type="text"/>
+                <input
+                  type="text"
+                  name="user_title"
+                  id="user_title"
+                  onChange={(e) => onChangeField(e)}
+                />
               </label>
-              <label htmlFor="">
+              <label htmlFor="user_description">
                 <p>내용</p>
-                <textarea name="" id="" cols="30" rows="10"></textarea>
+                <textarea
+                  name="user_description"
+                  id="user_description"
+                  onChange={(e) => onChangeField(e)}
+                />
               </label>
             </fieldset>
             <fieldset>
-              <label htmlFor="">
+              <label htmlFor="user_location">
                 <p>위치</p>
-                <input type="text"/>
+                <input
+                  type="text"
+                  name="user_location"
+                  id="user_location"
+                  onChange={(e) => onChangeField(e)}
+                />
               </label>
-              <label htmlFor="">
+              <label htmlFor="user_favorite">
                 <p>관심사</p>
-                <input type="text"/>
+                <input
+                  type="text"
+                  name="user_favorite"
+                  id="user_favorite"
+                  onChange={(e) => onChangeField(e)}
+                />
               </label>
-              <label htmlFor="">
+              <label htmlFor="user_contact">
                 <p>메일</p>
-                <input type="text"/>
+                <input
+                  type="text"
+                  name="user_contact"
+                  id="user_contact"
+                  onChange={(e) => onChangeField(e)}
+                />
               </label>
             </fieldset>
             <div className="buttons">
@@ -127,7 +157,7 @@ const ProfileSetting = () => {
         </div>
       </form>
     </ProfileSettingWrap>
-  )
+  );
 };
 
 export default ProfileSetting;

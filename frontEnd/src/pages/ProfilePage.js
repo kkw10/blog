@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Responsive from '../components/common/Responsive';
 import ProfileView from '../components/profile/ProfileView';
 import ActivityView from '../components/profile/ActivityView';
-import ProfileSetting from '../components/profile/ProfileSetting';
+import ProfileSettingContainer from '../containers/profile/ProfileSettingContainer';
 import TabArea from '../components/profile/TabArea';
 
 const ProfilePageHead = styled.div`
@@ -37,7 +37,7 @@ const ProfilePage = () => {
         </div>
         <div className="right">
           {/* <ActivityView /> */}
-          <ProfileSetting />
+          <ProfileSettingContainer />
         </div>
       </ProfilePageBody>
     </Responsive>

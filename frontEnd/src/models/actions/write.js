@@ -19,6 +19,11 @@ export const [
   COMMENTING_SUCCESS,
   COMMENTING_FAILURE,
 ] = createRequestActionTypes('write/COMMENTING');
+export const [
+  UPLOAD_PORTRAIT,
+  UPLOAD_PORTRAIT_SUCCESS,
+  UPLOAD_PORTRAIT_FAILURE,
+] = createRequestActionTypes('write/UPLOAD_PORTRAIT');
 
 export const initialize = () => ({
   type: INITIALIZE,
@@ -69,4 +74,9 @@ export const update = ({
     contents,
     hashTags,
   },
+});
+
+export const uploadImage = (formData) => ({
+  type: UPLOAD_PORTRAIT,
+  payload: formData,
 });

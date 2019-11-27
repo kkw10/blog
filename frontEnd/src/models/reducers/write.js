@@ -10,6 +10,8 @@ import {
   UPDATE_FAILURE,
   COMMENTING_SUCCESS,
   COMMENTING_FAILURE,
+  UPLOAD_PORTRAIT_SUCCESS,
+  UPLOAD_PORTRAIT_FAILURE,
 } from '../actions/write';
 
 const initialState = {
@@ -17,11 +19,19 @@ const initialState = {
   contents: '',
   hashTags: [],
   comment: '',
+  user_portrait: '',
+  user_background: '',
+  user_title: '',
+  user_description: '',
+  user_location: '',
+  user_favorite: '',
+  user_contact: '',
   result: null,
   postingError: null,
   commentingError: null,
   editingPostId: null,
   editingCommentId: null,
+  userProfileError: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -89,6 +99,17 @@ const reducer = (state = initialState, action) => {
         ...state,
         comment: action.payload.contents,
         editingCommentId: action.payload.id,
+      };
+    case UPLOAD_PORTRAIT_SUCCESS:
+      return {
+        ...state,
+        user_portrait: action.payload,
+        userProfileError: null,
+      };
+    case UPLOAD_PORTRAIT_FAILURE:
+      return {
+        ...state,
+        userProfileError: action.payload,
       };
     default:
       return state;

@@ -4,7 +4,7 @@ const upload = require('../../lib/upload');
 const profileCtrl = require('./profile.ctrl');
 
 router.post('/', 
-  upload,
+  upload.single('portrait'),
   profileCtrl.submitData
 );
 
