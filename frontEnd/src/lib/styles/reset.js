@@ -17,7 +17,12 @@ export const resetCSS = css`
     text-decoration: none;
   }
 
+  fieldset {
+    border: none;
+  }
+
   input {
+    border: none;
     &:focus {
       outline: none;
     }
@@ -30,4 +35,4 @@ export const resetCSS = css`
     cursor: pointer;
     vertical-align: middle;
   }
-`
+`;

@@ -15,6 +15,21 @@ module.exports = (sequelize, DataTypes) => {
     password: {
       type: DataTypes.STRING(100),
       allowNull: false
+    },
+    location: {
+      type: DataTypes.STRING(100),
+    },
+    portrait: {
+      type: DataTypes.STRING(100),
+    },
+    background: {
+      type: DataTypes.STRING(100),
+    },
+    title: {
+      type: DataTypes.STRING(200),
+    },
+    descipt: {
+      type: DataTypes.TEXT,
     }
   }, {
     // mysql에 한글을 저장하기 위한 옵션

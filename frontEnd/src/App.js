@@ -5,7 +5,7 @@ import tuiStyle from 'tui-editor/dist/tui-editor-contents.css'; // editor's cont
 import { resetCSS } from './lib/styles/reset';
 import Layout from './components/common/Layout';
 import MainPage from './pages/MainPage';
-import AboutPage from './pages/AboutPage';
+import ProfilePage from './pages/ProfilePage';
 import WritePage from './pages/WritePage';
 import PostPage from './pages/PostPage';
 import { brandingColor } from './lib/styles/branding';
@@ -32,7 +32,7 @@ const App = () => (
   <Layout>
     <GlobalStyle />
     <Route component={MainPage} path="/" exact />
-    <Route component={AboutPage} path="/about" />
+    <Route component={ProfilePage} path="/profile" />
     <Route component={WritePage} path="/write" />
     <Route component={PostPage} path="/post/:UserId/:PostId" />
   </Layout>

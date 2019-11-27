@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { IoMdCreate } from 'react-icons/io';
+import { FaUserAstronaut } from 'react-icons/fa';
 import Responsive from './Responsive';
 import Button from './Button';
 import { brandingColor } from '../../lib/styles/branding';
@@ -37,17 +38,43 @@ const Spacer = styled.div`
 `;
 
 const Tools = styled.div`
-  margin-right: 1rem;
   display: flex;
   align-items: center;
   font-size: 20px;
 
-  & svg {
+  svg {
     cursor: pointer;
   }
 
   .create_button {
     color: ${brandingColor.point[6]};
+    margin-right: 1rem;
+    transition: 0.2s ease-in-out;
+    &:hover {
+      color: ${brandingColor.main[7]};
+    }
+  }
+
+  .profile_button {
+    width: 120px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 16px;
+    border: 1px solid ${brandingColor.point[7]};
+    border-radius: 5px;
+    color: #fff;
+    background: ${brandingColor.point[7]};
+    transition: 0.2s ease-in-out;
+
+    svg {
+      margin-right: 1rem;
+    }
+    &:hover {
+      color: ${brandingColor.main[7]};
+    }
   }
 `;
 
@@ -80,14 +107,17 @@ const Header = ({
         ) : (
           <div className="right">
             <Tools>
-              <Link to="/write">
-                <IoMdCreate className="create_button" />
+              <Link className="create_button" to="/write">
+                <IoMdCreate />
+              </Link>
+              <Link className="profile_button" to="/profile">
+                <FaUserAstronaut />
+                <span>{user.nickname}</span>
               </Link>
             </Tools>
             <Button
               placeholder="로그아웃"
               size="lg"
-              background="point"
               onClick={onLogout}
             />
           </div>
