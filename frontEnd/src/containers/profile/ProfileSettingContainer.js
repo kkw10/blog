@@ -9,7 +9,15 @@ import ProfileSetting from '../../components/profile/ProfileSetting';
 const ProfileSettingContainer = () => {
   const portraitEl = useRef();
   const dispatch = useDispatch();
-  const userProfileData = useSelector(({ write }) => write.userProfile);
+  const userProfileData = useSelector(({ write }) => ({
+    userPortrait: write.user_portrait,
+    userBackground: write.user_background,
+    userTitle: write.user_title,
+    userDescription: write.user_description,
+    userLocation: write.user_location,
+    userFavorite: write.user_favorite,
+    userContact: write.user_contact,
+  }));
 
   const onClickPortrait = (e) => {
     e.preventDefault();

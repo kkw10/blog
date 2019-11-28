@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { FaUserAstronaut } from 'react-icons/fa';
 import Button from '../common/Button';
 import { brandingColor } from '../../lib/styles/branding';
 
@@ -20,14 +21,30 @@ const ImageArea = styled.div`
   margin-right: 2rem;
   .mirror {
     margin-bottom: 0.5rem;
-    img {
-      max-width: 260px;
-      max-height: 260px;
-      width: 100%;
-      height: 100%;
-      border-radius: 5px;
+    .defaultUser {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 200px;
+      height: 200px;
+      background: ${brandingColor.common[4]};
+      border-radius: 15px;
+      color: #fff;
+      svg {
+        font-size: 60px;
+      }
     }
   }
+`;
+
+const UserImage = styled.div`
+  width: 200px;
+  height: 200px;
+  border-radius: 15px;
+  background: ${(props) => `url(${props.background})`};
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 `;
 
 const InputArea = styled.div`
@@ -72,6 +89,7 @@ const InputArea = styled.div`
 
 const ProfileSetting = ({
   portraitEl,
+  userProfileData,
   onChangePortrait,
   onClickPortrait,
   onChangeField,
@@ -84,7 +102,15 @@ const ProfileSetting = ({
           <ImageArea>
             <input type="file" hidden ref={portraitEl} onChange={(e) => onChangePortrait(e)} />
             <div className="mirror">
-              <img src="https://consequenceofsound.net/wp-content/uploads/2019/02/imagine-dragons-reynolds-responds-nickelback-comparison.png?w=807" alt="" />
+              {userProfileData.userPortrait ? (
+                <UserImage
+                  background={`http://localhost:1991/${userProfileData.userPortrait}`}
+                />
+              ) : (
+                <div className="defaultUser">
+                  <FaUserAstronaut />
+                </div>
+              )}
             </div>
             <Button
               placeholder="이미지 업로드"
