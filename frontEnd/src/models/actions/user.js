@@ -7,6 +7,11 @@ export const [
   CHECK_FAILURE,
 ] = createRequestActionTypes('user/CHECK');
 export const LOGOUT = 'user/LOGOUT';
+export const [
+  UPLOAD_PROFILE,
+  UPLOAD_PROFILE_SUCCESS,
+  UPLOAD_PROFILE_FAILURE,
+] = createRequestActionTypes('user/UPLOAD_PROFILE');
 
 // 새로고침 이후 임시 로그인 처리
 export const tempSetUser = (user) => ({
@@ -20,4 +25,9 @@ export const check = () => ({
 
 export const logout = () => ({
   type: LOGOUT,
+});
+
+export const uploadProfile = (profileData) => ({
+  type: UPLOAD_PROFILE,
+  payload: profileData,
 });

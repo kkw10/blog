@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     title: {
       type: DataTypes.STRING(200),
     },
-    descipt: {
+    descript: {
       type: DataTypes.TEXT,
     },
     location: {

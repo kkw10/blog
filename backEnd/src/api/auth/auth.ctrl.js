@@ -47,7 +47,11 @@ exports.login = async (req, res, next) => {
   try {
     const user = await db.User.findOne({
       where: { email: email },
-      attributte: ['id', 'email', 'nickname']
+      attributte: [
+        'id',
+        'email',
+        'nickname',
+      ]
     })
 
     if (!user) {
@@ -64,9 +68,6 @@ exports.login = async (req, res, next) => {
 
     const data = user.toJSON();
     delete data.password;
-    
-    console.log('@@@@@@@');
-    console.log(data);
 
     const token = user.generateToken();
     res.cookie('access_token', token, {
@@ -84,15 +85,42 @@ exports.login = async (req, res, next) => {
 
 exports.check = async (req, res) => {
   const user = httpContext.get('user');
-  console.log('@@@@@ httpContext');
-  console.log(user);
 
-  if (!user) {
-    res.status(401).send('[Unauthorized]: 유효하지 않은 사용자입니다.');
-    return;
+  try {
+    if (!user) {
+      res.status(401).send('[Unauthorized]: 유효하지 않은 사용자입니다.');
+      return;
+    };
+
+    const profile = await db.User.findOne({
+      where: {
+        id: user.id
+      },
+      attributes: [
+        'portrait',
+        'background',
+        'title',
+        'descript',
+        'location',
+        'favorite',
+        'contact',
+      ]
+    });
+
+    res.json({
+      user,
+      profile,
+    });
+  } catch(e) {
+    console.error(e);
+    return next(e);
   }
 
-  res.status(200).send(user);
+
+
+
+
+  
 };
 
 exports.logout = async (req, res) => {

@@ -14,6 +14,7 @@ const updateSaga = createRequestSaga(UPDATE, postAPI.update);
 const commentingSaga = createRequestSaga(COMMENTING, postAPI.writeComment);
 const uploadPortraitSaga = createRequestSaga(UPLOAD_PORTRAIT, profileAPI.uploadImage);
 
+
 export default function* writeSaga() {
   yield takeLatest(POSTING, postingSaga);
   yield takeLatest(UPDATE, updateSaga);

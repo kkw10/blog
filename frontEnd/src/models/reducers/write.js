@@ -6,6 +6,7 @@ import {
   POSTING_FAILURE,
   SET_ORIGINAL_POST,
   SET_ORIGINAL_COMMENT,
+  SET_ORIGINAL_PROFILE,
   UPDATE_SUCCESS,
   UPDATE_FAILURE,
   COMMENTING_SUCCESS,
@@ -100,6 +101,16 @@ const reducer = (state = initialState, action) => {
         comment: action.payload.contents,
         editingCommentId: action.payload.id,
       };
+    case SET_ORIGINAL_PROFILE:
+      return {
+        ...state,
+        user_portrait: action.payload.portrait,
+        user_title: action.payload.title,
+        user_description: action.payload.descript,
+        user_location: action.payload.location,
+        user_favorite: action.payload.favorite,
+        user_contact: action.payload.contact,
+      }
     case UPLOAD_PORTRAIT_SUCCESS:
       return {
         ...state,

@@ -13,9 +13,7 @@ const jwtMiddleware = async (req, res, next) => {
       id: decoded.id,
       email: decoded.email,
       nickname: decoded.nickname,
-    })
-    console.log('@@@ JWT decoded');
-    console.log(decoded);
+    });
 
     // 토큰 재발급
     const now = Math.floor(Date.now() / 1000);

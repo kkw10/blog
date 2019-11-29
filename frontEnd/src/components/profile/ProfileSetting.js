@@ -51,17 +51,20 @@ const InputArea = styled.div`
   width: 100%;
   input {
     width: 100%;
-    height: 32px;
+    height: 34px;
     border: 1px solid #ddd;
     border-radius: 5px;
     padding: 0 0.5rem;
     border-color: ${brandingColor.common[3]};
+    color: ${brandingColor.common[6]};
   }
   textarea {
     width: 100%;
+    min-height: 150px;
     padding: 0.5rem;
     border-radius: 5px;
     border-color: ${brandingColor.common[3]};
+    color: ${brandingColor.common[6]};
   }
   fieldset {
     margin-bottom: 2rem;
@@ -89,10 +92,12 @@ const InputArea = styled.div`
 
 const ProfileSetting = ({
   portraitEl,
-  userProfileData,
+  writeProfileData,
   onChangePortrait,
   onClickPortrait,
   onChangeField,
+  onUploadProfile,
+  onChangeMenu,
 }) => {
   return (
     <ProfileSettingWrap>
@@ -102,9 +107,9 @@ const ProfileSetting = ({
           <ImageArea>
             <input type="file" hidden ref={portraitEl} onChange={(e) => onChangePortrait(e)} />
             <div className="mirror">
-              {userProfileData.userPortrait ? (
+              {writeProfileData.userPortrait ? (
                 <UserImage
-                  background={`http://localhost:1991/${userProfileData.userPortrait}`}
+                  background={`http://localhost:1991/${writeProfileData.userPortrait}`}
                 />
               ) : (
                 <div className="defaultUser">
@@ -127,6 +132,7 @@ const ProfileSetting = ({
                   type="text"
                   name="user_title"
                   id="user_title"
+                  value={writeProfileData.userTitle}
                   onChange={(e) => onChangeField(e)}
                 />
               </label>
@@ -135,7 +141,9 @@ const ProfileSetting = ({
                 <textarea
                   name="user_description"
                   id="user_description"
+                  style={{ resize: 'none' }}
                   onChange={(e) => onChangeField(e)}
+                  value={writeProfileData.userDescription}
                 />
               </label>
             </fieldset>
@@ -146,6 +154,7 @@ const ProfileSetting = ({
                   type="text"
                   name="user_location"
                   id="user_location"
+                  value={writeProfileData.userLocation}
                   onChange={(e) => onChangeField(e)}
                 />
               </label>
@@ -155,6 +164,7 @@ const ProfileSetting = ({
                   type="text"
                   name="user_favorite"
                   id="user_favorite"
+                  value={writeProfileData.userFavorite}
                   onChange={(e) => onChangeField(e)}
                 />
               </label>
@@ -164,6 +174,7 @@ const ProfileSetting = ({
                   type="text"
                   name="user_contact"
                   id="user_contact"
+                  value={writeProfileData.userContact}
                   onChange={(e) => onChangeField(e)}
                 />
               </label>
@@ -173,10 +184,12 @@ const ProfileSetting = ({
                 placeholder="수정"
                 size="md"
                 background="point"
+                onClick={onUploadProfile}
               />
               <Button
                 placeholder="취소"
                 size="md"
+                onClick={() => onChangeMenu('activity')}
               />
             </div>
           </InputArea>

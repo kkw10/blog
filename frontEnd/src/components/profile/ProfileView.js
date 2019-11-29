@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { MdEmail } from 'react-icons/md';
 import { TiLocation } from 'react-icons/ti';
 import { AiFillFire } from 'react-icons/ai';
+import { FaUserAstronaut } from 'react-icons/fa';
 import { brandingColor } from '../../lib/styles/branding';
 
 const ProfileViewWrap = styled.div`
@@ -12,14 +13,15 @@ const ProfileViewWrap = styled.div`
 
 const BackgroundArea = styled.div`
   border-radius: 5px 5px 0 0;
-  height: 220px;
-  background: url('https://wallpapercave.com/wp/wp2401087.jpg') no-repeat;
+  height: 250px;
+  background: url('http://localhost:1991/default_profile_background6.jpg') no-repeat;
   background-size: cover;
   background-position-y: 30%;
   border-bottom: 10px solid ${brandingColor.main[7]};
 `;
 
 const DataArea = styled.div`
+  width: 100%;
   border-top: 10px solid ${brandingColor.main[4]};
   border-radius: 0 0 5px 5px;
   background: #fff;
@@ -37,52 +39,75 @@ const DataArea = styled.div`
 
 const Portrait = styled.div`
   display: flex;
-  align-items: center;
   justify-content: center;
   margin-right: 3rem;
   border-radius: 5px;
-  width: 25%;
+  min-width: 200px;
   position: relative;
-  img {
-    max-width: 260px;
-    max-height: 260px;
-    width: 100%;
-    height: 100%;
-    border-radius: 15px;
-  }
   h2 {
     font-size: 20px;
-    color: ${brandingColor.common[6]};
+    color: ${brandingColor.point[6]};
     margin-top: 1rem;
     text-align: center;
   }
   .absoluteWrap {
     position: absolute;
-    top: -65%;
+    top: -110px;
     width: 100%;
   }
+  .defaultUser {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 200px;
+    background: ${brandingColor.common[4]};
+    border-radius: 15px;
+    color: #fff;
+    svg {
+      font-size: 60px;
+    }
+  }  
+`;
+
+const PortraitImage = styled.div`
+  margin: 0 auto;
+  width: 200px;
+  height: 200px;
+  border-radius: 15px;
+  background: ${(props) => `url(${props.background})`};
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 `;
 
 const Introduce = styled.div`
-  width: 50%;
-  margin-right: 3rem;
+  width: calc(100% - 480px);
+  margin-right: 2rem;
   b {
     font-size: 16px;
     color: ${brandingColor.common[6]};
   }
   p {
-    font-size: 13px;
-    margin-top: 0.5rem;
+    text-indent: 10px;
+    font-size: 14px;
+    line-height: 1.4;
     color: ${brandingColor.common[6]};
   }
 
   .title {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
+    padding-right: 1rem;
+  }
+  .desc {
+    max-height: 350px;
+    overflow: auto;
+    padding-right: 1rem;
   }
 `;
 
 const EtcInfo = styled.div`
-  width: 25%;
+  width: 280px;
 
   li {
     margin-bottom: 1rem;
@@ -111,7 +136,10 @@ const EtcInfo = styled.div`
   }
 `;
 
-const ProfileView = () => {
+const ProfileView = ({
+  user,
+  profile,
+}) => {
   return (
     <ProfileViewWrap>
       <BackgroundArea />
@@ -119,16 +147,22 @@ const ProfileView = () => {
         <div className="flexWrap">
           <Portrait>
             <div className="absoluteWrap">
-              <img src="https://consequenceofsound.net/wp-content/uploads/2019/02/imagine-dragons-reynolds-responds-nickelback-comparison.png?w=807" alt="profileimage"/>
-              <h2>UserName</h2>
+              {profile && profile.portrait ? (
+                <PortraitImage background={`http://localhost:1991/${profile.portrait}`} />
+              ) : (
+                <div className="defaultUser">
+                  <FaUserAstronaut />
+                </div>
+              )}
+              <h2>{user.nickname}</h2>
             </div>
           </Portrait>
           <Introduce>
             <div className="title">
-              <b>제목을 작성해주세요.</b>
+              <b>{profile && profile.title ? (profile.title) : '제목을 입력해주세요'}</b>
             </div>
             <div className="desc">
-              <p>내용을 작성해주세요.</p>
+              <p>{profile && profile.descript ? (profile.descript) : '내용을 입력해주세요'}</p>
             </div>
           </Introduce>
           <EtcInfo>
@@ -138,21 +172,21 @@ const ProfileView = () => {
                   <TiLocation />
                   위치
                 </b>
-                <p>서울, 강북구</p>
+                <p>{profile && profile.location ? (profile.location) : '위치를 입력해주세요'}</p>
               </li>
               <li>
                 <b>
                   <AiFillFire />
                   관심사
                 </b>
-                <p>자바스크립트, 리액트</p>
+                <p>{profile && profile.favorite ? (profile.favorite) : '관심사를 입력해주세요'}</p>
               </li>
               <li>
                 <b>
                   <MdEmail />
                   메일
                 </b>
-                <p>tester1@naver.com</p>
+                <p>{profile && profile.contact ? (profile.contact) : '연락처를 입력해주세요'}</p>
               </li>
             </ul>
           </EtcInfo>

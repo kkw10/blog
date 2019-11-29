@@ -1,13 +1,16 @@
 import { takeLatest, call } from 'redux-saga/effects';
 import * as authAPI from '../../lib/api/auth';
+import * as profileAPI from '../../lib/api/profile';
 import createRequestSaga from './createRequestSaga';
 import {
   CHECK,
   CHECK_FAILURE,
   LOGOUT,
+  UPLOAD_PROFILE,
 } from '../actions/user';
 
 const checkSaga = createRequestSaga(CHECK, authAPI.check);
+const uploadProfileSaga = createRequestSaga(UPLOAD_PROFILE, profileAPI.uploadProfile);
 
 function checkFailureSaga() {
   try {
@@ -30,4 +33,5 @@ export default function* userSaga() {
   yield takeLatest(CHECK, checkSaga);
   yield takeLatest(CHECK_FAILURE, checkFailureSaga);
   yield takeLatest(LOGOUT, logoutSaga);
+  yield takeLatest(UPLOAD_PROFILE, uploadProfileSaga);
 }

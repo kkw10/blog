@@ -10,16 +10,11 @@ const TabAreaWrap = styled.div`
 
     & > li {
       padding: 1rem 0.5rem;
-      color: ${brandingColor.common[6]};
       font-size: 16px;
       font-weight: bold;
       text-align: center;
       cursor: pointer;
       border-bottom: 1px solid ${brandingColor.common[3]};
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: 0.2s ease-in-out;
 
       svg {
         margin-right: 0.5rem;
@@ -29,9 +24,6 @@ const TabAreaWrap = styled.div`
         font-size: 13px;
       }
 
-      &:hover {
-        color: ${brandingColor.main[6]};
-      }
       &:last-child {
         border-bottom: none;
       }
@@ -39,17 +31,32 @@ const TabAreaWrap = styled.div`
   }
 `;
 
-const TabArea = () => {
+const MenuButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s ease-in-out;
+  color: ${(props) => (props.currentmenu ? brandingColor.main[6] : brandingColor.common[6])};
+  &:hover {
+    color: ${brandingColor.main[6]};
+  }
+`;
+
+const TabArea = ({ currentMenu, onChangeMenu }) => {
   return (
     <TabAreaWrap>
       <ul>
-        <li>
-          <FiActivity />
-          <span>활동 내역</span>
+        <li onClick={() => onChangeMenu('activity')}>
+          <MenuButton currentmenu={currentMenu === 'activity'}>
+            <FiActivity />
+            <span>활동 내역</span>
+          </MenuButton>
         </li>
-        <li>
-          <IoMdSettings />
-          <span>프로필 수정</span>
+        <li onClick={() => onChangeMenu('setting')}>
+          <MenuButton currentmenu={currentMenu === 'setting'}>
+            <IoMdSettings />
+            <span>프로필 수정</span>
+          </MenuButton>
         </li>
       </ul>
     </TabAreaWrap>

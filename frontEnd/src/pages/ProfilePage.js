@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Responsive from '../components/common/Responsive';
-import ProfileView from '../components/profile/ProfileView';
+import ProfileViewContainer from '../containers/profile/ProfileViewContainer';
 import ActivityView from '../components/profile/ActivityView';
 import ProfileSettingContainer from '../containers/profile/ProfileSettingContainer';
 import TabArea from '../components/profile/TabArea';
@@ -26,18 +26,34 @@ const ProfilePageBody = styled.div`
 `;
 
 const ProfilePage = () => {
+  const [currentMenu, setCurrentMenu] = useState('activity');
+
+  const onChangeMenu = (menu) => {
+    setCurrentMenu(menu);
+  };
+
+  const selectMenu = () => {
+    if (currentMenu === 'activity') {
+      return <ActivityView />;
+    }
+
+    return <ProfileSettingContainer onChangeMenu={onChangeMenu} />;
+  };
+
   return (
     <Responsive maxWidth="1200">
       <ProfilePageHead>
-        <ProfileView />
+        <ProfileViewContainer />
       </ProfilePageHead>
       <ProfilePageBody>
         <div className="left">
-          <TabArea />
+          <TabArea
+            currentMenu={currentMenu}
+            onChangeMenu={onChangeMenu}
+          />
         </div>
         <div className="right">
-          {/* <ActivityView /> */}
-          <ProfileSettingContainer />
+          {selectMenu()}
         </div>
       </ProfilePageBody>
     </Responsive>

@@ -4,6 +4,7 @@ export const INITIALIZE = 'write/INITIALIZE';
 export const CHANGE_FIELD = 'write/CHANGE_FIELD';
 export const SET_ORIGINAL_POST = 'write/SET_ORIGINAL_POST';
 export const SET_ORIGINAL_COMMENT = 'write/SET_ORIGINAL_COMMENT';
+export const SET_ORIGINAL_PROFILE = 'write/SET_ORIGINAL_PROFILE';
 export const [
   POSTING,
   POSTING_SUCCESS,
@@ -45,6 +46,11 @@ export const setOriginalPost = (post) => ({
 export const setOriginalComment = (comment) => ({
   type: SET_ORIGINAL_COMMENT,
   payload: comment,
+});
+
+export const setOriginProfile = (profile) => ({
+  type: SET_ORIGINAL_PROFILE,
+  payload: profile,
 })
 
 export const posting = ({ title, contents, hashTags }) => ({

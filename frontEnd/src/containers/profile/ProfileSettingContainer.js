@@ -1,15 +1,17 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   uploadImage,
   changeField,
+  setOriginProfile,
 } from '../../models/actions/write';
+import { uploadProfile } from '../../models/actions/user';
 import ProfileSetting from '../../components/profile/ProfileSetting';
 
-const ProfileSettingContainer = () => {
+const ProfileSettingContainer = ({ onChangeMenu }) => {
   const portraitEl = useRef();
   const dispatch = useDispatch();
-  const userProfileData = useSelector(({ write }) => ({
+  const writeProfileData = useSelector(({ write }) => ({
     userPortrait: write.user_portrait,
     userBackground: write.user_background,
     userTitle: write.user_title,
@@ -18,6 +20,7 @@ const ProfileSettingContainer = () => {
     userFavorite: write.user_favorite,
     userContact: write.user_contact,
   }));
+  const userProfileData = useSelector(({ user }) => user.profile);
 
   const onClickPortrait = (e) => {
     e.preventDefault();
@@ -44,13 +47,25 @@ const ProfileSettingContainer = () => {
     }));
   };
 
+  const onUploadProfile = (e) => {
+    e.preventDefault();
+    dispatch(uploadProfile(writeProfileData));
+  };
+
+  useEffect(() => {
+    dispatch(setOriginProfile(userProfileData));
+  }, [dispatch]);
+
   return (
     <ProfileSetting
       portraitEl={portraitEl}
+      writeProfileData={writeProfileData}
       userProfileData={userProfileData}
       onClickPortrait={onClickPortrait}
       onChangePortrait={onChangePortrait}
       onChangeField={onChangeField}
+      onUploadProfile={onUploadProfile}
+      onChangeMenu={onChangeMenu}
     />
   );
 };
