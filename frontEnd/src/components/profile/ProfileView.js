@@ -14,7 +14,7 @@ const ProfileViewWrap = styled.div`
 const BackgroundArea = styled.div`
   border-radius: 5px 5px 0 0;
   height: 250px;
-  background: url('http://localhost:1991/default_profile_background6.jpg') no-repeat;
+  background: url('http://localhost:1991/default_profile_background.jpg') no-repeat;
   background-size: cover;
   background-position-y: 30%;
   border-bottom: 10px solid ${brandingColor.main[7]};
@@ -84,15 +84,14 @@ const PortraitImage = styled.div`
 const Introduce = styled.div`
   width: calc(100% - 480px);
   margin-right: 2rem;
+  color: ${brandingColor.common[6]};
   b {
     font-size: 16px;
-    color: ${brandingColor.common[6]};
   }
   p {
     text-indent: 10px;
     font-size: 14px;
     line-height: 1.4;
-    color: ${brandingColor.common[6]};
   }
 
   .title {

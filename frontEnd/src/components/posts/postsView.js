@@ -6,8 +6,6 @@ import Tag from '../common/Tag';
 import PageNum from './PageNum';
 
 const PostsViewWrap = styled.div`
-  margin-top: 2rem;
-  margin-bottom: 2rem;
   background: #fff;
   border-radius: 5px;
   padding: 1rem;
