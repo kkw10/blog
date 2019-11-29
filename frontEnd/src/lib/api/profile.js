@@ -7,3 +7,7 @@ export const uploadProfile = (profileData) => (
 export const uploadImage = (formData) => (
   client.post('/api/profile/portrait', formData)
 );
+
+export const getProfile = (targetId) => (
+  client.get(`/api/profile/${targetId}`)
+);

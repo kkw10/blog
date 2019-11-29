@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import qs from 'qs';
 import { withRouter } from 'react-router-dom';
 import PostsView from '../../components/posts/postsView';
 import { readPosts } from '../../models/actions/posts';
+import { getTargetProfile } from '../../models/actions/user';
 
 const PostsViewContainer = ({ location }) => {
   const dispatch = useDispatch();
@@ -12,6 +13,10 @@ const PostsViewContainer = ({ location }) => {
     postsError: posts.postsError,
     lastPage: posts.lastPage,
   }));
+
+  const onGetTargetProfile = useCallback((targetId) => {
+    dispatch(getTargetProfile(targetId));
+  }, [dispatch]);
 
   useEffect(() => {
     const { page } = qs.parse(location.search, {
@@ -26,6 +31,7 @@ const PostsViewContainer = ({ location }) => {
       postsData={postsData}
       potsError={postsError}
       lastPage={lastPage}
+      onGetTargetProfile={onGetTargetProfile}
     />
   );
 };

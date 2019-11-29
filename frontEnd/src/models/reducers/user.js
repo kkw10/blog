@@ -5,11 +5,14 @@ import {
   LOGOUT,
   UPLOAD_PROFILE_SUCCESS,
   UPLOAD_PROFILE_FAILURE,
+  GET_TARGET_PROFILE_SUCCESS,
+  GET_TARGET_PROFILE_FAILURE,
 } from '../actions/user';
 
 const initialState = {
   user: null,
   profile: null,
+  stranger: null,
   checkError: null,
   profileError: null,
 };
@@ -46,6 +49,17 @@ const reducer = (state = initialState, action) => {
         profileError: null,
       };
     case UPLOAD_PROFILE_FAILURE:
+      return {
+        ...state,
+        profileError: action.payload,
+      };
+    case GET_TARGET_PROFILE_SUCCESS:
+      return {
+        ...state,
+        stranger: action.payload,
+        profileError: null,
+      };
+    case GET_TARGET_PROFILE_FAILURE:
       return {
         ...state,
         profileError: action.payload,

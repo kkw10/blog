@@ -75,21 +75,32 @@ const PostBoxWrap = styled.div`
   }
 
   .date {
+    color: ${brandingColor.common[6]};
+    float: right;
+    font-size: 13px;
+
+    b {
+      cursor: pointer;
+      transition: 0.2s ease-in-out;
+    }
+    b:hover {
+      color: ${brandingColor.main[6]};
+    }
     b::after {
       content: '/';
       display: inline-block;
       margin: 0 5px;
       font-size: 13px;
       font-weight: normal;
-    }
-
-    float: right;
-    font-size: 13px;
-    color: ${brandingColor.common[6]};
+      color: ${brandingColor.common[6]};
+    }    
   }
 `;
 
-const PostBox = ({ postData }) => {
+const PostBox = ({ 
+  postData,
+  onGetTargetProfile,
+ }) => {
   return (
     <PostBoxWrap>
       <div className="left">
@@ -120,7 +131,9 @@ const PostBox = ({ postData }) => {
           ))}
         </ul>
         <div className="date">
-          <b>{postData.User.nickname}</b>
+          <b onClick={() => onGetTargetProfile(postData.UserId)}>
+            {postData.User.nickname}
+          </b>
           {new Date(postData.updatedAt).toLocaleDateString()}
         </div>
       </div>
@@ -132,6 +145,7 @@ const PostsView = ({
   postsData,
   postsError,
   lastPage,
+  onGetTargetProfile,
 }) => {
   if (postsError) {
     return null;
@@ -149,6 +163,7 @@ const PostsView = ({
           <li key={postData.id}>
             <PostBox
               postData={postData}
+              onGetTargetProfile={onGetTargetProfile}
             />
           </li>
         ))}

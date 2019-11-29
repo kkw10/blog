@@ -13,5 +13,8 @@ router.post('/portrait',
   upload.single('portrait'),
   profileCtrl.submitPortrait,
 );
+router.get('/:userId',
+  profileCtrl.read,
+)
 
 module.exports = router;

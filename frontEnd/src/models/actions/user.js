@@ -12,6 +12,11 @@ export const [
   UPLOAD_PROFILE_SUCCESS,
   UPLOAD_PROFILE_FAILURE,
 ] = createRequestActionTypes('user/UPLOAD_PROFILE');
+export const [
+  GET_TARGET_PROFILE,
+  GET_TARGET_PROFILE_SUCCESS,
+  GET_TARGET_PROFILE_FAILURE,
+] = createRequestActionTypes('user/GET_TARGET_PROFILE');
 
 // 새로고침 이후 임시 로그인 처리
 export const tempSetUser = (user) => ({
@@ -30,4 +35,9 @@ export const logout = () => ({
 export const uploadProfile = (profileData) => ({
   type: UPLOAD_PROFILE,
   payload: profileData,
+});
+
+export const getTargetProfile = (targetId) => ({
+  type: GET_TARGET_PROFILE,
+  payload: targetId,
 });

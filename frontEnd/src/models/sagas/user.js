@@ -7,10 +7,12 @@ import {
   CHECK_FAILURE,
   LOGOUT,
   UPLOAD_PROFILE,
+  GET_TARGET_PROFILE,
 } from '../actions/user';
 
 const checkSaga = createRequestSaga(CHECK, authAPI.check);
 const uploadProfileSaga = createRequestSaga(UPLOAD_PROFILE, profileAPI.uploadProfile);
+const getTargetProfileSaga = createRequestSaga(GET_TARGET_PROFILE, profileAPI.getProfile);
 
 function checkFailureSaga() {
   try {
@@ -34,4 +36,5 @@ export default function* userSaga() {
   yield takeLatest(CHECK_FAILURE, checkFailureSaga);
   yield takeLatest(LOGOUT, logoutSaga);
   yield takeLatest(UPLOAD_PROFILE, uploadProfileSaga);
+  yield takeLatest(GET_TARGET_PROFILE, getTargetProfileSaga);
 }

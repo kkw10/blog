@@ -40,19 +40,25 @@ const UserCardWrap = styled.div`
   }
   & .body {
     background: #fff;
-    min-height: 300px;
     padding: 1rem;
     padding-top: 4rem;
     color: ${brandingColor.common[6]};
 
-    & > .nickname {
+    .guest {
+      text-align: center;
+      min-height: 50px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .member > .nickname {
       text-align: center;
       font-size: 20px;
       font-weight: bold;
       color: ${brandingColor.point[6]};
     }
 
-    & > .profile {
+    .member > .profile {
       padding: 1rem;
 
       & > li {
@@ -86,12 +92,12 @@ const UserPortrait = styled.div`
   background-position: center; 
 `;
 
-const UserCard = ({ user, profile }) => {
+const UserCard = ({ user }) => {
   return (
     <UserCardWrap>
       <div className="header">
-        {profile && profile.portrait ? (
-          <UserPortrait className="user" background={`http://localhost:1991/${profile.portrait}`} />
+        {user && user.portrait ? (
+          <UserPortrait className="user" background={`http://localhost:1991/${user.portrait}`} />
         ) : (
           <div className="user user_default">
             <FaUserAstronaut />
@@ -99,23 +105,38 @@ const UserCard = ({ user, profile }) => {
         )}
       </div>
       <div className="body">
-        <div className="nickname">
-          {user && user.nickname ? (user.nickname) : null}
-        </div>
-        <ul className="profile">
-          <li>
-            <b><TiLocation />위치</b>
-            {profile && profile.location ? (profile.location) : null}
-          </li>
-          <li>
-            <b><AiFillFire />관심사</b>
-            {profile && profile.favorite ? (profile.favorite) : null}
-          </li>
-          <li>
-            <b><MdEmail />연락처</b>
-            {profile && profile.contact ? (profile.contact) : null}
-          </li>
-        </ul>
+        {user ? (
+          <div className="member">
+            <div className="nickname">
+              {user && user.nickname ? (user.nickname) : null}
+            </div>
+            <ul className="profile">
+              <li>
+                <b>
+                  <TiLocation />
+                  위치
+                </b>
+                {user && user.location ? (user.location) : null}
+              </li>
+              <li>
+                <b>
+                  <AiFillFire />
+                  관심사
+                </b>
+                {user && user.favorite ? (user.favorite) : null}
+              </li>
+              <li>
+                <b>
+                  <MdEmail />
+                  연락처
+                </b>
+                {user && user.contact ? (user.contact) : null}
+              </li>
+            </ul>
+          </div>
+        ) : (
+          <div className="guest">로그인이 필요합니다.</div>
+        )}
       </div>
     </UserCardWrap>
   )

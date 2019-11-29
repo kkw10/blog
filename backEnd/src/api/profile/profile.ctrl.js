@@ -34,3 +34,19 @@ exports.submitProfile = async (req, res, next) => {
     return next(e);
   }
 };
+
+exports.read = async (req, res, next) => {
+  const targetUser = req.params.userId;
+
+  try {
+    const userProfile = await db.User.findOne({
+      where: { id: targetUser },
+      attributes: ['nickname', 'portrait', 'location', 'favorite', 'contact'],
+    });
+
+    res.send(userProfile);
+  } catch (e) {
+    console.error(e);
+    return next(e);
+  }
+}
