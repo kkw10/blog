@@ -102,6 +102,10 @@ const PostBox = ({ postData }) => {
             <div className="numb">{postData.Comments.length}</div>
             <div>댓글</div>
           </li>
+          <li>
+            <div className="numb">{postData.views}</div>
+            <div>조회수</div>
+          </li>
         </ul>
       </div>
       <div className="right">

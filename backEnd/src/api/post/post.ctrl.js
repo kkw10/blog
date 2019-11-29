@@ -118,6 +118,7 @@ exports.write = async (req, res, next) => {
     const newPost = await db.Post.create({
       title: title,
       contents: contents,
+      views: 0,
       UserId: httpContext.get('user').id,
     });
 
@@ -170,12 +171,25 @@ exports.read = async (req, res, next) => {
   const post = httpContext.get('post').dataValues;
   const comments = httpContext.get('comments');
 
-  const data = {
-    post,
-    comments,
-  }
+  try {
+    await db.Post.update({
+      views: post.views + 1,
+    }, {
+      where: { id: post.id }
+    })
 
-  res.status(200).json(data);
+    post.views += 1;
+
+    const data = {
+      post,
+      comments,
+    }
+
+    res.status(200).json(data);
+  } catch (e) {
+    console.error(e);
+    return next(e);
+  }
 };
 
 exports.readComments = async (req, res, next) => {

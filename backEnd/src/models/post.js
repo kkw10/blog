@@ -8,6 +8,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    views: {
+      type: DataTypes.SMALLINT,
+    },
   }, {
     charset: 'utf8',
     collate: 'utf8_general_ci'    

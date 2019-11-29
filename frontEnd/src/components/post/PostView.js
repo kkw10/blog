@@ -1,5 +1,6 @@
 import React from 'react';
 import { AiOutlineStar, AiFillStar } from 'react-icons/ai';
+import { MdRemoveRedEye } from 'react-icons/md';
 import styled from 'styled-components';
 import { brandingColor } from '../../lib/styles/branding';
 import Tag from '../common/Tag';
@@ -85,7 +86,7 @@ const HeadInfo = styled.div`
   }
 `;
 
-const VoteButton = styled.button`
+const IconButton = styled.button`
   display: flex;
   align-items: center;
   font-size: 16px;
@@ -175,7 +176,11 @@ const PostView = ({
           <div className="right">
             <div className="flexBox">
               <div className="buttons">
-                <VoteButton
+                <IconButton>
+                  <MdRemoveRedEye />
+                  <span>{postResult.views}</span>
+                </IconButton>
+                <IconButton
                   onClick={onRecomend}
                   fill={isRecomended ? 'true' : 'false'}
                 >
@@ -185,7 +190,7 @@ const PostView = ({
                     <AiOutlineStar />
                   )}
                   <span>{postResult.Recomenders && (postResult.Recomenders.length) || 0}</span>
-                </VoteButton>
+                </IconButton>
                 {user && postResult.UserId === user.id ? (
                   <>
                     <Button
