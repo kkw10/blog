@@ -49,7 +49,9 @@ module.exports = (sequelize, DataTypes) => {
     db.User.hasMany(db.Comment, { as: 'comments' });
     db.User.belongsToMany(db.Post, { through: 'RecomendPost', as: 'RecomendedPost' })
     db.User.belongsToMany(db.Comment, { through: 'CommentsLike', as: 'Likers', foreignKey: 'LikersId' });
-    db.User.belongsToMany(db.Comment, { through: 'CommentsDislike', as: 'Dislikers', foreignKey: 'DislikersId' });    
+    db.User.belongsToMany(db.Comment, { through: 'CommentsDislike', as: 'Dislikers', foreignKey: 'DislikersId' });
+    db.User.belongsToMany(db.User, { through: 'Follow', as: 'Followers', foreignKey: 'FollowingsId' });
+    db.User.belongsToMany(db.User, { through: 'Follow', as: 'Followings', foreignKey: 'FollowersId' });
   };
 
   // Static mehtods

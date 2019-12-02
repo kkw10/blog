@@ -88,7 +88,7 @@ const Header = ({
     <HeaderWrap>
       <ResponsiveWrap>
         <h1>
-          <Link to="/" className="logo">LOGO</Link>
+          <Link to="/" className="logo">SPACER</Link>
         </h1>
         {!user ? (
           <div className="right">
@@ -110,7 +110,7 @@ const Header = ({
               <Link className="create_button" to="/write">
                 <IoMdCreate />
               </Link>
-              <Link className="profile_button" to="/profile">
+              <Link className="profile_button" to={`/profile/${user.id}`}>
                 <FaUserAstronaut />
                 <span>{user.nickname}</span>
               </Link>

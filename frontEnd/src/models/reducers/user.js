@@ -7,6 +7,11 @@ import {
   UPLOAD_PROFILE_FAILURE,
   GET_TARGET_PROFILE_SUCCESS,
   GET_TARGET_PROFILE_FAILURE,
+  RESET_STRANGER_PROFILE,
+  FOLLOW_SUCCESS,
+  FOLLOW_FAILURE,
+  UNFOLLOW_SUCCESS,
+  UNFOLLOW_FAILURE,
 } from '../actions/user';
 
 const initialState = {
@@ -15,6 +20,7 @@ const initialState = {
   stranger: null,
   checkError: null,
   profileError: null,
+  followError: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -45,7 +51,10 @@ const reducer = (state = initialState, action) => {
     case UPLOAD_PROFILE_SUCCESS:
       return {
         ...state,
-        profile: action.payload,
+        profile: {
+          ...state.profile,
+          ...action.payload,
+        },
         profileError: null,
       };
     case UPLOAD_PROFILE_FAILURE:
@@ -63,6 +72,53 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         profileError: action.payload,
+      };
+    case RESET_STRANGER_PROFILE:
+      return {
+        ...state,
+        stranger: null,
+      };
+    case FOLLOW_SUCCESS:
+      return {
+        ...state,
+        profile: {
+          ...state.profile,
+          Followings: [
+            ...state.profile.Followings,
+            action.payload.targetUser,
+          ],
+        },
+        stranger: {
+          ...state.stranger,
+          Followers: [
+            ...state.stranger.Followers,
+            action.payload.me,
+          ],
+        },
+      };
+    case UNFOLLOW_SUCCESS: {
+      const newFollowings = [...state.profile.Followings]
+        .filter((v) => v.id !== action.payload.targetUser.id);
+      const newStrangerFollowers = [...state.stranger.Followers]
+        .filter((v) => v.id !== action.payload.me.id);
+
+      return {
+        ...state,
+        profile: {
+          ...state.profile,
+          Followings: newFollowings,
+        },
+        stranger: {
+          ...state.stranger,
+          Followers: newStrangerFollowers,
+        },
+      };
+    }
+    case FOLLOW_FAILURE:
+    case UNFOLLOW_FAILURE:
+      return {
+        ...state,
+        followError: action.payload,
       };
     default:
       return state;

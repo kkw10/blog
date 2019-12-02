@@ -1,8 +1,15 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaUserAstronaut } from 'react-icons/fa';
+import {
+  IoMdAdd,
+  IoMdRemove,
+  IoMdHome,
+  IoMdListBox,
+} from 'react-icons/io';
 import { MdEmail } from 'react-icons/md';
-import { TiLocation } from 'react-icons/ti';
+import { TiLocation, TiArrowBack } from 'react-icons/ti';
 import { AiFillFire } from 'react-icons/ai';
 import { brandingColor } from '../../lib/styles/branding';
 
@@ -16,6 +23,40 @@ const UserCardWrap = styled.div`
     background: url('http://localhost:1991/default_profile_background.jpg') no-repeat;
     background-size: cover;
     position: relative;
+
+    .reset {
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+      font-size: 22px;
+      color: #fff;
+      transition: 0.2s ease-in-out;
+      &:hover {
+        color: ${brandingColor.point[7]};
+      }
+    }
+
+    .home {
+      position: absolute;
+      right: 3rem;
+      top: 8rem;
+      font-size: 30px;
+      color: ${brandingColor.common[6]};
+      &:hover {
+        color: ${brandingColor.point[6]};
+      }
+    }
+
+    .list {
+      position: absolute;
+      left: 3rem;
+      top: 8rem;
+      font-size: 30px;
+      color: ${brandingColor.common[6]};
+      &:hover {
+        color: ${brandingColor.point[6]};
+      }
+    }
 
     .user {
       position: absolute;
@@ -92,23 +133,115 @@ const UserPortrait = styled.div`
   background-position: center; 
 `;
 
-const UserCard = ({ user }) => {
+const FollowButton = styled.div`
+  margin-top: 0.5rem;
+  & > button {
+    width: 100%;
+    height: 32px;
+    text-align: center;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+
+    &.follow {
+      border: 1px solid ${brandingColor.point[7]};
+      background: ${brandingColor.point[7]};
+      &:hover {
+        background: #fff;
+        color: ${brandingColor.point[7]};
+        border-color: ${brandingColor.point[7]};
+      }      
+    }
+    &.unfollow {
+      border: 1px solid ${brandingColor.main[7]};
+      background: ${brandingColor.main[7]};
+      &:hover {
+        background: #fff;
+        color: ${brandingColor.main[7]};
+        border-color: ${brandingColor.main[7]};
+      }      
+    }
+
+    & > svg {
+      font-size: 20px;
+      margin-right: 0.2rem;
+    }
+  };
+`;
+
+const FollowNumber = styled.ul`
+  display: flex;
+  border: 1px solid ${brandingColor.common[3]};
+  border-radius: 5px;
+  margin: 0.5rem 0;
+  margin-bottom: 1rem;
+  & > li {
+    font-size: 12px;
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+    padding: 0.5rem;
+    b {
+      margin-right: 0.3rem;
+    }
+    &.follower {
+      color: ${brandingColor.point[6]};
+      border-right: 1px solid ${brandingColor.common[3]};
+    }
+    &.following {
+      color: ${brandingColor.main[6]}
+    }
+  }
+`;
+
+const UserCard = ({
+  currentUser,
+  isFollowing,
+  onResetStranger,
+  onFollow,
+  onUnfollow,
+}) => {
   return (
     <UserCardWrap>
       <div className="header">
-        {user && user.portrait ? (
-          <UserPortrait className="user" background={`http://localhost:1991/${user.portrait}`} />
+        {currentUser && currentUser.portrait ? (
+          <UserPortrait className="user" background={`http://localhost:1991/${currentUser.portrait}`} />
         ) : (
           <div className="user user_default">
             <FaUserAstronaut />
           </div>
         )}
+        {currentUser && currentUser.id ? (
+          <>
+            <Link className="home" to={`/profile/${currentUser.id}`}>
+              <IoMdHome />
+            </Link>
+            <Link className="list">
+              <IoMdListBox />
+            </Link>
+          </>
+        ) : null}
+        {currentUser && !currentUser.isMe ? (
+          <>
+            <button
+              type="button"
+              className="reset"
+              onClick={onResetStranger}
+            >
+              <TiArrowBack />
+            </button>
+          </>
+        ) : null}
       </div>
       <div className="body">
-        {user ? (
+        {currentUser ? (
           <div className="member">
             <div className="nickname">
-              {user && user.nickname ? (user.nickname) : null}
+              {currentUser.nickname ? (currentUser.nickname) : null}
             </div>
             <ul className="profile">
               <li>
@@ -116,23 +249,58 @@ const UserCard = ({ user }) => {
                   <TiLocation />
                   위치
                 </b>
-                {user && user.location ? (user.location) : null}
+                {currentUser.location ? (currentUser.location) : null}
               </li>
               <li>
                 <b>
                   <AiFillFire />
                   관심사
                 </b>
-                {user && user.favorite ? (user.favorite) : null}
+                {currentUser.favorite ? (currentUser.favorite) : null}
               </li>
               <li>
                 <b>
                   <MdEmail />
                   연락처
                 </b>
-                {user && user.contact ? (user.contact) : null}
+                {currentUser.contact ? (currentUser.contact) : null}
               </li>
             </ul>
+            <FollowNumber>
+              <li className="follower">
+                <b>팔로워</b>
+                {currentUser.Followers && currentUser.Followers.length}
+              </li>
+              <li className="following">
+                <b>팔로잉</b>
+                {currentUser.Followings && currentUser.Followings.length}
+              </li>
+            </FollowNumber>
+            {!currentUser.isMe ? (
+              <div className="buttons">
+                <FollowButton>
+                  {isFollowing ? (
+                    <button
+                      className="unfollow"
+                      type="button"
+                      onClick={() => onUnfollow(currentUser.id)}
+                    >
+                      <IoMdRemove />
+                      <b>언팔로우</b>
+                    </button>
+                  ) : (
+                    <button
+                      className="follow"
+                      type="button"
+                      onClick={() => onFollow(currentUser.id)}
+                    >
+                      <IoMdAdd />
+                      <b>팔로우</b>
+                    </button>
+                  )}
+                </FollowButton>
+              </div>
+            ) : null}
           </div>
         ) : (
           <div className="guest">로그인이 필요합니다.</div>

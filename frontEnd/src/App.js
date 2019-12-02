@@ -32,7 +32,7 @@ const App = () => (
   <Layout>
     <GlobalStyle />
     <Route component={MainPage} path="/" exact />
-    <Route component={ProfilePage} path="/profile" />
+    <Route component={ProfilePage} path="/profile/:UserId" />
     <Route component={WritePage} path="/write" />
     <Route component={PostPage} path="/post/:UserId/:PostId" />
   </Layout>

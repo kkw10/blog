@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { MdEmail } from 'react-icons/md';
 import { TiLocation } from 'react-icons/ti';
@@ -46,7 +46,7 @@ const Portrait = styled.div`
   position: relative;
   h2 {
     font-size: 20px;
-    color: ${brandingColor.point[6]};
+    color: ${brandingColor.common[6]};
     margin-top: 1rem;
     text-align: center;
   }
@@ -87,6 +87,7 @@ const Introduce = styled.div`
   color: ${brandingColor.common[6]};
   b {
     font-size: 16px;
+    color: ${brandingColor.point[6]};
   }
   p {
     text-indent: 10px;
@@ -112,6 +113,12 @@ const EtcInfo = styled.div`
     margin-bottom: 1rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid ${brandingColor.common[3]};
+    
+    &::after {
+      content: '';
+      display: block;
+      clear: both;
+    }
 
     b {
       display: flex;
@@ -125,7 +132,8 @@ const EtcInfo = styled.div`
     p {
       font-size: 12px;
       margin-top: 1rem;
-      color: ${brandingColor.common[6]};      
+      color: ${brandingColor.common[6]};
+      float: right;
     }    
   }
   li:last-child {
@@ -135,10 +143,46 @@ const EtcInfo = styled.div`
   }
 `;
 
-const ProfileView = ({
-  user,
-  profile,
-}) => {
+const Followers = styled.ul`
+  display: flex;
+  margin-top: 1rem;
+  width: 100%;
+  margin-top: 9rem;
+
+  & > li {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    padding: 0.25rem;
+    margin: 0.25rem;
+    color: #fff;
+    height: 60px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: bold;
+    b {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  .followers {
+    background: ${brandingColor.main[6]};
+  }
+  .followings {
+    background: ${brandingColor.point[6]};
+  }
+`;
+
+const ProfileView = ({ currentUser }) => {
+  if (!currentUser) return null;
+
+  useEffect(() => {
+    console.log(currentUser);
+  }, [currentUser])
+
   return (
     <ProfileViewWrap>
       <BackgroundArea />
@@ -146,22 +190,34 @@ const ProfileView = ({
         <div className="flexWrap">
           <Portrait>
             <div className="absoluteWrap">
-              {profile && profile.portrait ? (
-                <PortraitImage background={`http://localhost:1991/${profile.portrait}`} />
+              {currentUser.portrait ? (
+                <PortraitImage background={`http://localhost:1991/${currentUser.portrait}`} />
               ) : (
                 <div className="defaultUser">
                   <FaUserAstronaut />
                 </div>
               )}
-              <h2>{user.nickname}</h2>
+              <h2>{currentUser.nickname}</h2>
             </div>
+            {currentUser ? (
+              <Followers>
+                <li className="followers">
+                  <b>팔로워</b>
+                  <span>{currentUser.Followers.length}</span>
+                </li>
+                <li className="followings">
+                  <b>팔로잉</b>
+                  <span>{currentUser.Followings.length}</span>
+                </li>
+              </Followers>
+            ) : null}
           </Portrait>
           <Introduce>
             <div className="title">
-              <b>{profile && profile.title ? (profile.title) : '제목을 입력해주세요'}</b>
+              <b>{currentUser.title ? (currentUser.title) : '제목을 입력해주세요'}</b>
             </div>
             <div className="desc">
-              <p>{profile && profile.descript ? (profile.descript) : '내용을 입력해주세요'}</p>
+              <p>{currentUser.descript ? (currentUser.descript) : '내용을 입력해주세요'}</p>
             </div>
           </Introduce>
           <EtcInfo>
@@ -171,21 +227,21 @@ const ProfileView = ({
                   <TiLocation />
                   위치
                 </b>
-                <p>{profile && profile.location ? (profile.location) : '위치를 입력해주세요'}</p>
+                <p>{currentUser.location ? (currentUser.location) : '위치를 입력해주세요'}</p>
               </li>
               <li>
                 <b>
                   <AiFillFire />
                   관심사
                 </b>
-                <p>{profile && profile.favorite ? (profile.favorite) : '관심사를 입력해주세요'}</p>
+                <p>{currentUser.favorite ? (currentUser.favorite) : '관심사를 입력해주세요'}</p>
               </li>
               <li>
                 <b>
                   <MdEmail />
                   메일
                 </b>
-                <p>{profile && profile.contact ? (profile.contact) : '연락처를 입력해주세요'}</p>
+                <p>{currentUser.contact ? (currentUser.contact) : '연락처를 입력해주세요'}</p>
               </li>
             </ul>
           </EtcInfo>

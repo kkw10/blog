@@ -104,7 +104,22 @@ exports.check = async (req, res) => {
         'location',
         'favorite',
         'contact',
-      ]
+      ],
+      include: [{
+        model: db.User,
+        through: 'Follow',
+        as: 'Followers',
+        attributes: {
+          exclude: ['password']
+        },
+      }, {
+        model: db.User,
+        through: 'Follow',
+        as: 'Followings',
+        attributes: {
+          exclude: ['password']
+        },
+      }],
     });
 
     res.json({
@@ -114,13 +129,7 @@ exports.check = async (req, res) => {
   } catch(e) {
     console.error(e);
     return next(e);
-  }
-
-
-
-
-
-  
+  }  
 };
 
 exports.logout = async (req, res) => {

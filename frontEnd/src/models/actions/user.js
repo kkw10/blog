@@ -17,6 +17,17 @@ export const [
   GET_TARGET_PROFILE_SUCCESS,
   GET_TARGET_PROFILE_FAILURE,
 ] = createRequestActionTypes('user/GET_TARGET_PROFILE');
+export const RESET_STRANGER_PROFILE = 'user/RESET_STRANGER_PROFILE';
+export const [
+  FOLLOW,
+  FOLLOW_SUCCESS,
+  FOLLOW_FAILURE,
+] = createRequestActionTypes('user/FOLLOW');
+export const [
+  UNFOLLOW,
+  UNFOLLOW_SUCCESS,
+  UNFOLLOW_FAILURE,
+] = createRequestActionTypes('user/UNFOLLOW');
 
 // 새로고침 이후 임시 로그인 처리
 export const tempSetUser = (user) => ({
@@ -39,5 +50,19 @@ export const uploadProfile = (profileData) => ({
 
 export const getTargetProfile = (targetId) => ({
   type: GET_TARGET_PROFILE,
+  payload: targetId,
+});
+
+export const resetStrangerProfile = () => ({
+  type: RESET_STRANGER_PROFILE,
+});
+
+export const follow = (targetId) => ({
+  type: FOLLOW,
+  payload: targetId,
+});
+
+export const unfollow = (targetId) => ({
+  type: UNFOLLOW,
   payload: targetId,
 });

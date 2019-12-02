@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   uploadImage,
@@ -8,7 +9,8 @@ import {
 import { uploadProfile } from '../../models/actions/user';
 import ProfileSetting from '../../components/profile/ProfileSetting';
 
-const ProfileSettingContainer = ({ onChangeMenu }) => {
+const ProfileSettingContainer = ({ match, onChangeMenu }) => {
+  const targetId = match.params.UserId;
   const portraitEl = useRef();
   const dispatch = useDispatch();
   const writeProfileData = useSelector(({ write }) => ({
@@ -20,7 +22,10 @@ const ProfileSettingContainer = ({ onChangeMenu }) => {
     userFavorite: write.user_favorite,
     userContact: write.user_contact,
   }));
-  const userProfileData = useSelector(({ user }) => user.profile);
+  const { me, userProfileData } = useSelector(({ user }) => ({
+    me: user.user,
+    userProfileData: user.profile,
+  }));
 
   const onClickPortrait = (e) => {
     e.preventDefault();
@@ -57,17 +62,23 @@ const ProfileSettingContainer = ({ onChangeMenu }) => {
   }, [dispatch]);
 
   return (
-    <ProfileSetting
-      portraitEl={portraitEl}
-      writeProfileData={writeProfileData}
-      userProfileData={userProfileData}
-      onClickPortrait={onClickPortrait}
-      onChangePortrait={onChangePortrait}
-      onChangeField={onChangeField}
-      onUploadProfile={onUploadProfile}
-      onChangeMenu={onChangeMenu}
-    />
+    <>
+      {Number(targetId) === me.id ? (
+        <ProfileSetting
+          portraitEl={portraitEl}
+          writeProfileData={writeProfileData}
+          userProfileData={userProfileData}
+          onClickPortrait={onClickPortrait}
+          onChangePortrait={onChangePortrait}
+          onChangeField={onChangeField}
+          onUploadProfile={onUploadProfile}
+          onChangeMenu={onChangeMenu}
+        />
+      ) : (
+        <div>권한이 없는 유저입니다.</div>
+      )}
+    </>
   );
 };
 
-export default ProfileSettingContainer;
+export default withRouter(ProfileSettingContainer);

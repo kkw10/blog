@@ -41,7 +41,33 @@ exports.read = async (req, res, next) => {
   try {
     const userProfile = await db.User.findOne({
       where: { id: targetUser },
-      attributes: ['nickname', 'portrait', 'location', 'favorite', 'contact'],
+      attributes: [
+        'id',
+        'nickname',
+        'portrait',
+        'background',
+        'title',
+        'descript',
+        'location',
+        'favorite',
+        'contact'
+      ],
+      include: [{
+        model: db.User,
+        through: 'Follow',
+        as: 'Followers',
+        attributes: {
+          exclude: ['password']
+        },
+      }, {
+        model: db.User,
+        through: 'Follow',
+        as: 'Followings',
+        attributes: {
+          exclude: ['password']
+        },
+      }],
+
     });
 
     res.send(userProfile);
