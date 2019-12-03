@@ -126,7 +126,9 @@ const PostBox = ({
         <ul className="tags">
           {postData.HashTags.map((tag) => (
             <li key={tag.name}>
-              <Tag name={tag.name} />
+              <Link to={`/posts/tagged/${tag.name}`}>
+                <Tag name={tag.name} />
+              </Link>
             </li>
           ))}
         </ul>

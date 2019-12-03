@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { AiOutlineStar, AiFillStar } from 'react-icons/ai';
 import { MdRemoveRedEye } from 'react-icons/md';
 import styled from 'styled-components';
@@ -160,7 +161,9 @@ const PostView = ({
               <ul className="tags">
                 {postResult.HashTags.map((hashTag) => (
                   <li className="tag" key="tag">
-                    <Tag name={hashTag.name} />
+                    <Link to={`/posts/tagged/${hashTag.name}`}>
+                      <Tag name={hashTag.name} />
+                    </Link>
                   </li>
                 ))}
               </ul>

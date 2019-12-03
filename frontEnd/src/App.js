@@ -8,7 +8,7 @@ import MainPage from './pages/MainPage';
 import ProfilePage from './pages/ProfilePage';
 import WritePage from './pages/WritePage';
 import PostPage from './pages/PostPage';
-import UserPostsPage from './pages/UserPostsPage';
+import SearchedPostsPage from './pages/SearchedPostsPage';
 import { brandingColor } from './lib/styles/branding';
 
 const GlobalStyle = createGlobalStyle`
@@ -36,7 +36,8 @@ const App = () => (
     <Route component={ProfilePage} path="/profile/:UserId" />
     <Route component={WritePage} path="/write" />
     <Route component={PostPage} path="/post/:UserId/:PostId" />
-    <Route component={UserPostsPage} path="/posts/:UserId" />
+    <Route component={SearchedPostsPage} path="/posts/:UserId" exact />
+    <Route component={SearchedPostsPage} path="/posts/tagged/:TagName" exact />
   </Layout>
 );
 

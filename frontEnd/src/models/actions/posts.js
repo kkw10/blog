@@ -6,9 +6,10 @@ export const [
   READ_POSTS_FAILURE,
 ] = createRequestActionTypes('posts/READ_POSTS');
 
-export const readPosts = ({ userId, page }) => ({
+export const readPosts = ({ tagName, userId, page }) => ({
   type: READ_POSTS,
   payload: {
+    tagName,
     userId,
     page,
   },

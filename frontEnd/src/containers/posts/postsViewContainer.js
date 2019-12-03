@@ -9,6 +9,7 @@ import { getTargetProfile } from '../../models/actions/user';
 const PostsViewContainer = ({ location, match }) => {
   const dispatch = useDispatch();
   const [userId, setUserId] = useState(null);
+  const [tagName, setTagName] = useState(null);
   const { postsData, postsError, lastPage } = useSelector(({ posts }) => ({
     postsData: posts.result,
     postsError: posts.postsError,
@@ -24,12 +25,16 @@ const PostsViewContainer = ({ location, match }) => {
       setUserId(match.params.UserId);
     }
 
+    if (match.params.TagName) {
+      setTagName(match.params.TagName);
+    }
+
     const { page } = qs.parse(location.search, {
       ignoreQueryPrefix: true,
     });
 
-    dispatch(readPosts({ userId, page }));
-  }, [dispatch, location.search, userId, match.params.UserId]);
+    dispatch(readPosts({ tagName, userId, page }));
+  }, [dispatch, location.search, userId, tagName, match.params.UserId, match.params.TagName]);
 
   return (
     <PostsView
