@@ -19,6 +19,7 @@ import {
   changeField,
   commenting,
 } from '../../models/actions/write';
+import { getTargetProfile } from '../../models/actions/user';
 import { toggling } from '../../models/actions/toggle';
 import { remove } from '../../lib/api/post';
 
@@ -150,9 +151,19 @@ const PostViewContainer = ({ match, history }) => {
     dispatch(initialize());
   }, [dispatch]);
 
+  const onGetTargetProfile = useCallback((profileId) => {
+    dispatch(getTargetProfile(profileId));
+  }, [dispatch]);
+
   useEffect(() => {
     dispatch(readPost(postId));
   }, [dispatch, postId]);
+
+  useEffect(() => {
+    if (postResult) {
+      dispatch(getTargetProfile(postResult.UserId));
+    }
+  }, [postResult]);
 
   useEffect(() => {
     if (writeResult) {
@@ -185,6 +196,7 @@ const PostViewContainer = ({ match, history }) => {
       onThumbsDown={onThumbsDown}
       onDeleteComment={onDeleteComment}
       onUpdateComment={onUpdateComment}
+      onGetTargetProfile={onGetTargetProfile}
       onRefresh={onRefresh}
     />
   );

@@ -9,7 +9,7 @@ exports.getPostById = async (req, res, next) => {
       where: { id },
       include: [{
         model: db.User,
-        attributes: ['email', 'nickname']
+        attributes: ['email', 'nickname', 'portrait']
       }, {
         model: db.HashTag,
         attributes: ['name']
@@ -44,7 +44,7 @@ exports.getCommentsInPost = async (req, res, next) => {
       },
       include: [{
         model: db.User,
-        attributes: ['email', 'nickname']
+        attributes: ['email', 'nickname', 'portrait']
       },{
         model: db.User,
         through: 'CommentsLike',
@@ -77,7 +77,7 @@ exports.getComment = async (req, res, next) => {
       },
       include: [{
         model: db.User,
-        attributes: ['email', 'nickname']
+        attributes: ['email', 'nickname', 'portrait']
       },{
         model: db.User,
         through: 'CommentsLike',
@@ -202,7 +202,7 @@ exports.readComments = async (req, res, next) => {
       },
       include: [{
         model: db.User,
-        attributes: ['email', 'nickname']
+        attributes: ['email', 'nickname', 'portrait']
       }, {
         model: db.User,
         through: 'CommentsLike',

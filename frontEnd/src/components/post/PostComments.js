@@ -8,6 +8,7 @@ import {
   AiFillDislike,
   AiFillLike,
 } from 'react-icons/ai';
+import { FaUserAstronaut } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { IoIosMore } from 'react-icons/io';
@@ -20,7 +21,6 @@ import { toggling } from '../../models/actions/toggle';
 import { brandingColor } from '../../lib/styles/branding';
 import Button from '../common/Button';
 import DropBox from '../common/dropbox';
-import { clearForm } from '../../models/actions/post';
 
 const PostCommentsWrap = styled.div`
   .tui-editor-defaultUI {
@@ -90,13 +90,45 @@ const Head = styled.div`
   justify-content: space-between;
 
   .info {
-    font-size: 13px;
-    color: ${brandingColor.common[6]};
-    b::after {
-      content: '/';
-      display: inline-block;
-      margin: 0 5px;
-      font-weight: normal;
+    display: flex;
+    align-items: center;
+    & > .info_portrait {
+      margin-right: 0.5rem;
+      img {
+        border-radius: 5px;
+        width: 30px;
+        height: 30px;
+      }
+
+      .default_user {
+        font-size: 16px;
+        color: #fff;
+        width: 30px;
+        height: 30px;
+        border-radius: 5px;
+        background: ${brandingColor.common[4]};
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }      
+    }
+
+    & > .info_name {
+      font-size: 13px;
+      color: ${brandingColor.common[6]};
+      b {
+        cursor: pointer;
+        transition: 0.2s ease-in-out;
+        &:hover {
+          color: ${brandingColor.main[6]};
+        }
+      }
+      b::after {
+        content: '/';
+        display: inline-block;
+        margin: 0 5px;
+        font-weight: normal;
+      }
     }
   }
   .more {
@@ -170,6 +202,7 @@ const PostComments = ({
   onThumbsDown,
   onDeleteComment,
   onUpdateComment,
+  onGetTargetProfile,
   onRefresh,
 }) => {
   const dispatch = useDispatch();
@@ -310,8 +343,21 @@ const PostComments = ({
             <CommentsBox key={comment.id}>
               <Head>
                 <div className="info">
-                  <b>{comment.User.nickname}</b>
-                  <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
+                  <div className="info_portrait">
+                    {comment.User.portrait ? (
+                      <img src={`http://localhost:1991/${comment.User.portrait}`} alt="" />
+                    ) : (
+                      <div className="default_user">
+                        <FaUserAstronaut />
+                      </div>
+                    )}
+                  </div>
+                  <div className="info_name">
+                    <b onClick={() => onGetTargetProfile(comment.UserId)}>
+                      {comment.User.nickname}
+                    </b>
+                    <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
+                  </div>
                 </div>
                 {comment.UserId === user.id ? (
                   <div className="more">

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { AiOutlineStar, AiFillStar } from 'react-icons/ai';
+import { FaUserAstronaut } from 'react-icons/fa';
 import { MdRemoveRedEye } from 'react-icons/md';
 import styled from 'styled-components';
 import { brandingColor } from '../../lib/styles/branding';
@@ -10,8 +11,6 @@ import AlertModal from '../common/modal/AlertModal';
 import PostComments from './PostComments';
 
 const PostViewWrap = styled.div`
-  margin-top: 2rem;
-  margin-bottom: 2rem;
   background: #fff;
   border-radius: 5px;
   padding: 1rem;
@@ -60,7 +59,7 @@ const Head = styled.div`
 const HeadInfo = styled.div`
   .tags {
     display: flex;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
 
     li {
       cursor: pointer;
@@ -73,16 +72,45 @@ const HeadInfo = styled.div`
   }
 
   .auther {
-    margin-bottom: 0.5rem;
-    font-size: 13px;
-    color: ${brandingColor.common[6]};
+    display: flex;
+    align-items: center;
+    & > .auther_portrait {
+      margin-right: 0.5rem;
+      img {
+        border-radius: 5px;
+        width: 30px;
+        height: 30px;
+      }
 
-    b::after {
-      content: '/';
-      display: inline-block;
-      margin: 0 5px;
+      .default_user {
+        font-size: 16px;
+        color: #fff;
+        width: 30px;
+        height: 30px;
+        border-radius: 5px;
+        background: ${brandingColor.common[4]};
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }      
+    }
+
+    & > .auther_name {
       font-size: 13px;
-      font-weight: normal;
+      color: ${brandingColor.common[6]};
+      b {
+        cursor: pointer;
+        transition: 0.2s ease-in-out;
+        &:hover {
+          color: ${brandingColor.main[6]};
+        }
+      }
+      b::after {
+        content: '/';
+        display: inline-block;
+        margin: 0 5px;
+        font-weight: normal;
+      }
     }
   }
 `;
@@ -134,6 +162,7 @@ const PostView = ({
   onThumbsDown,
   onDeleteComment,
   onUpdateComment,
+  onGetTargetProfile,
   onRefresh,
 }) => {
   if (loading || !postResult) {
@@ -168,10 +197,23 @@ const PostView = ({
                 ))}
               </ul>
               <div className="auther">
-                <b>{postResult.User.nickname}</b>
-                <span>
-                  {new Date(postResult.createdAt).toLocaleDateString()}
-                </span>
+                <div className="auther_portrait">
+                  {postResult.User.portrait ? (
+                    <img src={`http://localhost:1991/${postResult.User.portrait}`} alt="" />
+                  ) : (
+                    <div className="default_user">
+                      <FaUserAstronaut />
+                    </div>
+                  )}
+                </div>
+                <div className="auther_name">
+                  <b onClick={() => onGetTargetProfile(postResult.UserId)}>
+                    {postResult.User.nickname}
+                  </b>
+                  <span>
+                    {new Date(postResult.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
               </div>
             </HeadInfo>
             <h2>{postResult.title}</h2>
@@ -232,6 +274,7 @@ const PostView = ({
           onThumbsDown={onThumbsDown}
           onDeleteComment={onDeleteComment}
           onUpdateComment={onUpdateComment}
+          onGetTargetProfile={onGetTargetProfile}
           onRefresh={onRefresh}
         />
       </PostViewWrap>
