@@ -38,11 +38,16 @@ const PageNumWrap = styled.div`
   }
 `;
 
-const PageNum = ({ lastPage }) => {
+const PageNum = ({ pageId, lastPage }) => {
   const [pageArr, setPageArr] = useState([]);
 
   const buildLink = (page) => {
     const query = qs.stringify({ page });
+
+    if (pageId) {
+      return `/posts/${pageId}?${query}`;
+    }
+
     return `/?${query}`;
   }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { IoMdCreate } from 'react-icons/io';
+import { IoMdCreate, IoMdListBox } from 'react-icons/io';
 import { FaUserAstronaut } from 'react-icons/fa';
 import Responsive from './Responsive';
 import Button from './Button';
@@ -41,40 +41,53 @@ const Tools = styled.div`
   display: flex;
   align-items: center;
   font-size: 20px;
+  background: ${brandingColor.common[2]};
+  padding: 0 1rem;
+  border-radius: 5px;
 
   svg {
     cursor: pointer;
   }
 
-  .create_button {
-    color: ${brandingColor.point[6]};
+  & > a {
     margin-right: 1rem;
+    
+  }
+
+  & > a:last-child {
+    margin-right: 0;
+  }
+
+  .create_button,
+  .list_button {
+    color: ${brandingColor.point[6]};
     transition: 0.2s ease-in-out;
     &:hover {
       color: ${brandingColor.main[7]};
     }
   }
+`;
 
-  .profile_button {
-    width: 120px;
-    height: 32px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    font-size: 16px;
-    border: 1px solid ${brandingColor.point[7]};
-    border-radius: 5px;
-    color: #fff;
-    background: ${brandingColor.point[7]};
-    transition: 0.2s ease-in-out;
+const ProfileButton = styled(Link)`
+  width: 120px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 16px;
+  border: 1px solid ${brandingColor.point[7]};
+  border-radius: 5px;
+  color: #fff;
+  background: ${brandingColor.point[7]};
+  transition: 0.2s ease-in-out;
+  margin-right: 0.5rem;
 
-    svg {
-      margin-right: 1rem;
-    }
-    &:hover {
-      color: ${brandingColor.main[7]};
-    }
+  svg {
+    margin-right: 1rem;
+  }
+  &:hover {
+    color: ${brandingColor.main[7]};
   }
 `;
 
@@ -110,11 +123,14 @@ const Header = ({
               <Link className="create_button" to="/write">
                 <IoMdCreate />
               </Link>
-              <Link className="profile_button" to={`/profile/${user.id}`}>
-                <FaUserAstronaut />
-                <span>{user.nickname}</span>
+              <Link className="list_button" to={`/posts/${user.id}`}>
+                <IoMdListBox />
               </Link>
             </Tools>
+            <ProfileButton to={`/profile/${user.id}`}>
+              <FaUserAstronaut />
+              <span>{user.nickname}</span>
+            </ProfileButton>
             <Button
               placeholder="로그아웃"
               size="lg"

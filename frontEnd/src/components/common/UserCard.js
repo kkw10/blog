@@ -220,7 +220,7 @@ const UserCard = ({
             <Link className="home" to={`/profile/${currentUser.id}`}>
               <IoMdHome />
             </Link>
-            <Link className="list">
+            <Link className="list" to={`/posts/${currentUser.id}`}>
               <IoMdListBox />
             </Link>
           </>
@@ -307,7 +307,7 @@ const UserCard = ({
         )}
       </div>
     </UserCardWrap>
-  )
+  );
 };
 
 export default UserCard;

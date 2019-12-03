@@ -8,6 +8,7 @@ import MainPage from './pages/MainPage';
 import ProfilePage from './pages/ProfilePage';
 import WritePage from './pages/WritePage';
 import PostPage from './pages/PostPage';
+import UserPostsPage from './pages/UserPostsPage';
 import { brandingColor } from './lib/styles/branding';
 
 const GlobalStyle = createGlobalStyle`
@@ -35,6 +36,7 @@ const App = () => (
     <Route component={ProfilePage} path="/profile/:UserId" />
     <Route component={WritePage} path="/write" />
     <Route component={PostPage} path="/post/:UserId/:PostId" />
+    <Route component={UserPostsPage} path="/posts/:UserId" />
   </Layout>
 );
 

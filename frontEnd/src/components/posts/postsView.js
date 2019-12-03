@@ -97,10 +97,10 @@ const PostBoxWrap = styled.div`
   }
 `;
 
-const PostBox = ({ 
+const PostBox = ({
   postData,
   onGetTargetProfile,
- }) => {
+}) => {
   return (
     <PostBoxWrap>
       <div className="left">
@@ -142,6 +142,7 @@ const PostBox = ({
 };
 
 const PostsView = ({
+  pageId,
   postsData,
   postsError,
   lastPage,
@@ -155,6 +156,7 @@ const PostsView = ({
     <PostsViewWrap>
       <div className="left">
         <PageNum
+          pageId={pageId}
           lastPage={lastPage}
         />
       </div>

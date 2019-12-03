@@ -5,7 +5,7 @@ import TagBoxContainer from '../containers/write/TagBoxContainer';
 import PostingButtonsContainer from '../containers/write/PostingButtonsContainer';
 
 const WritePage = () => (
-  <Responsive maxWidth="1200">
+  <Responsive maxWidth="1400">
     <TagBoxContainer />
     <EditorContainer />
     <PostingButtonsContainer />
