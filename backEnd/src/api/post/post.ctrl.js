@@ -35,7 +35,6 @@ exports.getPostById = async (req, res, next) => {
 
 exports.getCommentsInPost = async (req, res, next) => {
   const post = httpContext.get('post').dataValues;
-  // const user = httpContext.get('user');
 
   try {
     let comments = await db.Comment.findAndCountAll({
@@ -77,7 +76,7 @@ exports.getComment = async (req, res, next) => {
       },
       include: [{
         model: db.User,
-        attributes: ['email', 'nickname', 'portrait']
+        attributes: ['id', 'email', 'nickname', 'portrait']
       },{
         model: db.User,
         through: 'CommentsLike',
@@ -90,6 +89,11 @@ exports.getComment = async (req, res, next) => {
         attributes: ['id', 'email', 'nickname']
       }],      
     })
+
+    if (!comment) {
+      res.status(404).send('[Not Found]: 존재하지 않는 댓글입니다.');
+      return;
+    }
 
     httpContext.set('comment', comment);
     return next();
@@ -168,17 +172,13 @@ exports.writeComment = async (req, res, next) => {
 };
 
 exports.read = async (req, res, next) => {
-  const post = httpContext.get('post').dataValues;
+  const post = httpContext.get('post');
   const comments = httpContext.get('comments');
 
   try {
-    await db.Post.update({
+    await post.update({
       views: post.views + 1,
-    }, {
-      where: { id: post.id }
     })
-
-    post.views += 1;
 
     const data = {
       post,
@@ -326,6 +326,7 @@ exports.delete = async (req, res, next) => {
 exports.deleteComment = async (req, res, next) => {
   const user = httpContext.get('user');
   const targetComment = httpContext.get('comment');
+  const parentId = req.query.parentId;
 
   try  {
     if (user.id !== targetComment.UserId) {
@@ -339,7 +340,28 @@ exports.deleteComment = async (req, res, next) => {
       }
     })
 
-    res.json(targetComment.id);
+    if (parentId) {
+      const parentComment = await db.Comment.findOne({
+        where: {
+          id: parentId
+        }
+      });
+  
+      await parentComment.update({
+        subCommentsNumb: parentComment.subCommentsNumb - 1,
+      });
+
+      res.json({
+        parentId,
+        targetId: targetComment.id,
+        subCommentsNumb: parentComment.subCommentsNumb,
+      });  
+      return;
+    }
+    
+    res.json({
+      targetId: targetComment.id,
+    });
   } catch (e) {
     console.error(e);
     return next(e);
@@ -408,7 +430,7 @@ exports.thumbsUp = async (req, res, next) => {
       },
       include: [{
         model: db.User,
-        attributes: ['email', 'nickname']
+        attributes: ['email', 'nickname', 'portrait']
       },{
         model: db.User,
         through: 'CommentsLike',
@@ -430,7 +452,6 @@ exports.thumbsUp = async (req, res, next) => {
 };
 
 exports.thumbsDown = async (req, res, next) => {
-  console.log('thumbsDown');
   const user = httpContext.get('user');
   const comment = httpContext.get('comment');
 
@@ -465,7 +486,7 @@ exports.thumbsDown = async (req, res, next) => {
       },
       include: [{
         model: db.User,
-        attributes: ['email', 'nickname']
+        attributes: ['email', 'nickname', 'portrait']
       },{
         model: db.User,
         through: 'CommentsLike',

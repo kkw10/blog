@@ -36,6 +36,22 @@ export const [
   UPDATE_COMMENT_SUCCESS,
   UPDATE_COMMENT_FAILURE,
 ] = createRequestActionTypes('post/UPDATE_COMMENT');
+export const [
+  UPDATE_SUB_COMMENT,
+  UPDATE_SUB_COMMENT_SUCCESS,
+  UPDATE_SUB_COMMENT_FAILURE,
+] = createRequestActionTypes('post/UPDATE_SUB_COMMENT');
+export const [
+  SUB_COMMENTING,
+  SUB_COMMENTING_SUCCESS,
+  SUB_COMMENTING_FAILURE,
+] = createRequestActionTypes('post/SUB_COMMENTING');
+export const [
+  READ_SUB_COMMENTS,
+  READ_SUB_COMMENTS_SUCCESS,
+  READ_SUB_COMMENTS_FAILURE,
+] = createRequestActionTypes('post/READ_SUB_COMMENTS');
+export const HIDE_SUB_COMMENTS = 'post/HIDE_SUB_COMMENTS';
 
 export const readPost = (id) => ({
   type: READ_POST,
@@ -72,11 +88,11 @@ export const thumbsDown = ({ postId, commentId }) => ({
   },
 });
 
-export const deleteComment = ({ postId, commentId }) => ({
+export const deleteComment = ({ commentId, parentId }) => ({
   type: DELETE_COMMENT,
   payload: {
-    postId,
     commentId,
+    parentId,
   },
 });
 
@@ -87,4 +103,28 @@ export const updateComment = ({ postId, commentId, contents }) => ({
     commentId,
     contents,
   },
+});
+
+export const updateSubComment = ({ commentId, parentId, contents }) => ({
+  type: UPDATE_SUB_COMMENT,
+  payload: {
+    commentId,
+    parentId,
+    contents,
+  },
+});
+
+export const subCommenting = (comment) => ({
+  type: SUB_COMMENTING,
+  payload: comment,
+});
+
+export const readSubComments = (commentId) => ({
+  type: READ_SUB_COMMENTS,
+  payload: commentId,
+});
+
+export const hideSubComments = (commentId) => ({
+  type: HIDE_SUB_COMMENTS,
+  payload: commentId,
 });

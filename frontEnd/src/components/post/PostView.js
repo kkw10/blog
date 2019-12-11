@@ -8,7 +8,9 @@ import { brandingColor } from '../../lib/styles/branding';
 import Tag from '../common/Tag';
 import Button from '../common/Button';
 import AlertModal from '../common/modal/AlertModal';
-import PostComments from './PostComments';
+
+// Component...
+import PostCommentsContainer from '../../containers/post/PostCommentsContainer';
 
 const PostViewWrap = styled.div`
   background: #fff;
@@ -260,23 +262,7 @@ const PostView = ({
           className="tui-style tui-editor-contents"
           dangerouslySetInnerHTML={{ __html: postResult.contents }}
         />
-        <PostComments
-          user={user}
-          commentsData={commentsResult}
-          commentError={commentError}
-          onChangeField={onChangeField}
-          onSubmit={onSubmit}
-          clearedForm={clearedForm}
-          onEditComment={onEditComment}
-          editingCommentData={editingCommentData}
-          onEditCancel={onEditCancel}
-          onThumbsUp={onThumbsUp}
-          onThumbsDown={onThumbsDown}
-          onDeleteComment={onDeleteComment}
-          onUpdateComment={onUpdateComment}
-          onGetTargetProfile={onGetTargetProfile}
-          onRefresh={onRefresh}
-        />
+        <PostCommentsContainer />
       </PostViewWrap>
       <AlertModal
         description="정말로 삭제를 하시겠습니까?"

@@ -3,6 +3,12 @@ module.exports = (sequelize, DataTypes) => {
     contents: {
       type: DataTypes.TEXT,
       allowNull: false,
+    },
+    subCommentsNumb: {
+      type: DataTypes.INTEGER(11),
+    },
+    parentCommentId: {
+      type: DataTypes.INTEGER(11),
     }
   }, {
     charset: 'utf8',

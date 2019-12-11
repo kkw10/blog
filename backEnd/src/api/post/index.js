@@ -1,8 +1,10 @@
 const Express = require('express');
 const router = Express.Router();
 const postCtrl = require('./post.ctrl');
+const commentCtrl = require('./post.comment.ctrl');
 const isLoggedIn = require('../../lib/isLoggedIn');
 
+// POST
 router.post('/', 
   isLoggedIn,
   postCtrl.write
@@ -27,6 +29,13 @@ router.post('/:id/comment/:commentId/down',
   postCtrl.getComment,
   postCtrl.thumbsDown,
 );
+router.post('/subcomment/:commentId',
+  isLoggedIn,
+  postCtrl.getComment,
+  commentCtrl.writeSubComment,
+);
+
+// GET
 router.get('/:id',
   postCtrl.getPostById,
   postCtrl.getCommentsInPost,
@@ -36,27 +45,40 @@ router.get('/:id/comments',
   postCtrl.getPostById,
   postCtrl.readComments
 )
+router.get('/subcomments/:commentId',
+  postCtrl.getComment,
+  commentCtrl.readSubComments,
+)
+
+// PATCH
 router.patch('/:id',
   isLoggedIn,
   postCtrl.getPostById,
   postCtrl.isMyPost,
   postCtrl.update
 );
-router.patch('/:id/:commentId',
+router.patch('/comment/:id/:commentId',
   isLoggedIn,
   postCtrl.getComment,
   postCtrl.updateComment,
 );
+router.patch('/subcomment/:commentId',
+  isLoggedIn,
+  postCtrl.getComment,
+  commentCtrl.updateSubComment,
+);
+
+// DELETE
 router.delete('/:id',
   isLoggedIn,
   postCtrl.getPostById,
   postCtrl.isMyPost,
-  postCtrl.delete
+  postCtrl.delete,
 );
-router.delete('/:id/:commentId',
+router.delete('/comment/:commentId',
   isLoggedIn,
   postCtrl.getComment,
   postCtrl.deleteComment
-)
+);
 
 module.exports = router;

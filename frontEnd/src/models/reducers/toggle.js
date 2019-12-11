@@ -1,19 +1,27 @@
 import {
-  TOGGLING
+  TOGGLING,
+  CLEAR_TOGGLE,
 } from '../actions/toggle';
 
 const reducer = (state = {}, action) => {
   switch (action.type) {
-    case TOGGLING:
-      let prevState = state.activeToggle;
-      prevState ? prevState = "" : prevState = action.payload  
+    case TOGGLING: {
+      let newState = action.payload;
+      const prevState = state.activeToggle;
+
+      if (newState === prevState) {
+        newState = null;
+      }
 
       return {
         ...state,
-        activeToggle: prevState
-      }
+        activeToggle: newState,
+      };
+    }
+    case CLEAR_TOGGLE:
+      return {};
     default:
-      return state; 
+      return state;
   }
 }
 

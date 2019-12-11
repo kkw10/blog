@@ -4,14 +4,8 @@ import React, {
   useRef,
   useCallback,
 } from 'react';
-import {
-  AiFillDislike,
-  AiFillLike,
-} from 'react-icons/ai';
-import { FaUserAstronaut } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { IoIosMore } from 'react-icons/io';
 import 'tui-editor/dist/tui-editor.css'; // editor's ui
 import 'tui-editor/dist/tui-editor-contents.css'; // editor's content
 import 'codemirror/lib/codemirror.css'; // codemirror
@@ -19,8 +13,10 @@ import 'highlight.js/styles/github.css'; // code block highlight
 import Editor from 'tui-editor';
 import { toggling } from '../../models/actions/toggle';
 import { brandingColor } from '../../lib/styles/branding';
+
+// Component...
 import Button from '../common/Button';
-import DropBox from '../common/dropbox';
+import Comment from '../common/Comment';
 
 const PostCommentsWrap = styled.div`
   .tui-editor-defaultUI {
@@ -56,164 +52,52 @@ const Form = styled.form`
 `;
 
 const CommentsList = styled.div`
-`;
+  & .comment-border-wrap {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid ${brandingColor.common[2]};
 
-const CommentsBox = styled.div`
-  font-size: 13px;
-  padding: 1rem 0;
-  border-bottom: 1px solid ${brandingColor.common[2]};
-
-  .text {
-    margin: 1rem 0;
-  }
-
-  .tools {
-    display: flex;
-
-    svg {
-      font-size: 16px;
-      cursor: pointer;
-      margin-right: 0.5rem;
-    }
-    
-    span {
-      display: inline-block;
-      margin-right: 1rem;
-      color: ${brandingColor.common[4]};
-    }
-  }
-`;
-
-const Head = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  .info {
-    display: flex;
-    align-items: center;
-    & > .info_portrait {
-      margin-right: 0.5rem;
-      img {
-        border-radius: 5px;
-        width: 30px;
-        height: 30px;
-      }
-
-      .default_user {
-        font-size: 16px;
-        color: #fff;
-        width: 30px;
-        height: 30px;
-        border-radius: 5px;
-        background: ${brandingColor.common[4]};
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }      
-    }
-
-    & > .info_name {
-      font-size: 13px;
-      color: ${brandingColor.common[6]};
-      b {
-        cursor: pointer;
-        transition: 0.2s ease-in-out;
-        &:hover {
-          color: ${brandingColor.main[6]};
-        }
-      }
-      b::after {
-        content: '/';
-        display: inline-block;
-        margin: 0 5px;
-        font-weight: normal;
-      }
-    }
-  }
-  .more {
-    color: ${brandingColor.common[6]};
-    font-size: 20px;
-    position: relative;
-    svg {
-      cursor: pointer;
-    }
-  }
-`;
-
-const Content = styled.div`
-  .editingArea {
-    overflow: hidden;
-    margin: 1rem 0;
-  };
-
-  #tui_updater {
-    .te-mode-switch-section {
-      display: none!important;
-    }
-  };
-
-  .buttons {
-    float: right;
-    margin-top: 0.5rem;
-    button + button {
-      margin-left: 0.5rem;
-    }
-  };
-`;
-
-const MoreBox = styled.ul`
-  width: 60px;
-  text-align: center;
-  font-size: 12px;
-  li {
-    margin-bottom: 0.5rem;
-    padding: 0.3rem;
-    cursor: pointer;
-    &:hover {
-      background: ${brandingColor.point[5]};
-      color: #fff;
-    }
     &:last-child {
       margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
     }
   }
 `;
 
 const SubComment = styled.div`
-  color: ${brandingColor.common[4]};
-`;
-
-const SvgWrap = styled.div`
-  color: ${(props) => (props.fill === 'point' ? brandingColor.main[5] : brandingColor.common[4])};
+  margin: 0.5rem 0;
+  padding: 1rem;
+  padding-left: 2rem;
+  border-radius: 5px;
+  color: ${brandingColor.common[6]};
+  font-size: 20px;
+  position: relative;
 `;
 
 const PostComments = ({
-  user,
-  commentsData,
-  commentError,
-  onChangeField,
-  onSubmit,
+  me,
+  commentsResult,
   clearedForm,
-  onEditComment,
   editingCommentData,
-  onEditCancel,
-  onThumbsUp,
-  onThumbsDown,
+  commentError,
+  onInitialize,
+  onChangeField,
+  onCommentSubmit,
+  onEditingFieldSetting,
   onDeleteComment,
   onUpdateComment,
-  onGetTargetProfile,
+  onThumbsUp,
+  onThumbsDown,
   onRefresh,
+  onShowSubComment,
+  onHideSubComment,
+  onGetTargetProfile,
 }) => {
   const dispatch = useDispatch();
   const toggle = useSelector(({ toggle }) => (toggle));
   const mounted = useRef(false);
-  const mountedComment = useRef(commentsData.reduce((acc, cur) => {
-    acc[`${cur.id}`] = false;
-    return acc;
-  }, {}));
   const instance = useRef(null);
-  const updateInstance = useRef(null);
   const [test, setTest] = useState('새로고침');
 
   if (commentError) {
@@ -224,41 +108,28 @@ const PostComments = ({
     );
   }
 
+  // 메인 댓글 에디터 버튼, 새로고침 or 댓글 전환
   const onClick = useCallback((e) => {
     e.preventDefault();
     if (test === '댓글') {
-      onSubmit(e);
+      onCommentSubmit(e);
       return;
     }
     onRefresh();
-  }, [onSubmit, onRefresh]);
+  }, [onCommentSubmit, onRefresh]);
 
+  // 댓글 우측 더보기 아이콘 버튼 토글
   const commentMoreToggle = useCallback((id) => {
     dispatch(toggling(`commentMore-${id}`));
   }, [dispatch]);
 
-  const onEditCommentClick = useCallback((commentId) => {
-    onEditComment(commentId);
-    dispatch(toggling(`commentMore-${commentId}`));
-  }, [dispatch, onEditComment]);
-
-  const onDeleteCommentClick = useCallback((commentId) => {
-    onDeleteComment(commentId);
-    dispatch(toggling(`commentMore-${commentId}`));
-  }, [dispatch, onDeleteComment]);
-
-  const onUpdateCommentClick = useCallback((commentId) => {
-    onUpdateComment(commentId);
-    mountedComment.current[commentId] = false;
-  }, [onUpdateComment]);
-
-  const onEditCancelClick = useCallback((commentId) => {
-    onEditCancel();
-    mountedComment.current[commentId] = false;
-  });
+  // 대댓글 에디터 show/off 토글 버튼
+  const subEditorToggle = useCallback((id) => {
+    dispatch(toggling(`subCommentEditor-${id}`));
+  }, [dispatch]);
 
   useEffect(() => { // 포스트 댓글 작성 에디터
-    if (!user) return;
+    if (!me) return;
 
     if (!mounted.current) {
       mounted.current = true;
@@ -289,38 +160,11 @@ const PostComments = ({
     if (mounted.current && clearedForm) {
       instance.current.setValue('');
     }
-  }, [user, onChangeField, clearedForm]);
-
-  useEffect(() => { // 댓글 수정 관련 에디터
-    const target = editingCommentData.id;
-    if (!target) return;
-
-    if (!mountedComment.current[target]) {
-      mountedComment.current[target] = true;
-      updateInstance.current = new Editor({
-        el: document.querySelector(`#tui_updater${editingCommentData.id}`),
-        initialEditType: 'wysiwyg',
-        previewStyle: 'vertical',
-        height: '200px',
-      });
-
-      updateInstance.current.setValue(editingCommentData.contents);
-
-      updateInstance.current.on('change', () => {
-        const data = updateInstance.current.getHtml();
-
-        onChangeField({
-          key: 'comment',
-          value: data,
-        });
-      });
-    }
-
-  }, [editingCommentData, onChangeField]);
+  }, [me, onChangeField, clearedForm]);
 
   return (
     <PostCommentsWrap>
-      {user && (
+      {me && (
         <>
           <Form>
             <div id="tui_editor" />
@@ -336,83 +180,62 @@ const PostComments = ({
         </>
       )}
       <CommentsList>
-        {commentsData.map((comment) => {
-          const isLiked = user && comment.Likers && comment.Likers.find((v) => v.id === user.id);
-          const isDisliked = user && comment.Dislikers && comment.Dislikers.find((v) => v.id === user.id);
+        {commentsResult.map((comment) => {
+          const isLiked = comment.Likers && comment.Likers.find((v) => v.id === me.user.id);
+          const isDisliked = comment.Dislikers && comment.Dislikers.find((v) => v.id === me.user.id);
           return (
-            <CommentsBox key={comment.id}>
-              <Head>
-                <div className="info">
-                  <div className="info_portrait">
-                    {comment.User.portrait ? (
-                      <img src={`http://localhost:1991/${comment.User.portrait}`} alt="" />
-                    ) : (
-                      <div className="default_user">
-                        <FaUserAstronaut />
+            <div className="comment-border-wrap">
+              <Comment
+                key={comment.id}
+                me={me}
+                toggle={toggle}
+                commentMoreToggle={commentMoreToggle}
+                commentData={comment}
+                editingCommentData={editingCommentData}
+                onEditingFieldSetting={onEditingFieldSetting}
+                onCommentSubmit={onCommentSubmit}
+                onDeleteComment={onDeleteComment}
+                onUpdateComment={onUpdateComment}
+                onEditCancel={onInitialize}
+                onThumbsUp={onThumbsUp}
+                onThumbsDown={onThumbsDown}
+                onGetTargetProfile={onGetTargetProfile}
+                isLiked={isLiked}
+                isDisliked={isDisliked}
+                onShowSubComment={onShowSubComment}
+                onHideSubComment={onHideSubComment}
+                subEditorToggle={subEditorToggle}
+              />
+              {comment.isOpen && (comment.ChildComment && comment.ChildComment.map((child) => {
+                if (child) {
+                  return (
+                    <SubComment>
+                      <div className="comment-border-wrap">
+                        <Comment
+                          key={child.id}
+                          type="SUB"
+                          me={me}
+                          toggle={toggle}
+                          commentMoreToggle={commentMoreToggle}
+                          commentData={child}
+                          parentData={comment}
+                          editingCommentData={editingCommentData}
+                          onEditingFieldSetting={onEditingFieldSetting}
+                          onCommentSubmit={onCommentSubmit}
+                          onDeleteComment={onDeleteComment}
+                          onUpdateComment={onUpdateComment}
+                          onEditCancel={onInitialize}
+                          onThumbsUp={onThumbsUp}
+                          onThumbsDown={onThumbsDown}
+                          onGetTargetProfile={onGetTargetProfile}
+                          subEditorToggle={subEditorToggle}
+                        />
                       </div>
-                    )}
-                  </div>
-                  <div className="info_name">
-                    <b onClick={() => onGetTargetProfile(comment.UserId)}>
-                      {comment.User.nickname}
-                    </b>
-                    <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
-                  </div>
-                </div>
-                {comment.UserId === user.id ? (
-                  <div className="more">
-                    <IoIosMore
-                      onClick={() => commentMoreToggle(comment.id)}
-                    />
-                    <DropBox
-                      visible={toggle.activeToggle === `commentMore-${comment.id}`}
-                      top="20px"
-                    >
-                      <MoreBox>
-                        <li onClick={() => onEditCommentClick(comment.id)}>수정</li>
-                        <li onClick={() => onDeleteCommentClick(comment.id)}>삭제</li>
-                      </MoreBox>
-                    </DropBox>
-                  </div>
-                ) : null}
-              </Head>
-              <Content>
-                {editingCommentData.id && editingCommentData.id === comment.id ? (
-                  <div className="editingArea">
-                    <div id={`tui_updater${comment.id}`} />
-                    <div className="buttons">
-                      <Button
-                        placeholder="수정"
-                        size="md"
-                        background="point"
-                        onClick={() => onUpdateCommentClick(comment.id)}
-                      />
-                      <Button
-                        placeholder="취소"
-                        size="md"
-                        onClick={() => onEditCancelClick(comment.id)}
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <div
-                    className="text tui-style tui-editor-contents"
-                    dangerouslySetInnerHTML={{ __html: comment.contents }}
-                  />
-                )}
-              </Content>
-              <div className="tools">
-                <SvgWrap fill={isLiked ? 'point' : 'common'}>
-                  <AiFillLike onClick={() => onThumbsUp(comment.id)} />
-                </SvgWrap>
-                <span>{comment.Likers && (comment.Likers.length) || 0}</span>
-                <SvgWrap fill={isDisliked ? 'point' : 'common'}>
-                  <AiFillDislike onClick={() => onThumbsDown(comment.id)} />
-                </SvgWrap>
-                <span>{comment.Dislikers && (comment.Dislikers.length) || 0}</span>
-                <SubComment>댓글</SubComment>
-              </div>
-            </CommentsBox>
+                    </SubComment>
+                  );
+                }
+              }))}
+            </div>
           );
         })}
       </CommentsList>

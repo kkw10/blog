@@ -15,6 +15,13 @@ import {
   DELETE_COMMENT_FAILURE,
   UPDATE_COMMENT_SUCCESS,
   UPDATE_COMMENT_FAILURE,
+  UPDATE_SUB_COMMENT_SUCCESS,
+  UPDATE_SUB_COMMENT_FAILURE,
+  SUB_COMMENTING_SUCCESS,
+  SUB_COMMENTING_FAILURE,
+  READ_SUB_COMMENTS_SUCCESS,
+  READ_SUB_COMMENTS_FAILURE,
+  HIDE_SUB_COMMENTS,
 } from '../actions/post';
 
 const initialState = {
@@ -120,8 +127,20 @@ const reducer = (state = initialState, action) => {
         thumbsError: action.payload,
       };
     case DELETE_COMMENT_SUCCESS: {
+      const { parentId, targetId, subCommentsNumb } = action.payload;
       let newComments = [...state.commentsResult];
-      newComments = newComments.filter((comment) => comment.id !== action.payload);
+
+      if (parentId) {
+        const parentIndex = newComments.findIndex((comment) => (
+          comment.id === Number(parentId)
+        ));
+        newComments[parentIndex].ChildComment = newComments[parentIndex].ChildComment.filter((comment) => comment.id !== targetId);
+        newComments[parentIndex].subCommentsNumb = subCommentsNumb;
+      } else {
+        console.log(2)
+        newComments = newComments.filter((comment) => comment.id !== targetId);
+      }
+
       return {
         ...state,
         commentsResult: newComments,
@@ -146,11 +165,80 @@ const reducer = (state = initialState, action) => {
         commentError: null,
       };
     }
+    case UPDATE_SUB_COMMENT_SUCCESS: {
+      const newCommentResults = [...state.commentsResult];
+      const parentIndex = [...state.commentsResult].findIndex((comment) => (
+        comment.id === action.payload.parentId
+      ));
+      const childIndex = newCommentResults[parentIndex].ChildComment.findIndex((comment) => (
+        comment.id === action.payload.childId
+      ));
+      newCommentResults[parentIndex].ChildComment[childIndex].contents = action.payload.editedContents;
+
+      return {
+        ...state,
+        commentsResult: newCommentResults,
+        commentError: null,
+      };
+    }
     case UPDATE_COMMENT_FAILURE:
+    case UPDATE_SUB_COMMENT_FAILURE: {
       return {
         ...state,
         commentError: action.payload,
       };
+    }
+    case SUB_COMMENTING_SUCCESS: {
+      const targetId = action.payload.parentCommentId;
+      const targetIndex = [...state.commentsResult].findIndex((comment) => (
+        comment.id === targetId
+      ));
+      const newCommentsResult = [...state.commentsResult];
+      newCommentsResult[targetIndex].subCommentsNumb = state.commentsResult[targetIndex].subCommentsNumb + 1;
+
+      return {
+        ...state,
+        commentsResult: newCommentsResult,
+        commentError: null,
+      };
+    }
+    case SUB_COMMENTING_FAILURE: {
+      return {
+        ...state,
+        commentError: action.payload,
+      };
+    }
+    case READ_SUB_COMMENTS_SUCCESS: {
+      const { parentId } = action.payload;
+      const parentIndex = [...state.commentsResult].findIndex((comment) => (
+        comment.id === parentId
+      ));
+      const newCommentsResult = [...state.commentsResult];
+      newCommentsResult[parentIndex].isOpen = true;
+      newCommentsResult[parentIndex].ChildComment = action.payload.subComments;
+      return {
+        ...state,
+        commentsResult: newCommentsResult,
+      };
+    }
+    case READ_SUB_COMMENTS_FAILURE: {
+      return {
+        ...state,
+        commentError: action.payload,
+      };
+    }
+    case HIDE_SUB_COMMENTS: {
+      const targetId = action.payload;
+      const targetIndex = [...state.commentsResult].findIndex((comment) => (
+        comment.id === targetId
+      ));
+      const newCommentsResult = [...state.commentsResult];
+      newCommentsResult[targetIndex].isOpen = false;
+      return {
+        ...state,
+        commentsResult: newCommentsResult,
+      };
+    }
     default:
       return state;
   }

@@ -54,7 +54,7 @@ const Button = ({ placeholder, ...props }) => {
     <StyledButton {...props}>
       { placeholder }
     </StyledButton>
-  )
-}
+  );
+};
 
 export default Button;
