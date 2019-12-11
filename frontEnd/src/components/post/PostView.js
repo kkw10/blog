@@ -144,28 +144,15 @@ const Contents = styled.div`
 
 const PostView = ({
   postResult,
-  commentsResult,
   postError,
-  commentError,
   loading,
   user,
   onEdit,
-  onEditComment,
-  editingCommentData,
-  onEditCancel,
   onDelete,
-  onSubmit,
   toggle,
   onToggling,
-  onChangeField,
-  clearedForm,
   onRecomend,
-  onThumbsUp,
-  onThumbsDown,
-  onDeleteComment,
-  onUpdateComment,
   onGetTargetProfile,
-  onRefresh,
 }) => {
   if (loading || !postResult) {
     return null;

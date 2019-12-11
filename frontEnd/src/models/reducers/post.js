@@ -2,6 +2,7 @@ import {
   READ_POST,
   READ_POST_SUCCESS,
   READ_POST_FAILURE,
+  READ_COMMENTS,
   READ_COMMENTS_SUCCESS,
   READ_COMMENTS_FAILURE,
   CLEAR_FORM,
@@ -22,11 +23,14 @@ import {
   READ_SUB_COMMENTS_SUCCESS,
   READ_SUB_COMMENTS_FAILURE,
   HIDE_SUB_COMMENTS,
+  REFRESH_COMMENTS_SUCCESS,
+  REFRESH_COMMENTS_FAILURE,
 } from '../actions/post';
 
 const initialState = {
   postResult: null,
   commentsResult: null,
+  hasMoreComments: true,
   postError: null,
   recomendError: null,
   commentError: null,
@@ -54,13 +58,28 @@ const reducer = (state = initialState, action) => {
         commentsResult: null,
         postError: action.payload,
       };
+    case READ_COMMENTS:
+      return {
+        ...state,
+        commentsResult: action.lastCommentId ? [] : [...state.commentsResult],
+        hasMorePost: action.payload.lastCommentId ? state.hasMorePost : true,
+      };
     case READ_COMMENTS_SUCCESS:
       return {
         ...state,
+        commentsResult: [...state.commentsResult, ...action.payload],
+        hasMoreComments: action.payload.length === 10,
+        commentError: null,
+      };
+    case REFRESH_COMMENTS_SUCCESS:
+      return {
+        ...state,
         commentsResult: action.payload,
+        hasMoreComments: true,
         commentError: null,
       };
     case READ_COMMENTS_FAILURE:
+    case REFRESH_COMMENTS_FAILURE:
       return {
         ...state,
         commentsResult: null,

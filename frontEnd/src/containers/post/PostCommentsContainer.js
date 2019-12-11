@@ -13,6 +13,7 @@ import {
   setOriginalComment,
 } from '../../models/actions/write';
 import {
+  refreshComments,
   readComments,
   readSubComments,
   hideSubComments,
@@ -153,7 +154,7 @@ const PostCommentsContainer = ({
 
   // 댓글 새로고침
   const onRefresh = useCallback(() => {
-    dispatch(readComments(postId));
+    dispatch(refreshComments({ postId }));
   }, [dispatch]);
 
   // 대댓글 보기

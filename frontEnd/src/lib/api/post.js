@@ -17,9 +17,13 @@ export const read = (id) => (
   client.get(`/api/post/${id}`)
 );
 
-export const readComments = (id) => (
-  client.get(`/api/post/${id}/comments`)
-);
+export const readComments = ({ postId, lastCommentId = 0 }) => {
+  const queryString = qs.stringify({
+    lastCommentId,
+  });
+
+  return client.get(`/api/post/${postId}/comments?${queryString}`)
+};
 
 export const readSubComments = (id) => (
   client.get(`/api/post/subcomments/${id}`)

@@ -52,6 +52,7 @@ exports.getCommentsInPost = async (req, res, next) => {
       }],
       distinct: true,
       order: [['createdAt', 'DESC']],
+      limit: 10,
     })
     .then(result => {
       res.set('Comments-Count', result.count);
@@ -87,7 +88,7 @@ exports.getComment = async (req, res, next) => {
         through: 'CommentsDislike',
         as: 'Dislikers',
         attributes: ['id', 'email', 'nickname']
-      }],      
+      }],
     })
 
     if (!comment) {
@@ -194,12 +195,26 @@ exports.read = async (req, res, next) => {
 
 exports.readComments = async (req, res, next) => {
   const post = httpContext.get('post');
+  const lastId = parseInt(req.query.lastCommentId, 10);
+  let where = {};
 
   try {
-    const comments = await db.Comment.findAndCountAll({
-      where: {
+    if (lastId) {
+      where = {
         PostId: post.id,
-      },
+        id: { [db.Sequelize.Op.lt]: lastId },
+      }
+    } else {
+      where = {
+        postId: post.id,
+      }
+    }
+
+    console.log('@@@@@@@@@@@@@');
+    console.log(lastId);
+
+    const comments = await db.Comment.findAndCountAll({
+      where,
       include: [{
         model: db.User,
         attributes: ['email', 'nickname', 'portrait']
@@ -216,6 +231,7 @@ exports.readComments = async (req, res, next) => {
       }],
       distinct: true,
       order: [['createdAt', 'DESC']],
+      limit: 10,
     })
     .then(result => {
       res.set('Comments-Count', result.count);

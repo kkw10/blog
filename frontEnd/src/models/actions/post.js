@@ -52,15 +52,23 @@ export const [
   READ_SUB_COMMENTS_FAILURE,
 ] = createRequestActionTypes('post/READ_SUB_COMMENTS');
 export const HIDE_SUB_COMMENTS = 'post/HIDE_SUB_COMMENTS';
+export const [
+  REFRESH_COMMENTS,
+  REFRESH_COMMENTS_SUCCESS,
+  REFRESH_COMMENTS_FAILURE,
+] = createRequestActionTypes('post/REFRESH_COMMENTS');
 
 export const readPost = (id) => ({
   type: READ_POST,
   payload: id,
 });
 
-export const readComments = (id) => ({
+export const readComments = ({ postId, lastCommentId }) => ({
   type: READ_COMMENTS,
-  payload: id,
+  payload: {
+    postId,
+    lastCommentId,
+  },
 });
 
 export const clearForm = () => ({
@@ -127,4 +135,9 @@ export const readSubComments = (commentId) => ({
 export const hideSubComments = (commentId) => ({
   type: HIDE_SUB_COMMENTS,
   payload: commentId,
+});
+
+export const refreshComments = (postId) => ({
+  type: REFRESH_COMMENTS,
+  payload: postId,
 });

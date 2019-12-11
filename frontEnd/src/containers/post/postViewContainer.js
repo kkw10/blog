@@ -21,6 +21,7 @@ const PostViewContainer = ({ match, history }) => {
   const {
     postResult,
     commentsResult,
+    hasMoreComments,
     postError,
     commentError,
     loading,
@@ -29,6 +30,7 @@ const PostViewContainer = ({ match, history }) => {
   } = useSelector(({ post, loading, user }) => ({
     postResult: post.postResult,
     commentsResult: post.commentsResult,
+    hasMoreComments: post.hasMoreComments,
     postError: post.postError,
     commentError: post.commentError,
     loading: loading['post/READ_POST'],
@@ -77,31 +79,47 @@ const PostViewContainer = ({ match, history }) => {
     dispatch(recomend(postId));
   }, [dispatch]);
 
-  const onRefresh = useCallback(() => {
-    dispatch(readComments(postId));
-  }, [dispatch]);
-
   const onGetTargetProfile = useCallback((profileId) => {
     dispatch(getTargetProfile(profileId));
   }, [dispatch]);
 
-  useEffect(() => {
+  const onScroll = useCallback(() => {
+    const { scrollY } = window;
+    const { clientHeight } = document.documentElement;
+    const { scrollHeight } = document.documentElement;
+
+    if (scrollY + clientHeight > scrollHeight - 300) {
+      if (!hasMoreComments) return;
+      const lastIndex = commentsResult.length - 1;
+      const lastCommentId = commentsResult[lastIndex].id;
+      dispatch(readComments({ postId, lastCommentId }));
+    }
+  }, [postId, commentsResult]);
+
+  useEffect(() => { // 포스트 읽기
     dispatch(readPost(postId));
   }, [dispatch, postId]);
 
-  useEffect(() => {
+  useEffect(() => { // 포스트 로딩 후 글의 저자로 유저 카드 내역 변경
     if (postResult) {
       dispatch(getTargetProfile(postResult.UserId));
     }
   }, [postResult]);
 
-  useEffect(() => {
+  useEffect(() => { // 코멘트 작성 후 tui-editor 초기화 하기
     if (writeResult) {
-      dispatch(readComments(postId));
+      dispatch(readComments({ postId }));
       dispatch(initialize());
       dispatch(clearForm());
     }
   }, [dispatch, writeResult]);
+
+  useEffect(() => { // 스크롤 이벤트 등록 및 해제 ( for 댓글 인피니티 스크롤 )
+    window.addEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, [commentsResult]);
 
   return (
     <PostView
@@ -119,7 +137,6 @@ const PostViewContainer = ({ match, history }) => {
       clearedForm={clearedForm}
       onRecomend={onRecomend}
       onGetTargetProfile={onGetTargetProfile}
-      onRefresh={onRefresh}
     />
   );
 };
