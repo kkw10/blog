@@ -2,11 +2,16 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { IoMdCreate, IoMdListBox } from 'react-icons/io';
+import { AiFillStar } from 'react-icons/ai';
 import { FaUserAstronaut } from 'react-icons/fa';
+
+// Component...
 import Responsive from './Responsive';
 import Button from './Button';
-import { brandingColor } from '../../lib/styles/branding';
 import AuthModal from './modal/AuthModal';
+
+// lib...
+import { brandingColor } from '../../lib/styles/branding';
 
 const HeaderWrap = styled.header`
   height: 3rem;
@@ -59,7 +64,8 @@ const Tools = styled.div`
   }
 
   .create_button,
-  .list_button {
+  .list_button,
+  .liked_button {
     color: ${brandingColor.point[6]};
     transition: 0.2s ease-in-out;
     &:hover {
@@ -123,8 +129,11 @@ const Header = ({
               <Link className="create_button" to="/write">
                 <IoMdCreate />
               </Link>
-              <Link className="list_button" to={`/posts/${user.id}`}>
+              <Link className="list_button" to={`/posts/user/${user.id}`}>
                 <IoMdListBox />
+              </Link>
+              <Link className="liked_button" to="/posts/liked">
+                <AiFillStar />
               </Link>
             </Tools>
             <ProfileButton to={`/profile/${user.id}`}>

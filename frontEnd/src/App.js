@@ -43,8 +43,9 @@ const App = () => (
     <Route component={ProfilePage} path="/profile/:UserId" />
     <Route component={WritePage} path="/write" />
     <Route component={PostPage} path="/post/:UserId/:PostId" />
-    <Route component={SearchedPostsPage} path="/posts/:UserId" exact />
+    <Route component={SearchedPostsPage} path="/posts/user/:UserId" exact />
     <Route component={SearchedPostsPage} path="/posts/tagged/:TagName" exact />
+    <Route component={SearchedPostsPage} path="/posts/liked" />
   </Layout>
 );
 

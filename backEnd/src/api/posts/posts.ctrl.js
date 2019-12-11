@@ -1,4 +1,5 @@
 const db = require('../../models');
+const httpContext = require('express-http-context');
 
 exports.list = async (req, res, next) => {
   let pageNum = req.query.page || 1;
@@ -143,6 +144,64 @@ exports.tagList = async (req, res, next) => {
 
     res.status(200).json(posts);
 
+  } catch (e) {
+    console.error(e);
+    return next(e);
+  }
+}
+
+exports.likedList = async (req, res, next) => {
+  const user = httpContext.get('user');
+
+  try {
+    let pageNum = req.query.page || 1;
+    let offset = 0;
+  
+    if (pageNum < 1) {
+      res.status(400).send('요청하신 페이지가 존재하지 않습니다.');
+    }
+   
+    if (pageNum > 1) {
+      offset = 10 * (pageNum - 1)
+    }
+
+    const me = await db.User.findOne({
+      where: {
+        id: user.id
+      }
+    });
+
+    const posts = await me.getRecomendedPost({
+      include: [{
+        model: db.HashTag,
+        attributes: ['name']
+      }, {
+        model: db.User,
+        attributes: ['email', 'nickname']
+      }, {
+        model: db.Comment,
+        attributes: ['id'],
+      }, {
+        model: db.User,
+        through: 'RecomendPost',
+        as: 'Recomenders',
+        attributes: ['id', 'email', 'nickname']
+      }],
+      order: [['createdAt', 'DESC']],
+    })
+    .then(result => {
+      res.set('Last-Page', Math.ceil(result.length / 10));
+      return result;
+    })
+    .then(result => {
+      if (offset > 0) {
+        offset = offset - 1;
+      }
+      result = result.slice(offset, 10);
+      return result;
+    });
+
+    res.status(200).json(posts);
   } catch (e) {
     console.error(e);
     return next(e);

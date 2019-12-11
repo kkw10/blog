@@ -8,8 +8,10 @@ import { getTargetProfile } from '../../models/actions/user';
 
 const PostsViewContainer = ({ location, match }) => {
   const dispatch = useDispatch();
+  const [pageId, setPageId] = useState(null);
   const [userId, setUserId] = useState(null);
   const [tagName, setTagName] = useState(null);
+  const [liked, setLiked] = useState(false);
   const { postsData, postsError, lastPage } = useSelector(({ posts }) => ({
     postsData: posts.result,
     postsError: posts.postsError,
@@ -23,22 +25,30 @@ const PostsViewContainer = ({ location, match }) => {
   useEffect(() => { // 유저 아이디 검사 및 페이지 넘버 쿼리 파싱
     if (match.params.UserId) {
       setUserId(match.params.UserId);
+      setPageId(match.params.UserId);
     }
 
     if (match.params.TagName) {
       setTagName(match.params.TagName);
+      setPageId(match.params.TagName);
     }
 
+    // for pagination
     const { page } = qs.parse(location.search, {
       ignoreQueryPrefix: true,
     });
 
-    dispatch(readPosts({ tagName, userId, page }));
-  }, [dispatch, location.search, userId, tagName, match.params.UserId, match.params.TagName]);
+    if (match.path === '/posts/liked') {
+      setLiked(true);
+      setPageId('liked');
+    }
+
+    dispatch(readPosts({ tagName, userId, liked, page }));
+  }, [dispatch, location.search, userId, tagName, match.params.UserId, match.params.TagName, liked]);
 
   return (
     <PostsView
-      pageId={userId}
+      pageId={pageId}
       postsData={postsData}
       potsError={postsError}
       lastPage={lastPage}
