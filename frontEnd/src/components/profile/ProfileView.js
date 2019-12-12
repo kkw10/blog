@@ -1,10 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { MdEmail } from 'react-icons/md';
 import { TiLocation } from 'react-icons/ti';
 import { AiFillFire } from 'react-icons/ai';
 import { FaUserAstronaut } from 'react-icons/fa';
 import { brandingColor } from '../../lib/styles/branding';
+
+// Component...
+import Modal from '../common/modal';
+import FollowView from '../profile/FollowView';
+
+// lib...
+import useToggle from '../../lib/hooks/toggleHook';
 
 const ProfileViewWrap = styled.div`
   border-radius: 5px;
@@ -162,6 +169,7 @@ const Followers = styled.ul`
     border-radius: 5px;
     font-size: 12px;
     font-weight: bold;
+    cursor: pointer;
     b {
       display: block;
       margin-bottom: 0.5rem;
@@ -169,19 +177,28 @@ const Followers = styled.ul`
   }
 
   .followers {
+    transition: 0.2s ease-in-out;
     background: ${brandingColor.main[6]};
+    &:hover {
+      border: 1px solid ${brandingColor.main[6]};
+      color: ${brandingColor.main[6]};
+      background: #fff;
+    }
   }
   .followings {
+    transition: 0.2s ease-in-out;
     background: ${brandingColor.point[6]};
+    &:hover {
+      border: 1px solid ${brandingColor.point[6]};
+      color: ${brandingColor.point[6]};
+      background: #fff;
+    }
   }
 `;
 
 const ProfileView = ({ currentUser }) => {
   if (!currentUser) return null;
-
-  useEffect(() => {
-    console.log(currentUser);
-  }, [currentUser])
+  const [toggle, onToggle] = useToggle();
 
   return (
     <ProfileViewWrap>
@@ -201,11 +218,11 @@ const ProfileView = ({ currentUser }) => {
             </div>
             {currentUser ? (
               <Followers>
-                <li className="followers">
+                <li className="followers" onClick={() => onToggle('FollowersList')}>
                   <b>팔로워</b>
                   <span>{currentUser.Followers.length}</span>
                 </li>
-                <li className="followings">
+                <li className="followings" onClick={() => onToggle('FollowingsList')}>
                   <b>팔로잉</b>
                   <span>{currentUser.Followings.length}</span>
                 </li>
@@ -247,6 +264,24 @@ const ProfileView = ({ currentUser }) => {
           </EtcInfo>
         </div>
       </DataArea>
+      <Modal
+        visible={toggle.activeToggle === 'FollowersList'}
+        title="팔로워"
+        onCancel={() => onToggle('FollowersList')}
+      >
+        <FollowView
+          followers={currentUser.Followers ? currentUser.Followers : null}
+        />
+      </Modal>
+      <Modal
+        visible={toggle.activeToggle === 'FollowingsList'}
+        title="팔로잉"
+        onCancel={() => onToggle('FollowingsList')}
+      >
+        <FollowView
+          followers={currentUser.Followings ? currentUser.Followings : null}
+        />
+      </Modal>
     </ProfileViewWrap>
   )
 }

@@ -31,11 +31,11 @@ const ModalWrap = styled.div`
     cursor: pointer;
   }
 
-  h2 {
+  & > h2 {
     margin-bottom: 1rem;
   }
 
-  p {
+  & > p {
     margin-bottom: 2rem;
   }
 `;

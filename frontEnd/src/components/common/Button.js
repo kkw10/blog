@@ -16,6 +16,14 @@ const StyledButton = styled.button`
   )}
 
   ${props => (
+    props.background === 'main' && css`
+      background: ${brandingColor[props.background][7]};
+      color: #fff;
+      border: 1px solid #fff;
+    `
+  )}  
+
+  ${props => (
     props.size === 'mx' && css`
       width: 100%;
       height: 36px;
