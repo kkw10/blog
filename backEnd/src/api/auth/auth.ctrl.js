@@ -107,21 +107,6 @@ exports.check = async (req, res) => {
         'favorite',
         'contact',
       ],
-      include: [{
-        model: db.User,
-        through: 'Follow',
-        as: 'Followers',
-        attributes: {
-          exclude: ['password']
-        },
-      }, {
-        model: db.User,
-        through: 'Follow',
-        as: 'Followings',
-        attributes: {
-          exclude: ['password']
-        },
-      }],
     });
 
     res.json({

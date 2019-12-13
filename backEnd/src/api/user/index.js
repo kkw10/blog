@@ -8,11 +8,21 @@ router.post('/follow/:userId',
   userCtrl.findTargetUser,
   userCtrl.follow,
 );
-
 router.post('/unfollow/:userId',
   isLoggedIn,
   userCtrl.findTargetUser,
   userCtrl.unfollow,
+);
+router.post('/unfollowing/:userId',
+  isLoggedIn,
+  userCtrl.findTargetUser,
+  userCtrl.unfollowing,
+);
+router.get('/followers/:userId',
+  userCtrl.readFollowers,
+);
+router.get('/followings/:userId',
+  userCtrl.readFollowings,
 )
 
 module.exports = router;

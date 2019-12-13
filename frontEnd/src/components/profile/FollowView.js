@@ -72,7 +72,7 @@ const Buttons = styled.div`
 
 `;
 
-const FollowView = ({ followers }) => {
+const FollowView = ({ type, isMe, followers, onUnfollowFromList, onUnfollowingFromList }) => {
   return (
     <FollowViewWrap>
       <ul>
@@ -90,13 +90,25 @@ const FollowView = ({ followers }) => {
                   {follower.favorite ? follower.favorite : '내용이 없습니다.'}
                 </div>
               </Introduce>
-              <Buttons>
-                <Button
-                  placeholder="언팔로우"
-                  size="md"
-                  background="main"
-                />
-              </Buttons>
+              {isMe ? (
+                <Buttons>
+                  {type === 'follower' ? (
+                    <Button
+                      placeholder="언팔로잉"
+                      size="md"
+                      background="main"
+                      onClick={() => onUnfollowingFromList(follower.id)}
+                    />
+                  ) : (
+                    <Button
+                      placeholder="언팔로우"
+                      size="md"
+                      background="main"
+                      onClick={() => onUnfollowFromList(follower.id)}
+                    />
+                  )}
+                </Buttons>
+              ) : (null)}
             </li>
           )
         })}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { MdEmail } from 'react-icons/md';
 import { TiLocation } from 'react-icons/ti';
@@ -196,9 +196,27 @@ const Followers = styled.ul`
   }
 `;
 
-const ProfileView = ({ currentUser }) => {
+const ProfileView = ({
+  currentUser,
+  FollowersList,
+  FollowingsList,
+  onReadFollowers,
+  onReadFollowings,
+  onUnfollowFromList,
+  onUnfollowingFromList,
+}) => {
   if (!currentUser) return null;
   const [toggle, onToggle] = useToggle();
+
+  const followerClickHandler = useCallback(() => {
+    onReadFollowers(currentUser.id);
+    onToggle('FollowersList');
+  }, [currentUser]);
+
+  const followingClickHandler = useCallback(() => {
+    onReadFollowings(currentUser.id);
+    onToggle('FollowingsList');
+  }, [currentUser]);
 
   return (
     <ProfileViewWrap>
@@ -218,13 +236,13 @@ const ProfileView = ({ currentUser }) => {
             </div>
             {currentUser ? (
               <Followers>
-                <li className="followers" onClick={() => onToggle('FollowersList')}>
+                <li className="followers" onClick={followerClickHandler}>
                   <b>팔로워</b>
                   <span>{currentUser.followers || 0}</span>
                 </li>
-                <li className="followings" onClick={() => onToggle('FollowingsList')}>
+                <li className="followings" onClick={followingClickHandler}>
                   <b>팔로잉</b>
-                  <span>{currentUser.Ffollowings || 0}</span>
+                  <span>{currentUser.followings || 0}</span>
                 </li>
               </Followers>
             ) : null}
@@ -269,18 +287,28 @@ const ProfileView = ({ currentUser }) => {
         title="팔로워"
         onCancel={() => onToggle('FollowersList')}
       >
-        <FollowView
-          followers={currentUser.Followers ? currentUser.Followers : null}
-        />
+        {FollowersList && (
+          <FollowView
+            type="follower"
+            isMe={currentUser.isMe}
+            followers={FollowersList}
+            onUnfollowingFromList={onUnfollowingFromList}
+          />
+        )}
       </Modal>
       <Modal
         visible={toggle.activeToggle === 'FollowingsList'}
         title="팔로잉"
         onCancel={() => onToggle('FollowingsList')}
       >
-        <FollowView
-          followers={currentUser.Followings ? currentUser.Followings : null}
-        />
+        {FollowingsList && (
+          <FollowView
+            type="following"
+            isMe={currentUser.isMe}
+            followers={FollowingsList}
+            onUnfollowFromList={onUnfollowFromList}
+          />
+        )}
       </Modal>
     </ProfileViewWrap>
   )

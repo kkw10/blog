@@ -69,3 +69,82 @@ exports.unfollow = async (req, res, next) => {
     return next(e);
   }
 };
+
+exports.unfollowing = async (req, res, next) => {
+  const targetUser = httpContext.get('targetUser');
+  const me = httpContext.get('user');
+
+  try {
+    await me.removeFollowers(targetUser.id);
+    await me.update({
+      followers: me.followers - 1,
+    });
+    await targetUser.update({
+      followings: targetUser.followings - 1,
+    });
+
+    res.json({
+      targetUser,
+      me
+    });
+  } catch (e) {
+    console.error(e);
+    return next(e);
+  }
+}
+
+exports.readFollowers = async (req, res, next) => {
+  const targetId = req.params.userId;
+
+  try {
+    const targetUser = await db.User.findOne({
+      where: { id: targetId },
+      include: [{
+        model: db.User,
+        through: 'Follow',
+        as: 'Followers',
+        attributes: {
+          exclude: ['password']
+        },
+      }],      
+    });
+
+    if (!targetUser) {
+      res.status(404).send('[Not Found]: 존재하지 않는 유저입니다.');
+      return;
+    }
+
+    res.json(targetUser.Followers);
+  } catch (e) {
+    console.error(e);
+    return next(e);
+  }
+};
+
+exports.readFollowings = async (req, res, next) => {
+  const targetId = req.params.userId;
+
+  try {
+    const targetUser = await db.User.findOne({
+      where: { id: targetId },
+      include: [{
+        model: db.User,
+        through: 'Follow',
+        as: 'Followings',
+        attributes: {
+          exclude: ['password']
+        },
+      }],      
+    });
+
+    if (!targetUser) {
+      res.status(404).send('[Not Found]: 존재하지 않는 유저입니다.');
+      return;
+    }
+
+    res.json(targetUser.Followings);
+  } catch (e) {
+    console.error(e);
+    return next(e);
+  }
+};
