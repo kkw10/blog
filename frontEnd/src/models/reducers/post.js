@@ -29,7 +29,7 @@ import {
 
 const initialState = {
   postResult: null,
-  commentsResult: null,
+  commentsResult: [],
   hasMoreComments: true,
   postError: null,
   recomendError: null,
@@ -44,13 +44,13 @@ const reducer = (state = initialState, action) => {
       return {
         ...initialState,
       };
-    case READ_POST_SUCCESS:
+    case READ_POST_SUCCESS: {
       return {
         ...state,
-        postResult: action.payload.post,
-        commentsResult: action.payload.comments,
+        postResult: action.payload,
         postError: null,
       };
+    }
     case READ_POST_FAILURE:
       return {
         ...state,
@@ -58,33 +58,36 @@ const reducer = (state = initialState, action) => {
         commentsResult: null,
         postError: action.payload,
       };
-    case READ_COMMENTS:
+    case READ_COMMENTS: {
       return {
         ...state,
         commentsResult: action.lastCommentId ? [] : [...state.commentsResult],
         hasMorePost: action.payload.lastCommentId ? state.hasMorePost : true,
       };
-    case READ_COMMENTS_SUCCESS:
+    }
+    case READ_COMMENTS_SUCCESS: {
       return {
         ...state,
         commentsResult: [...state.commentsResult, ...action.payload],
         hasMoreComments: action.payload.length === 10,
         commentError: null,
       };
+    }
     case REFRESH_COMMENTS_SUCCESS:
       return {
         ...state,
         commentsResult: action.payload,
-        hasMoreComments: true,
+        hasMoreComments: action.payload.length === 10,
         commentError: null,
       };
     case READ_COMMENTS_FAILURE:
-    case REFRESH_COMMENTS_FAILURE:
+    case REFRESH_COMMENTS_FAILURE: {
       return {
         ...state,
         commentsResult: null,
         commentError: action.payload,
       };
+    }
     case CLEAR_FORM:
       return {
         ...state,

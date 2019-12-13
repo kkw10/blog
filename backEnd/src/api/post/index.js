@@ -38,8 +38,7 @@ router.post('/subcomment/:commentId',
 // GET
 router.get('/:id',
   postCtrl.getPostById,
-  postCtrl.getCommentsInPost,
-  postCtrl.read
+  postCtrl.readPost
 );
 router.get('/:id/comments',
   postCtrl.getPostById,

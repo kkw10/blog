@@ -36,41 +36,25 @@ exports.submitProfile = async (req, res, next) => {
 };
 
 exports.read = async (req, res, next) => {
-  const targetUser = req.params.userId;
+  const targetUserId = req.params.userId;
+  const me = httpContext.get('user');
 
   try {
-    const userProfile = await db.User.findOne({
-      where: { id: targetUser },
-      attributes: [
-        'id',
-        'nickname',
-        'portrait',
-        'background',
-        'title',
-        'descript',
-        'location',
-        'favorite',
-        'contact'
-      ],
-      include: [{
-        model: db.User,
-        through: 'Follow',
-        as: 'Followers',
-        attributes: {
-          exclude: ['password']
-        },
-      }, {
-        model: db.User,
-        through: 'Follow',
-        as: 'Followings',
-        attributes: {
-          exclude: ['password']
-        },
-      }],
-
+    const targetUser = await db.User.findOne({
+      where: { id: targetUserId }
     });
 
-    res.send(userProfile);
+    if (me) {
+      const isFollowed = await targetUser.getFollowers({ where: { id: me.id } });
+
+      if (isFollowed[0]) {
+        targetUser.dataValues.isFollowed = true;
+      } else {
+        targetUser.dataValues.isFollowed = false;
+      }
+    }
+
+    res.send(targetUser);
   } catch (e) {
     console.error(e);
     return next(e);

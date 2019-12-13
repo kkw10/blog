@@ -16,6 +16,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(100),
       allowNull: false
     },
+    followers: {
+      type: DataTypes.INTEGER(11),
+    },
+    followings: {
+      type: DataTypes.INTEGER(11),
+    },
     portrait: {
       type: DataTypes.STRING(100),
     },

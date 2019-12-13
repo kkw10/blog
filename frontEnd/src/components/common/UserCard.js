@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaUserAstronaut } from 'react-icons/fa';
@@ -200,11 +200,14 @@ const FollowNumber = styled.ul`
 
 const UserCard = ({
   currentUser,
-  isFollowing,
   onResetStranger,
   onFollow,
   onUnfollow,
 }) => {
+  useEffect(() => {
+    console.log(currentUser)
+  }, [currentUser])
+
   return (
     <UserCardWrap>
       <div className="header">
@@ -269,17 +272,17 @@ const UserCard = ({
             <FollowNumber>
               <li className="follower">
                 <b>팔로워</b>
-                {currentUser.Followers && currentUser.Followers.length}
+                {(currentUser.followers && currentUser.followers) || 0}
               </li>
               <li className="following">
                 <b>팔로잉</b>
-                {currentUser.Followings && currentUser.Followings.length}
+                {(currentUser.followings && currentUser.followings) || 0}
               </li>
             </FollowNumber>
             {!currentUser.isMe ? (
               <div className="buttons">
                 <FollowButton>
-                  {isFollowing ? (
+                  {currentUser.isFollowed ? (
                     <button
                       className="unfollow"
                       type="button"

@@ -220,11 +220,11 @@ const ProfileView = ({ currentUser }) => {
               <Followers>
                 <li className="followers" onClick={() => onToggle('FollowersList')}>
                   <b>팔로워</b>
-                  <span>{currentUser.Followers.length}</span>
+                  <span>{currentUser.followers || 0}</span>
                 </li>
                 <li className="followings" onClick={() => onToggle('FollowingsList')}>
                   <b>팔로잉</b>
-                  <span>{currentUser.Followings.length}</span>
+                  <span>{currentUser.Ffollowings || 0}</span>
                 </li>
               </Followers>
             ) : null}

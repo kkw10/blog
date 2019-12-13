@@ -97,6 +97,8 @@ exports.check = async (req, res) => {
         id: user.id
       },
       attributes: [
+        'followers',
+        'followings',
         'portrait',
         'background',
         'title',

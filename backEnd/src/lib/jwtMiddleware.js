@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const httpContext = require('express-http-context');
-const db = require('../models/user');
+const db = require('../models');
 
 const jwtMiddleware = async (req, res, next) => {
   const token = req.cookies.access_token;
@@ -9,11 +9,14 @@ const jwtMiddleware = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    httpContext.set('user', {
-      id: decoded.id,
-      email: decoded.email,
-      nickname: decoded.nickname,
+
+    const me = await db.User.findOne({
+      where: {
+        id: decoded.id
+      }
     });
+
+    httpContext.set('user', me);
 
     // 토큰 재발급
     const now = Math.floor(Date.now() / 1000);

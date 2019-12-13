@@ -45,8 +45,7 @@ const reducer = (state = initialState, action) => {
       };
     case LOGOUT:
       return {
-        ...state,
-        user: null,
+        ...initialState,
       };
     case UPLOAD_PROFILE_SUCCESS:
       return {
@@ -83,37 +82,27 @@ const reducer = (state = initialState, action) => {
         ...state,
         profile: {
           ...state.profile,
-          Followings: [
-            ...state.profile.Followings,
-            action.payload.targetUser,
-          ],
+          followings: (state.profile.followings || 0) + 1,
         },
         stranger: {
           ...state.stranger,
-          Followers: [
-            ...state.stranger.Followers,
-            action.payload.me,
-          ],
+          followers: action.payload.targetUser.followers,
+          isFollowed: action.payload.targetUser.isFollowed,
         },
       };
-    case UNFOLLOW_SUCCESS: {
-      const newFollowings = [...state.profile.Followings]
-        .filter((v) => v.id !== action.payload.targetUser.id);
-      const newStrangerFollowers = [...state.stranger.Followers]
-        .filter((v) => v.id !== action.payload.me.id);
-
+    case UNFOLLOW_SUCCESS:
       return {
         ...state,
         profile: {
           ...state.profile,
-          Followings: newFollowings,
+          followings: (state.profile.followings || 0) - 1,
         },
         stranger: {
           ...state.stranger,
-          Followers: newStrangerFollowers,
+          followers: action.payload.targetUser.followers,
+          isFollowed: action.payload.targetUser.isFollowed,
         },
       };
-    }
     case FOLLOW_FAILURE:
     case UNFOLLOW_FAILURE:
       return {

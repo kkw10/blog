@@ -28,6 +28,13 @@ exports.follow = async (req, res, next) => {
 
   try {
     await targetUser.addFollowers(me.id);
+    await targetUser.update({
+      followers: targetUser.followers + 1,
+    });
+    await me.update({
+      followings: me.followings + 1,
+    });
+    targetUser.dataValues.isFollowed = true;
 
     res.json({
       targetUser,
@@ -45,6 +52,13 @@ exports.unfollow = async (req, res, next) => {
 
   try {
     await targetUser.removeFollowers(me.id);
+    await targetUser.update({
+      followers: targetUser.followers - 1,
+    });
+    await me.update({
+      followings: me.followings - 1,
+    });
+    targetUser.dataValues.isFollowed = false;
 
     res.json({
       targetUser,

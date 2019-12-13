@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -172,26 +172,34 @@ const PostCommentsContainer = ({
     dispatch(getTargetProfile(profileId));
   }, [dispatch]);
 
+  useEffect(() => {
+    dispatch(readComments({ postId }));
+  }, [dispatch])
+
   return (
-    <PostComments
-      me={me}
-      commentsResult={commentsResult}
-      clearedForm={clearedForm}
-      editingCommentData={editingCommentData}
-      commentError={commentError}
-      onInitialize={onInitialize}
-      onChangeField={onChangeField}
-      onCommentSubmit={onCommentSubmit}
-      onEditingFieldSetting={onEditingFieldSetting}
-      onDeleteComment={onDeleteComment}
-      onUpdateComment={onUpdateComment}
-      onThumbsUp={onThumbsUp}
-      onThumbsDown={onThumbsDown}
-      onRefresh={onRefresh}
-      onShowSubComment={onShowSubComment}
-      onHideSubComment={onHideSubComment}
-      onGetTargetProfile={onGetTargetProfile}
-    />
+    <>
+      {commentsResult && (
+        <PostComments
+          me={me}
+          commentsResult={commentsResult}
+          clearedForm={clearedForm}
+          editingCommentData={editingCommentData}
+          commentError={commentError}
+          onInitialize={onInitialize}
+          onChangeField={onChangeField}
+          onCommentSubmit={onCommentSubmit}
+          onEditingFieldSetting={onEditingFieldSetting}
+          onDeleteComment={onDeleteComment}
+          onUpdateComment={onUpdateComment}
+          onThumbsUp={onThumbsUp}
+          onThumbsDown={onThumbsDown}
+          onRefresh={onRefresh}
+          onShowSubComment={onShowSubComment}
+          onHideSubComment={onHideSubComment}
+          onGetTargetProfile={onGetTargetProfile}
+        />
+      )}
+    </>
   );
 };
 

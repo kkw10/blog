@@ -33,40 +33,6 @@ exports.getPostById = async (req, res, next) => {
   }
 }
 
-exports.getCommentsInPost = async (req, res, next) => {
-  const post = httpContext.get('post').dataValues;
-
-  try {
-    let comments = await db.Comment.findAndCountAll({
-      where: {
-        PostId: post.id,
-      },
-      include: [{
-        model: db.User,
-        attributes: ['email', 'nickname', 'portrait']
-      },{
-        model: db.User,
-        through: 'CommentsLike',
-        as: 'Likers',
-        attributes: ['id', 'email', 'nickname']
-      }],
-      distinct: true,
-      order: [['createdAt', 'DESC']],
-      limit: 10,
-    })
-    .then(result => {
-      res.set('Comments-Count', result.count);
-      return result.rows;
-    });
-
-    await httpContext.set('comments', comments);
-    return next();
-  } catch (e) {
-    console.error(e);
-    return next(e);
-  }  
-}
-
 exports.getComment = async (req, res, next) => {
   const commentId = req.params.commentId;
 
@@ -172,21 +138,21 @@ exports.writeComment = async (req, res, next) => {
   }
 };
 
-exports.read = async (req, res, next) => {
+exports.readPost = async (req, res, next) => {
   const post = httpContext.get('post');
-  const comments = httpContext.get('comments');
+  // const comments = httpContext.get('comments');
 
   try {
     await post.update({
       views: post.views + 1,
     })
 
-    const data = {
-      post,
-      comments,
-    }
+    // const data = {
+    //   post,
+    //   comments,
+    // }
 
-    res.status(200).json(data);
+    res.status(200).json(post);
   } catch (e) {
     console.error(e);
     return next(e);
@@ -209,9 +175,6 @@ exports.readComments = async (req, res, next) => {
         postId: post.id,
       }
     }
-
-    console.log('@@@@@@@@@@@@@');
-    console.log(lastId);
 
     const comments = await db.Comment.findAndCountAll({
       where,
@@ -237,6 +200,9 @@ exports.readComments = async (req, res, next) => {
       res.set('Comments-Count', result.count);
       return result.rows;
     })
+
+    console.log('@@@@@@@@@@@@@');
+    console.log(comments);
 
     res.json(comments);
   } catch (e) {
