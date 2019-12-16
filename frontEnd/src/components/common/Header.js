@@ -9,6 +9,7 @@ import { FaUserAstronaut } from 'react-icons/fa';
 import Responsive from './Responsive';
 import Button from './Button';
 import AuthModal from './modal/AuthModal';
+import SearchBar from './SearchBar';
 
 // lib...
 import { brandingColor } from '../../lib/styles/branding';
@@ -29,6 +30,21 @@ const ResponsiveWrap = styled(Responsive)`
   justify-content: space-between;
   background: #fff;
 
+  .left {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding-right: 2rem;
+
+    & > h1 {
+      margin-right: 2rem;
+    }
+    
+    & > .search-bar {
+      width: 100%;
+    }
+  }
+
   .right {
     display: flex;
 
@@ -36,10 +52,6 @@ const ResponsiveWrap = styled(Responsive)`
       margin-left: 10px;
     }
   }
-`;
-
-const Spacer = styled.div`
-  height: 3rem;
 `;
 
 const Tools = styled.div`
@@ -97,6 +109,10 @@ const ProfileButton = styled(Link)`
   }
 `;
 
+const Spacer = styled.div`
+  height: 3rem;
+`;
+
 const Header = ({
   toggle,
   onToggling,
@@ -106,9 +122,14 @@ const Header = ({
   <>
     <HeaderWrap>
       <ResponsiveWrap>
-        <h1>
-          <Link to="/" className="logo">SPACER</Link>
-        </h1>
+        <div className="left">
+          <h1>
+            <Link to="/" className="logo">SPACER</Link>
+          </h1>
+          <div className="search-bar">
+            <SearchBar />
+          </div>
+        </div>
         {!user ? (
           <div className="right">
             <Button

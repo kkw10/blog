@@ -114,12 +114,12 @@ const PostViewContainer = ({ match, history }) => {
     }
   }, [dispatch, writeResult]);
 
-  // useEffect(() => { // 스크롤 이벤트 등록 및 해제 ( for 댓글 인피니티 스크롤 )
-  //   window.addEventListener('scroll', onScroll);
-  //   return () => {
-  //     window.removeEventListener('scroll', onScroll);
-  //   };
-  // }, []);
+  useEffect(() => { // 스크롤 이벤트 등록 및 해제 ( for 댓글 인피니티 스크롤 )
+    window.addEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, []);
 
   return (
     <PostView
