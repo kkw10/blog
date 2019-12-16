@@ -12,7 +12,7 @@ import DropBox from './dropbox';
 import useToggle from '../../lib/hooks/toggleHook';
 import { brandingColor } from '../../lib/styles/branding';
 
-const SearchBarWrap = styled.form`
+const SearchBarWrap = styled.div`
   width: 80%;
   display: flex;
   align-items: center;
@@ -53,7 +53,7 @@ const SearchType = styled.div`
   margin-right: 0.5rem;
   position: relative;
 
-  & > .current-type {
+  .current-type-wrap {
     display: flex;
     height: 32px;
     align-items: center;
@@ -62,13 +62,19 @@ const SearchType = styled.div`
     border-radius: 5px;
     color: ${brandingColor.common[6]};
     border: 1px solid transparent;
-    & > span {
-      font-size: 13px;
-      font-weight: bold;
-      margin-right: 0.3rem;
-    }
     &:hover {
       border-color: ${brandingColor.common[4]};
+    }
+  }
+
+  .current-type {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    font-weight: bold;
+  
+    & > svg {
+      margin-right: 0.5rem;
     }
   }
 `;
@@ -97,18 +103,40 @@ const SearchTypeList = styled.ul`
   }
 `;
 
-const SearchBar = () => {
+const SearchBar = ({
+  searchType,
+  searchQuery,
+  onChangeSearchType,
+  onChangeSearchField,
+  onEnterKeyPress,
+  onSearch,
+}) => {
   const [toggle, onToggle] = useToggle();
 
   return (
     <SearchBarWrap>
       <SearchType>
         <div
-          className="current-type"
+          className="current-type-wrap"
           onClick={() => onToggle('SearchType')}
         >
-          <span>검색 유형</span>
-          <TiArrowSortedDown />
+          {searchType === 'tag' ? (
+            <>
+              <div className="current-type">
+                <FaHashtag />
+                <span>태그검색</span>
+              </div>
+              <TiArrowSortedDown />
+            </>
+          ) : (
+            <>
+              <div className="current-type">
+                <MdShortText />
+                <span>제목 + 내용검색</span>
+              </div>
+              <TiArrowSortedDown />
+            </>
+          )}
         </div>
         <DropBox
           visible={toggle.activeToggle === 'SearchType'}
@@ -116,11 +144,11 @@ const SearchBar = () => {
           side="left"
         >
           <SearchTypeList>
-            <li>
+            <li onClick={() => onChangeSearchType('tag')}>
               <FaHashtag />
               <span>태그검색</span>
             </li>
-            <li>
+            <li onClick={() => onChangeSearchType('contents')}>
               <MdShortText />
               <span>제목 + 내용검색</span>
             </li>
@@ -128,8 +156,17 @@ const SearchBar = () => {
         </DropBox>
       </SearchType>
       <fieldset>
-        <input type="text" />
-        <button type="button">
+        <input
+          type="text"
+          name="search_query"
+          onChange={(e) => onChangeSearchField(e)}
+          onKeyPress={(e) => onEnterKeyPress(e)}
+          value={searchQuery}
+        />
+        <button
+          type="button"
+          onClick={(e) => onSearch(e)}
+        >
           <IoMdSearch />
         </button>
       </fieldset>

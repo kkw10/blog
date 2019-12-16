@@ -25,6 +25,8 @@ export const [
   UPLOAD_PORTRAIT_SUCCESS,
   UPLOAD_PORTRAIT_FAILURE,
 ] = createRequestActionTypes('write/UPLOAD_PORTRAIT');
+export const CHANGE_SEARCH_TYPE = 'write/CHANGE_SEARCH_TYPE';
+
 
 export const initialize = () => ({
   type: INITIALIZE,
@@ -85,4 +87,9 @@ export const update = ({
 export const uploadImage = (formData) => ({
   type: UPLOAD_PORTRAIT,
   payload: formData,
+});
+
+export const changeSearchType = (type) => ({
+  type: CHANGE_SEARCH_TYPE,
+  payload: type,
 });

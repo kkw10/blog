@@ -13,6 +13,7 @@ import {
   COMMENTING_FAILURE,
   UPLOAD_PORTRAIT_SUCCESS,
   UPLOAD_PORTRAIT_FAILURE,
+  CHANGE_SEARCH_TYPE,
 } from '../actions/write';
 
 const initialState = {
@@ -27,6 +28,8 @@ const initialState = {
   user_location: '',
   user_favorite: '',
   user_contact: '',
+  search_type: 'tag',
+  search_query: '',
   result: null,
   postingError: null,
   commentingError: null,
@@ -40,6 +43,7 @@ const reducer = (state = initialState, action) => {
     case INITIALIZE:
       return {
         ...initialState,
+        search_type: state.search_type,
       };
     case CHANGE_FIELD:
       return {
@@ -121,6 +125,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         userProfileError: action.payload,
+      };
+    case CHANGE_SEARCH_TYPE:
+      return {
+        ...state,
+        search_type: action.payload,
       };
     default:
       return state;

@@ -1,6 +1,7 @@
 import {
   READ_POSTS_SUCCESS,
   READ_POSTS_FAILURE,
+  CLEAR_POSTS,
 } from '../actions/posts';
 
 const initialState = {
@@ -24,6 +25,10 @@ const reducer = (state = initialState, action) => {
         result: null,
         postsError: action.payload,
       };
+    case CLEAR_POSTS:
+      return {
+        ...initialState,
+      }
     default:
       return state;
   }

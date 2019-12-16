@@ -9,7 +9,7 @@ import { FaUserAstronaut } from 'react-icons/fa';
 import Responsive from './Responsive';
 import Button from './Button';
 import AuthModal from './modal/AuthModal';
-import SearchBar from './SearchBar';
+import SearchBarContainer from '../../containers/common/SearchBarContainer';
 
 // lib...
 import { brandingColor } from '../../lib/styles/branding';
@@ -127,7 +127,7 @@ const Header = ({
             <Link to="/" className="logo">SPACER</Link>
           </h1>
           <div className="search-bar">
-            <SearchBar />
+            <SearchBarContainer />
           </div>
         </div>
         {!user ? (

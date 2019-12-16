@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import qs from 'qs';
 import { withRouter } from 'react-router-dom';
 import PostsView from '../../components/posts/postsView';
-import { readPosts } from '../../models/actions/posts';
+import { readPosts, clearPosts } from '../../models/actions/posts';
 import { getTargetProfile } from '../../models/actions/user';
 
 const PostsViewContainer = ({ location, match }) => {
@@ -45,6 +45,12 @@ const PostsViewContainer = ({ location, match }) => {
 
     dispatch(readPosts({ tagName, userId, liked, page }));
   }, [dispatch, location.search, userId, tagName, match.params.UserId, match.params.TagName, liked]);
+
+  useEffect(() => { // 언마운트될 때 초기화
+    return () => {
+      dispatch(clearPosts());
+    };
+  }, []);
 
   return (
     <PostsView
