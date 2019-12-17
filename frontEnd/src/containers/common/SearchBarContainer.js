@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -37,8 +37,12 @@ const SearchBarContainer = ({ history }) => {
   const onSearch = useCallback((e) => {
     e.preventDefault();
 
+    if (!searchQuery) return;
+
     if (searchType === 'tag') {
       history.push(`/posts/tagged/${searchQuery}`);
+    } else {
+      history.push(`/posts/search/?q=${searchQuery}`);
     }
 
     dispatch(initialize());

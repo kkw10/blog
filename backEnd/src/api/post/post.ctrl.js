@@ -147,11 +147,6 @@ exports.readPost = async (req, res, next) => {
       views: post.views + 1,
     })
 
-    // const data = {
-    //   post,
-    //   comments,
-    // }
-
     res.status(200).json(post);
   } catch (e) {
     console.error(e);

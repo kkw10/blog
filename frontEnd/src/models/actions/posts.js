@@ -7,10 +7,17 @@ export const [
 ] = createRequestActionTypes('posts/READ_POSTS');
 export const CLEAR_POSTS = 'posts/CLEAR_POSTS';
 
-export const readPosts = ({ tagName, userId, liked, page }) => ({
+export const readPosts = ({
+  tagName,
+  query,
+  userId,
+  liked,
+  page,
+}) => ({
   type: READ_POSTS,
   payload: {
     tagName,
+    query,
     userId,
     liked,
     page,

@@ -23,7 +23,7 @@ const PostsViewContainer = ({ location, match }) => {
     dispatch(getTargetProfile(profileId));
   }, [dispatch]);
 
-  useEffect(() => { // 유저 아이디 검사 및 페이지 넘버 쿼리 파싱
+  useEffect(() => { // 유저 아이디 검사, 경로 검사 및 쿼리 파싱
     if (match.params.UserId) {
       setUserId(match.params.UserId);
       setPageId(match.params.UserId);
@@ -35,7 +35,7 @@ const PostsViewContainer = ({ location, match }) => {
     }
 
     // for pagination
-    const { page } = qs.parse(location.search, {
+    const { q, page } = qs.parse(location.search, {
       ignoreQueryPrefix: true,
     });
 
@@ -44,8 +44,21 @@ const PostsViewContainer = ({ location, match }) => {
       setPageId('liked');
     }
 
-    dispatch(readPosts({ tagName, userId, liked, page }));
-  }, [dispatch, location.search, userId, tagName, match.params.UserId, match.params.TagName, liked]);
+    dispatch(readPosts({
+      tagName,
+      query: q,
+      userId,
+      liked,
+      page,
+    }));
+  }, [
+    dispatch,
+    location.search,
+    userId, tagName,
+    match.params.UserId,
+    match.params.TagName,
+    liked,
+  ]);
 
   useEffect(() => { // 언마운트될 때 초기화
     return () => {

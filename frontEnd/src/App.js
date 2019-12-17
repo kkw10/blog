@@ -48,6 +48,7 @@ const App = () => (
     <Route component={SearchedPostsPage} path="/posts/user/:UserId" exact />
     <Route component={SearchedPostsPage} path="/posts/tagged/:TagName" exact />
     <Route component={SearchedPostsPage} path="/posts/liked" />
+    <Route component={SearchedPostsPage} path="/posts/search" exact />
   </Layout>
 );
 
