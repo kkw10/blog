@@ -68,15 +68,13 @@ const Introduce = styled.div`
   }
 `;
 
-const Buttons = styled.div`
+const Buttons = styled.div``;
 
-`;
-
-const FollowView = ({ type, isMe, followers, onUnfollowFromList, onUnfollowingFromList }) => {
+const FollowView = ({ type, isMe, list, event }) => {
   return (
     <FollowViewWrap>
       <ul>
-        {followers.map((follower) => {
+        {list.map((follower) => {
           return (
             <li>
               <Portrait background={follower.portrait ? `http://localhost:1991/${follower.portrait}` : null}>
@@ -97,14 +95,14 @@ const FollowView = ({ type, isMe, followers, onUnfollowFromList, onUnfollowingFr
                       placeholder="언팔로잉"
                       size="md"
                       background="main"
-                      onClick={() => onUnfollowingFromList(follower.id)}
+                      onClick={() => event(follower.id)}
                     />
                   ) : (
                     <Button
                       placeholder="언팔로우"
                       size="md"
                       background="main"
-                      onClick={() => onUnfollowFromList(follower.id)}
+                      onClick={() => event(follower.id)}
                     />
                   )}
                 </Buttons>

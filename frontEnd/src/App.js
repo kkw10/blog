@@ -23,9 +23,11 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
     min-height: 100%;
   }
+
   .tui-editor-contents img {
       border-radius: 15px;
-    }
+  }
+
   .tui-style {
     ${tuiStyle}
     .toSomeone {

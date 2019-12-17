@@ -1,4 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
+import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import PostView from '../../components/post/PostView';
@@ -15,6 +16,7 @@ import {
 import { getTargetProfile } from '../../models/actions/user';
 import { toggling } from '../../models/actions/toggle';
 import { remove } from '../../lib/api/post';
+import LoadingWrap from '../../components/common/LoadingWrap';
 
 const PostViewContainer = ({ match, history }) => {
   const dispatch = useDispatch();
@@ -24,16 +26,14 @@ const PostViewContainer = ({ match, history }) => {
     hasMoreComments,
     postError,
     commentError,
-    loading,
     user,
     clearedForm,
-  } = useSelector(({ post, loading, user }) => ({
+  } = useSelector(({ post, user }) => ({
     postResult: post.postResult,
     commentsResult: post.commentsResult,
     hasMoreComments: post.hasMoreComments,
     postError: post.postError,
     commentError: post.commentError,
-    loading: loading['post/READ_POST'],
     user: user.user,
     clearedForm: post.clearedForm,
   }));
@@ -122,22 +122,26 @@ const PostViewContainer = ({ match, history }) => {
   }, []);
 
   return (
-    <PostView
-      user={user}
-      postResult={postResult}
-      commentsResult={commentsResult}
-      postError={postError}
-      commentError={commentError}
-      loading={loading}
-      onEdit={onEdit}
-      editingCommentData={editingCommentData}
-      onDelete={onDelete}
-      toggle={toggle}
-      onToggling={onToggling}
-      clearedForm={clearedForm}
-      onRecomend={onRecomend}
-      onGetTargetProfile={onGetTargetProfile}
-    />
+    <LoadingWrap
+      loadingType="post/READ"
+      styleType="post"
+    >
+      <PostView
+        user={user}
+        postResult={postResult}
+        commentsResult={commentsResult}
+        postError={postError}
+        commentError={commentError}
+        onEdit={onEdit}
+        editingCommentData={editingCommentData}
+        onDelete={onDelete}
+        toggle={toggle}
+        onToggling={onToggling}
+        clearedForm={clearedForm}
+        onRecomend={onRecomend}
+        onGetTargetProfile={onGetTargetProfile}
+      />
+    </LoadingWrap>
   );
 };
 

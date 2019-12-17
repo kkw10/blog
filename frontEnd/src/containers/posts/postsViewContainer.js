@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import PostsView from '../../components/posts/postsView';
 import { readPosts, clearPosts } from '../../models/actions/posts';
 import { getTargetProfile } from '../../models/actions/user';
+import LoadingWrap from '../../components/common/LoadingWrap';
 
 const PostsViewContainer = ({ location, match }) => {
   const dispatch = useDispatch();
@@ -53,13 +54,18 @@ const PostsViewContainer = ({ location, match }) => {
   }, []);
 
   return (
-    <PostsView
-      pageId={pageId}
-      postsData={postsData}
-      potsError={postsError}
-      lastPage={lastPage}
-      onGetTargetProfile={onGetTargetProfile}
-    />
+    <LoadingWrap
+      loadingType="posts/READ_POSTS"
+      styleType="posts"
+    >
+      <PostsView
+        pageId={pageId}
+        postsData={postsData}
+        potsError={postsError}
+        lastPage={lastPage}
+        onGetTargetProfile={onGetTargetProfile}
+      />
+    </LoadingWrap>
   );
 };
 

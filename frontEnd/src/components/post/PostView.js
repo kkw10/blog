@@ -5,12 +5,12 @@ import { FaUserAstronaut } from 'react-icons/fa';
 import { MdRemoveRedEye } from 'react-icons/md';
 import styled from 'styled-components';
 import { brandingColor } from '../../lib/styles/branding';
-import Tag from '../common/Tag';
-import Button from '../common/Button';
-import AlertModal from '../common/modal/AlertModal';
 
 // Component...
 import PostCommentsContainer from '../../containers/post/PostCommentsContainer';
+import Button from '../common/Button';
+import Tag from '../common/Tag';
+import AlertModal from '../common/modal/AlertModal';
 
 const PostViewWrap = styled.div`
   background: #fff;
@@ -138,9 +138,7 @@ const IconButton = styled.button`
   }
 `;
 
-const Contents = styled.div`
-
-`;
+const Contents = styled.div``;
 
 const PostView = ({
   postResult,

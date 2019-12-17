@@ -8,6 +8,7 @@ import { brandingColor } from '../../lib/styles/branding';
 
 // Component...
 import Modal from '../common/modal';
+import FollowViewContainer from '../../containers/profile/FollowViewContainer';
 import FollowView from '../profile/FollowView';
 
 // lib...
@@ -288,11 +289,11 @@ const ProfileView = ({
         onCancel={() => onToggle('FollowersList')}
       >
         {FollowersList && (
-          <FollowView
+          <FollowViewContainer
             type="follower"
             isMe={currentUser.isMe}
-            followers={FollowersList}
-            onUnfollowingFromList={onUnfollowingFromList}
+            list={FollowersList}
+            event={onUnfollowingFromList}
           />
         )}
       </Modal>
@@ -302,11 +303,11 @@ const ProfileView = ({
         onCancel={() => onToggle('FollowingsList')}
       >
         {FollowingsList && (
-          <FollowView
+          <FollowViewContainer
             type="following"
             isMe={currentUser.isMe}
-            followers={FollowingsList}
-            onUnfollowFromList={onUnfollowFromList}
+            list={FollowingsList}
+            event={onUnfollowFromList}
           />
         )}
       </Modal>

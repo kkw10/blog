@@ -46,7 +46,10 @@ const Form = styled.form`
     margin-top: 1rem;
 
     button {
-      display: inline-block;
+      text-align: center;
+      & > * {
+        display: inline-block;
+      }
     }
   }
 `;
@@ -98,7 +101,7 @@ const PostComments = ({
   const toggle = useSelector(({ toggle }) => (toggle));
   const mounted = useRef(false);
   const instance = useRef(null);
-  const [test, setTest] = useState('새로고침');
+  const [buttonType, setButtonType] = useState('새로고침');
 
   if (commentError) {
     return (
@@ -111,7 +114,7 @@ const PostComments = ({
   // 메인 댓글 에디터 버튼, 새로고침 or 댓글 전환
   const onClick = useCallback((e) => {
     e.preventDefault();
-    if (test === '댓글') {
+    if (buttonType === '댓글') {
       onCommentSubmit(e);
       return;
     }
@@ -145,9 +148,9 @@ const PostComments = ({
         const data = instance.current.getHtml();
 
         if (data) {
-          setTest('댓글');
+          setButtonType('댓글');
         } else {
-          setTest('새로고침');
+          setButtonType('새로고침');
         }
 
         onChangeField({
@@ -170,7 +173,10 @@ const PostComments = ({
             <div id="tui_editor" />
             <div className="button">
               <Button
-                placeholder={test}
+                placeholder={buttonType}
+                loadingType={
+                  buttonType === '새로고침' ? 'post/REFRESH_COMMENTS' : 'write/COMMENTING'
+                }
                 size="mx"
                 background="point"
                 onClick={onClick}

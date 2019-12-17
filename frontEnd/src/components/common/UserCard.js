@@ -2,16 +2,12 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaUserAstronaut } from 'react-icons/fa';
-import {
-  IoMdAdd,
-  IoMdRemove,
-  IoMdHome,
-  IoMdListBox,
-} from 'react-icons/io';
+import { IoMdHome, IoMdListBox } from 'react-icons/io';
 import { MdEmail } from 'react-icons/md';
 import { TiLocation, TiArrowBack } from 'react-icons/ti';
 import { AiFillFire } from 'react-icons/ai';
 import { brandingColor } from '../../lib/styles/branding';
+import Button from './Button';
 
 const UserCardWrap = styled.div`
   border-radius: 5px;
@@ -283,23 +279,21 @@ const UserCard = ({
               <div className="buttons">
                 <FollowButton>
                   {currentUser.isFollowed ? (
-                    <button
-                      className="unfollow"
-                      type="button"
+                    <Button
+                      placeholder="언팔로우"
+                      loadingType="user/UNFOLLOW"
+                      size="mx"
+                      background="main"
                       onClick={() => onUnfollow(currentUser.id)}
-                    >
-                      <IoMdRemove />
-                      <b>언팔로우</b>
-                    </button>
+                    />
                   ) : (
-                    <button
-                      className="follow"
-                      type="button"
+                    <Button
+                      placeholder="팔로우"
+                      loadingType="user/FOLLOW"
+                      size="mx"
+                      background="point"
                       onClick={() => onFollow(currentUser.id)}
-                    >
-                      <IoMdAdd />
-                      <b>팔로우</b>
-                    </button>
+                    />
                   )}
                 </FollowButton>
               </div>

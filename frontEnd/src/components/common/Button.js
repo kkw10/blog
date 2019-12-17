@@ -1,5 +1,10 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import { CircleSpinner } from 'react-spinners-kit';
+
+import { useDispatch, useSelector } from 'react-redux';
+
+// lib...
 import { brandingColor } from '../../lib/styles/branding';
 
 const StyledButton = styled.button`
@@ -57,10 +62,20 @@ const StyledButton = styled.button`
   )}  
 `;
 
-const Button = ({ placeholder, ...props }) => {
+const Button = ({ placeholder, loadingType, ...props }) => {
+  const loading = useSelector(({ loading }) => loading);
+
   return (
     <StyledButton {...props}>
-      { placeholder }
+      {loading[loadingType] ? (
+        <CircleSpinner
+          size={10}
+          color="#fff"
+          loading={loading.loadingType}
+        />
+      ) : (
+        placeholder
+      )}
     </StyledButton>
   );
 };
