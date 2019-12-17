@@ -4,6 +4,7 @@ import { brandingColor } from '../../lib/styles/branding';
 
 // Component...
 import Button from '../common/Button';
+import NoContents from '../common/NoContents';
 
 const FollowViewWrap = styled.div`
   width: 450px;
@@ -74,7 +75,7 @@ const FollowView = ({ type, isMe, list, event }) => {
   return (
     <FollowViewWrap>
       <ul>
-        {list.map((follower) => {
+        {list.length > 0 ? list.map((follower) => {
           return (
             <li>
               <Portrait background={follower.portrait ? `http://localhost:1991/${follower.portrait}` : null}>
@@ -109,7 +110,9 @@ const FollowView = ({ type, isMe, list, event }) => {
               ) : (null)}
             </li>
           )
-        })}
+        }) : (
+          <NoContents placeholder={type === 'follower' ? '팔로워가 존재하지 않습니다.' : '팔로잉한 유저가 존재하지 않습니다.'} />
+        )}
       </ul>
     </FollowViewWrap>
   )

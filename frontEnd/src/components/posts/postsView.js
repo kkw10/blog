@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { brandingColor } from '../../lib/styles/branding';
 import Tag from '../common/Tag';
 import PageNum from './PageNum';
+import NoContents from '../common/NoContents';
 
 const PostsViewWrap = styled.div`
   background: #fff;
@@ -18,6 +19,7 @@ const PostsViewWrap = styled.div`
 
   .right {
     width: 100%;
+    
   }
 `;
 
@@ -163,14 +165,16 @@ const PostsView = ({
         />
       </div>
       <ul className="right">
-        {postsData && postsData.map((postData) => (
+        {postsData && postsData.length > 0 ? postsData.map((postData) => (
           <li key={postData.id}>
             <PostBox
               postData={postData}
               onGetTargetProfile={onGetTargetProfile}
             />
           </li>
-        ))}
+        )) : (
+          <NoContents placeholder="요청하신 게시물이 존재하지 않습니다." />
+        )}
       </ul>
     </PostsViewWrap>
   );
