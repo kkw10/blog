@@ -2,10 +2,11 @@ import {
   READ_POST,
   READ_POST_SUCCESS,
   READ_POST_FAILURE,
+  COMMENTING_SUCCESS,
+  COMMENTING_FAILURE,
   READ_COMMENTS,
   READ_COMMENTS_SUCCESS,
   READ_COMMENTS_FAILURE,
-  CLEAR_FORM,
   THUMBS_UP_SUCCESS,
   THUMBS_UP_FAILURE,
   THUMBS_DOWN_SUCCESS,
@@ -35,7 +36,7 @@ const initialState = {
   recomendError: null,
   commentError: null,
   thumbsError: null,
-  clearedForm: false,
+  isLoading: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -58,27 +59,27 @@ const reducer = (state = initialState, action) => {
         commentsResult: null,
         postError: action.payload,
       };
-    case READ_COMMENTS: {
+    case READ_COMMENTS:
       return {
         ...state,
-        commentsResult: action.lastCommentId ? [] : [...state.commentsResult],
-        hasMorePost: action.payload.lastCommentId ? state.hasMorePost : true,
+        isLoading: true,
       };
-    }
     case READ_COMMENTS_SUCCESS: {
       return {
         ...state,
         commentsResult: [...state.commentsResult, ...action.payload],
         hasMoreComments: action.payload.length === 10,
         commentError: null,
+        isLoading: false,
       };
     }
     case REFRESH_COMMENTS_SUCCESS:
       return {
         ...state,
         commentsResult: action.payload,
-        hasMoreComments: action.payload.length === 10,
+        hasMoreComments: true,
         commentError: null,
+        isLoading: false,
       };
     case READ_COMMENTS_FAILURE:
     case REFRESH_COMMENTS_FAILURE: {
@@ -88,11 +89,19 @@ const reducer = (state = initialState, action) => {
         commentError: action.payload,
       };
     }
-    case CLEAR_FORM:
+    case COMMENTING_SUCCESS: {
+      const newCommentsResult = [...state.commentsResult];
+      newCommentsResult.unshift(action.payload);
       return {
         ...state,
-        clearedForm: !state.clearedForm,
+        commentsResult: newCommentsResult,
       };
+    }
+    case COMMENTING_FAILURE: {
+      return {
+        ...state,
+      };
+    }
     case THUMBS_UP_SUCCESS: {
       const newResult = [
         ...state.commentsResult,
@@ -159,7 +168,6 @@ const reducer = (state = initialState, action) => {
         newComments[parentIndex].ChildComment = newComments[parentIndex].ChildComment.filter((comment) => comment.id !== targetId);
         newComments[parentIndex].subCommentsNumb = subCommentsNumb;
       } else {
-        console.log(2)
         newComments = newComments.filter((comment) => comment.id !== targetId);
       }
 

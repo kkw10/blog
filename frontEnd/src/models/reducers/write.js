@@ -9,8 +9,6 @@ import {
   SET_ORIGINAL_PROFILE,
   UPDATE_SUCCESS,
   UPDATE_FAILURE,
-  COMMENTING_SUCCESS,
-  COMMENTING_FAILURE,
   UPLOAD_PORTRAIT_SUCCESS,
   UPLOAD_PORTRAIT_FAILURE,
   CHANGE_SEARCH_TYPE,
@@ -67,18 +65,6 @@ const reducer = (state = initialState, action) => {
         ...state,
         result: null,
         postingError: action.payload,
-      };
-    case COMMENTING_SUCCESS:
-      return {
-        ...state,
-        result: action.payload,
-        commentingError: null,
-      };
-    case COMMENTING_FAILURE:
-      return {
-        ...state,
-        result: null,
-        commentingError: action.payload,
       };
     case UPDATE_SUCCESS:
       return {

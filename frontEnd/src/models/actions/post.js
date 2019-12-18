@@ -1,6 +1,11 @@
 import { createRequestActionTypes } from '../sagas/createRequestSaga';
 
 export const [
+  COMMENTING,
+  COMMENTING_SUCCESS,
+  COMMENTING_FAILURE,
+] = createRequestActionTypes('post/COMMENTING');
+export const [
   READ_POST,
   READ_POST_SUCCESS,
   READ_POST_FAILURE,
@@ -10,7 +15,6 @@ export const [
   READ_COMMENTS_SUCCESS,
   READ_COMMENTS_FAILURE,
 ] = createRequestActionTypes('post/READ_COMMENTS');
-export const CLEAR_FORM = 'post/CLEAR_FORM';
 export const [
   RECOMEND,
   RECOMEND_SUCCESS,
@@ -58,6 +62,11 @@ export const [
   REFRESH_COMMENTS_FAILURE,
 ] = createRequestActionTypes('post/REFRESH_COMMENTS');
 
+export const commenting = (comment) => ({
+  type: COMMENTING,
+  payload: comment,
+});
+
 export const readPost = (id) => ({
   type: READ_POST,
   payload: id,
@@ -69,10 +78,6 @@ export const readComments = ({ postId, lastCommentId }) => ({
     postId,
     lastCommentId,
   },
-});
-
-export const clearForm = () => ({
-  type: CLEAR_FORM,
 });
 
 export const recomend = (postId) => ({

@@ -6,6 +6,7 @@ import React, {
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { CircleSpinner } from 'react-spinners-kit';
 import 'tui-editor/dist/tui-editor.css'; // editor's ui
 import 'tui-editor/dist/tui-editor-contents.css'; // editor's content
 import 'codemirror/lib/codemirror.css'; // codemirror
@@ -78,10 +79,17 @@ const SubComment = styled.div`
   position: relative;
 `;
 
+const CommentsLoadingWrap = styled.div`
+  text-align: center;
+  & > * {
+    display: inline-block;
+  }
+`;
+
 const PostComments = ({
   me,
   commentsResult,
-  clearedForm,
+  commentsLoading,
   editingCommentData,
   commentError,
   onInitialize,
@@ -101,6 +109,7 @@ const PostComments = ({
   const toggle = useSelector(({ toggle }) => (toggle));
   const mounted = useRef(false);
   const instance = useRef(null);
+  const [formClear, setFormClear] = useState(false);
   const [buttonType, setButtonType] = useState('새로고침');
 
   if (commentError) {
@@ -116,6 +125,7 @@ const PostComments = ({
     e.preventDefault();
     if (buttonType === '댓글') {
       onCommentSubmit(e);
+      setFormClear(true);
       return;
     }
     onRefresh();
@@ -160,10 +170,11 @@ const PostComments = ({
       });
     }
 
-    if (mounted.current && clearedForm) {
+    if (mounted.current && formClear) {
       instance.current.setValue('');
+      setFormClear(false);
     }
-  }, [me, onChangeField, clearedForm]);
+  }, [me, onChangeField, formClear]);
 
   return (
     <PostCommentsWrap>
@@ -244,6 +255,13 @@ const PostComments = ({
             </div>
           );
         })}
+        <CommentsLoadingWrap>
+          <CircleSpinner
+            size={20}
+            color={brandingColor.point[6]}
+            loading={commentsLoading["post/READ_COMMENTS"]}
+          />
+        </CommentsLoadingWrap>
       </CommentsList>
     </PostCommentsWrap>
   );

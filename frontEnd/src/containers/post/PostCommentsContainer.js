@@ -9,15 +9,13 @@ import PostComments from '../../components/post/PostComments';
 import {
   initialize,
   changeField,
-  commenting,
   setOriginalComment,
 } from '../../models/actions/write';
 import {
   refreshComments,
-  readComments,
+  commenting,
   readSubComments,
   hideSubComments,
-  clearForm,
   updateComment,
   updateSubComment,
   deleteComment,
@@ -41,11 +39,9 @@ const PostCommentsContainer = ({
   const postId = match.params.PostId;
   const {
     commentsResult,
-    clearedForm,
     commentError,
   } = useSelector(({ post }) => ({
     commentsResult: post.commentsResult,
-    clearedForm: post.clearedForm,
     commentError: post.commentError,
   }));
   const {
@@ -60,6 +56,7 @@ const PostCommentsContainer = ({
       id: write.editingCommentId,
     },
   }));
+  const commentsLoading = useSelector(({ loading }) => loading);
 
   // 에디터 입력 값 관리
   const onChangeField = useCallback((payload) => {
@@ -84,13 +81,11 @@ const PostCommentsContainer = ({
       }));
       dispatch(clearToggle());
       dispatch(readSubComments(commentId));
-
     } else { // 댓글 등록
       dispatch(commenting({
         postId,
         contents: writtenComment,
       }));
-      dispatch(clearForm());
     }
   }, [writtenComment, postId, dispatch]);
 
@@ -165,16 +160,12 @@ const PostCommentsContainer = ({
   // 대댓글 숨기기
   const onHideSubComment = useCallback((commentId) => {
     dispatch(hideSubComments(commentId));
-  })
+  });
 
   // 유저 프로필 검색용 ( 유저 네임 클릭 이벤트에 사용 )
   const onGetTargetProfile = useCallback((profileId) => {
     dispatch(getTargetProfile(profileId));
   }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(readComments({ postId }));
-  }, [dispatch])
 
   return (
     <>
@@ -182,7 +173,7 @@ const PostCommentsContainer = ({
         <PostComments
           me={me}
           commentsResult={commentsResult}
-          clearedForm={clearedForm}
+          commentsLoading={commentsLoading}
           editingCommentData={editingCommentData}
           commentError={commentError}
           onInitialize={onInitialize}

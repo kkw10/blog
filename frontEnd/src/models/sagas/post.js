@@ -3,6 +3,7 @@ import * as postAPI from '../../lib/api/post';
 import createRequestSaga from './createRequestSaga';
 import {
   READ_POST,
+  COMMENTING,
   READ_COMMENTS,
   THUMBS_UP,
   THUMBS_DOWN,
@@ -17,6 +18,7 @@ import {
 
 const readPostSaga = createRequestSaga(READ_POST, postAPI.read);
 const readCommentsSaga = createRequestSaga(READ_COMMENTS, postAPI.readComments);
+const commentingSaga = createRequestSaga(COMMENTING, postAPI.writeComment);
 const readSubCommentsSaga = createRequestSaga(READ_SUB_COMMENTS, postAPI.readSubComments);
 const recomendSaga = createRequestSaga(RECOMEND, postAPI.recomend);
 const thumbsUpSaga = createRequestSaga(THUMBS_UP, postAPI.commentUp);
@@ -29,7 +31,8 @@ const refreshCommentsSaga = createRequestSaga(REFRESH_COMMENTS, postAPI.readComm
 
 export default function* postSaga() {
   yield takeLatest(READ_POST, readPostSaga);
-  yield throttle(2000, READ_COMMENTS, readCommentsSaga);
+  yield takeLatest(COMMENTING, commentingSaga);
+  yield throttle(1000, READ_COMMENTS, readCommentsSaga);
   yield takeLatest(READ_SUB_COMMENTS, readSubCommentsSaga);
   yield takeLatest(RECOMEND, recomendSaga);
   yield takeLatest(THUMBS_UP, thumbsUpSaga);

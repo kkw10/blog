@@ -16,11 +16,6 @@ export const [
   UPDATE_FAILURE,
 ] = createRequestActionTypes('write/UPDATE');
 export const [
-  COMMENTING,
-  COMMENTING_SUCCESS,
-  COMMENTING_FAILURE,
-] = createRequestActionTypes('write/COMMENTING');
-export const [
   UPLOAD_PORTRAIT,
   UPLOAD_PORTRAIT_SUCCESS,
   UPLOAD_PORTRAIT_FAILURE,
@@ -62,11 +57,6 @@ export const posting = ({ title, contents, hashTags }) => ({
     contents,
     hashTags,
   },
-});
-
-export const commenting = (comment) => ({
-  type: COMMENTING,
-  payload: comment,
 });
 
 export const update = ({

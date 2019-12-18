@@ -127,7 +127,17 @@ exports.writeComment = async (req, res, next) => {
       },
       include: [{
         model: db.User,
-        attributes: ['id', 'email', 'nickname'],
+        attributes: ['email', 'nickname', 'portrait']
+      }, {
+        model: db.User,
+        through: 'CommentsLike',
+        as: 'Likers',
+        attributes: ['id', 'email', 'nickname']
+      }, {
+        model: db.User,
+        through: 'CommentsDislike',
+        as: 'Dislikers',
+        attributes: ['id', 'email', 'nickname']
       }],
     })
 

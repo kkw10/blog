@@ -1,12 +1,10 @@
 import React, { useEffect, useCallback } from 'react';
-import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import PostView from '../../components/post/PostView';
 import {
   readPost,
   readComments,
-  clearForm,
   recomend,
 } from '../../models/actions/post';
 import {
@@ -24,18 +22,18 @@ const PostViewContainer = ({ match, history }) => {
     postResult,
     commentsResult,
     hasMoreComments,
+    isLoading,
     postError,
     commentError,
     user,
-    clearedForm,
   } = useSelector(({ post, user }) => ({
     postResult: post.postResult,
     commentsResult: post.commentsResult,
     hasMoreComments: post.hasMoreComments,
+    isLoading: post.isLoading,
     postError: post.postError,
     commentError: post.commentError,
     user: user.user,
-    clearedForm: post.clearedForm,
   }));
   const toggle = useSelector(({ toggle }) => toggle);
   const {
@@ -84,20 +82,22 @@ const PostViewContainer = ({ match, history }) => {
   }, [dispatch]);
 
   const onScroll = useCallback(() => {
+    if (!hasMoreComments) return;
     const { scrollY } = window;
     const { clientHeight } = document.documentElement;
     const { scrollHeight } = document.documentElement;
 
-    if (scrollY + clientHeight > scrollHeight - 300) {
-      if (!hasMoreComments) return;
+    if (Math.ceil(scrollY + clientHeight) === scrollHeight) {
+      if (isLoading) return;
       const lastIndex = commentsResult.length - 1;
       const lastCommentId = commentsResult[lastIndex].id;
       dispatch(readComments({ postId, lastCommentId }));
     }
-  }, [postId, commentsResult]);
+  }, [commentsResult, hasMoreComments, isLoading]);
 
   useEffect(() => { // 포스트 읽기
     dispatch(readPost(postId));
+    dispatch(readComments({ postId }));
   }, [dispatch, postId]);
 
   useEffect(() => { // 포스트 로딩 후 글의 저자로 유저 카드 내역 변경
@@ -106,11 +106,10 @@ const PostViewContainer = ({ match, history }) => {
     }
   }, [postResult]);
 
-  useEffect(() => { // 코멘트 작성 후 tui-editor 초기화 하기
+  useEffect(() => { // 코멘트 작성 후 초기화
     if (writeResult) {
       dispatch(readComments({ postId }));
       dispatch(initialize());
-      dispatch(clearForm());
     }
   }, [dispatch, writeResult]);
 
@@ -119,7 +118,7 @@ const PostViewContainer = ({ match, history }) => {
     return () => {
       window.removeEventListener('scroll', onScroll);
     };
-  }, []);
+  }, [commentsResult, hasMoreComments, isLoading]);
 
   return (
     <LoadingWrap
@@ -137,7 +136,6 @@ const PostViewContainer = ({ match, history }) => {
         onDelete={onDelete}
         toggle={toggle}
         onToggling={onToggling}
-        clearedForm={clearedForm}
         onRecomend={onRecomend}
         onGetTargetProfile={onGetTargetProfile}
       />
