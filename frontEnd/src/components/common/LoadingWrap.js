@@ -1,86 +1,100 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { CircleSpinner } from 'react-spinners-kit';
 import { brandingColor } from '../../lib/styles/branding';
 
-const PostSpinner = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 5px;  
-  height: calc(100vh - 10rem);
-  background: ${brandingColor.common[4]};
-  & > * {
-    display: inline-block;
-  }
+const SpinnerWrap = styled.div`
+  ${props => (
+    props.styleType === 'posts' && css`
+      width: 100%;
+      & > li {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 5px;      
+        height: 100px;
+        margin-bottom: 1rem;
+        background: ${brandingColor.common[4]};
+      }
+      & > li > * {
+        display: inline-block;
+      }    
+    `
+  )}
+
+  ${props => (
+    props.styleType === 'post' && css`
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 5px;  
+      height: calc(100vh - 10rem);
+      background: ${brandingColor.common[4]};
+      & > * {
+        display: inline-block;
+      }    
+    `
+  )}
+
+  ${props => (
+    props.styleType === 'follow' && css`
+      width: 450px;
+      height: 450px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 5px;     
+    `
+  )}
+  
+  ${props => (
+    props.styleType === 'comments' && css`
+      text-align: center;
+      & > * {
+        display: inline-block;
+      }
+    `
+  )}    
 `;
 
-const PostsSpinner = styled.ul`
-  width: 100%;
-  & > li {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 5px;      
-    height: 100px;
-    margin-bottom: 1rem;
-    background: ${brandingColor.common[4]};
-  }
-  & > li > * {
-    display: inline-block;
-  }
-`;
-
-const FollowSpinner = styled.div`
-  width: 500px;
-  height: 500px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 5px;       
-`;
-
-const LoadingWrap = ({ children, loadingType, styleType }) => {
+const LoadingWrap = ({
+  children,
+  loadingType,
+  styleType,
+  size,
+  color,
+  isMulti,
+}) => {
   const loading = useSelector(({ loading }) => loading);
 
   const renderingSpinner = () => {
-    if (styleType === 'post') {
+    if (isMulti) { // 리스트 형태 로딩
       return (
-        <PostSpinner>
-          <CircleSpinner
-            size={30}
-            color="#fff"
-            loading={loading.loadingType}
-          />
-        </PostSpinner>
-      );
-    } else if (styleType === 'follow') {
-      return (
-        <FollowSpinner>
-          <CircleSpinner
-            size={30}
-            color={brandingColor.point[6]}
-            loading={loading.loadingType}
-          />
-        </FollowSpinner>
+        <SpinnerWrap styleType={styleType}>
+          {[...Array(isMulti)].map(() => (
+            <li>
+              <CircleSpinner
+                size={size}
+                color={color}
+                loading={loading.loadingType}
+              />
+            </li>
+          ))}
+        </SpinnerWrap>
       );
     }
 
-    return (
-      <PostsSpinner>
-        {[...Array(10)].map(() => (
-          <li>
-            <CircleSpinner
-              size={20}
-              color="#fff"
-              loading={loading.loadingType}
-            />
-          </li>
-        ))}
-      </PostsSpinner>
+    return ( // 단일 형태 로딩
+      <SpinnerWrap styleType={styleType}>
+        <CircleSpinner
+          size={size}
+          color={color}
+          loading={loading.loadingType}
+        />
+      </SpinnerWrap>
     );
   };
 

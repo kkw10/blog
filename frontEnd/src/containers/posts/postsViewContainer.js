@@ -70,6 +70,9 @@ const PostsViewContainer = ({ location, match }) => {
     <LoadingWrap
       loadingType="posts/READ_POSTS"
       styleType="posts"
+      size={20}
+      color="#fff"
+      isMulti={10}
     >
       <PostsView
         pageId={pageId}

@@ -56,7 +56,6 @@ const PostCommentsContainer = ({
       id: write.editingCommentId,
     },
   }));
-  const commentsLoading = useSelector(({ loading }) => loading);
 
   // 에디터 입력 값 관리
   const onChangeField = useCallback((payload) => {
@@ -173,7 +172,6 @@ const PostCommentsContainer = ({
         <PostComments
           me={me}
           commentsResult={commentsResult}
-          commentsLoading={commentsLoading}
           editingCommentData={editingCommentData}
           commentError={commentError}
           onInitialize={onInitialize}

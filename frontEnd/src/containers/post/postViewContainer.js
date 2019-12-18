@@ -124,6 +124,8 @@ const PostViewContainer = ({ match, history }) => {
     <LoadingWrap
       loadingType="post/READ"
       styleType="post"
+      size={30}
+      color="#fff"
     >
       <PostView
         user={user}

@@ -18,6 +18,7 @@ import { brandingColor } from '../../lib/styles/branding';
 // Component...
 import Button from '../common/Button';
 import Comment from '../common/Comment';
+import LoadingWrap from '../common/LoadingWrap';
 
 const PostCommentsWrap = styled.div`
   .tui-editor-defaultUI {
@@ -79,17 +80,9 @@ const SubComment = styled.div`
   position: relative;
 `;
 
-const CommentsLoadingWrap = styled.div`
-  text-align: center;
-  & > * {
-    display: inline-block;
-  }
-`;
-
 const PostComments = ({
   me,
   commentsResult,
-  commentsLoading,
   editingCommentData,
   commentError,
   onInitialize,
@@ -255,13 +248,12 @@ const PostComments = ({
             </div>
           );
         })}
-        <CommentsLoadingWrap>
-          <CircleSpinner
-            size={20}
-            color={brandingColor.point[6]}
-            loading={commentsLoading["post/READ_COMMENTS"]}
-          />
-        </CommentsLoadingWrap>
+        <LoadingWrap
+          loadingType="post/READ_COMMENTS"
+          styleType="comments"
+          size={20}
+          color={brandingColor.point[6]}
+        />
       </CommentsList>
     </PostCommentsWrap>
   );

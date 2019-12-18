@@ -11,15 +11,16 @@ const PostsViewWrap = styled.div`
   border-radius: 5px;
   padding: 1rem;
   display: flex;
-
   .left {
     display: flex;
     justify-content: center;
   }
-
   .right {
     width: 100%;
-    
+    & > li {
+      border-bottom: 1px solid ${brandingColor.common[2]};
+      &:last-child { border-bottom: none }
+    }
   }
 `;
 
@@ -27,7 +28,6 @@ const PostBoxWrap = styled.div`
   padding: 1rem;
   padding-left: 0;
   overflow: hidden;
-  border-bottom: 1px solid ${brandingColor.common[2]};
   display: flex;
   align-items: center;
 
