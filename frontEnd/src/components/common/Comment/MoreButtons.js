@@ -7,6 +7,7 @@ import DropBox from '../dropbox';
 
 // lib...
 import { brandingColor } from '../../../lib/styles/branding';
+import useToggle from '../../../lib/hooks/toggleHook';
 
 const MoreButtonsWrap = styled.div`
   position: relative;
@@ -35,15 +36,15 @@ const MoreButtons = ({
   type,
   commentData,
   parentData,
-  commentMoreToggle,
-  toggle,
   onEditingFieldSetting,
   onDeleteComment,
 }) => {
+  const [toggle, onToggle] = useToggle();
+
   return (
     <MoreButtonsWrap>
       <IoIosMore
-        onClick={() => commentMoreToggle(commentData.id)}
+        onClick={() => onToggle(`commentMore-${commentData.id}`)}
       />
       <DropBox
         visible={toggle && toggle.activeToggle === `commentMore-${commentData.id}`}

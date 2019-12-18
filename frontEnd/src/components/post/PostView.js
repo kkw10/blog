@@ -5,12 +5,14 @@ import { FaUserAstronaut } from 'react-icons/fa';
 import { MdRemoveRedEye } from 'react-icons/md';
 import styled from 'styled-components';
 import { brandingColor } from '../../lib/styles/branding';
+import useToggle from '../../lib/hooks/toggleHook';
 
 // Component...
 import PostCommentsContainer from '../../containers/post/PostCommentsContainer';
 import Button from '../common/Button';
 import Tag from '../common/Tag';
 import AlertModal from '../common/modal/AlertModal';
+import InfoModal from '../common/modal/InfoModal';
 
 const PostViewWrap = styled.div`
   background: #fff;
@@ -147,8 +149,6 @@ const PostView = ({
   user,
   onEdit,
   onDelete,
-  toggle,
-  onToggling,
   onRecomend,
   onGetTargetProfile,
 }) => {
@@ -167,6 +167,7 @@ const PostView = ({
   const isRecomended = user
     && postResult.Recomenders
     && postResult.Recomenders.find((v) => v.id === user.id);
+  const [toggle, onToggle] = useToggle();
 
   return (
     <>
@@ -213,7 +214,7 @@ const PostView = ({
                   <span>{postResult.views}</span>
                 </IconButton>
                 <IconButton
-                  onClick={onRecomend}
+                  onClick={user ? onRecomend : () => onToggle('info')}
                   fill={isRecomended ? 'true' : 'false'}
                 >
                   {isRecomended ? (
@@ -234,7 +235,7 @@ const PostView = ({
                       placeholder="삭제"
                       size="md"
                       background="point"
-                      onClick={() => onToggling('alert')}
+                      onClick={() => onToggle('alert')}
                     />
                   </>
                 ) : null}
@@ -250,10 +251,17 @@ const PostView = ({
         <PostCommentsContainer />
       </PostViewWrap>
       <AlertModal
+        title="경고!"
         description="정말로 삭제를 하시겠습니까?"
         visible={toggle && toggle.activeToggle === 'alert'}
-        onCancel={onToggling}
+        onCancel={() => onToggle('alert')}
         onSubmit={onDelete}
+      />
+      <InfoModal
+        title="알림"
+        description="로그인이 필요한 기능입니다."
+        visible={toggle && toggle.activeToggle === 'info'}
+        onCancel={() => onToggle('info')}
       />
     </>
   );

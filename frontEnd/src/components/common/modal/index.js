@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { IoMdClose } from 'react-icons/io';
 import Button from '../Button';
+import { brandingColor } from '../../../lib/styles/branding';
 
 const Overlay = styled.div`
   position: fixed;
@@ -32,38 +33,36 @@ const ModalWrap = styled.div`
   }
 
   & > h2 {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
   }
 
   & > p {
     margin-bottom: 2rem;
+    color: ${brandingColor.common[6]};
   }
 `;
 
-const Modal = ({ 
+const Modal = ({
   type,
-  visible, 
-  title, 
+  visible,
+  title,
   description,
-  submitText = '확인',
-  cancelText,
-  onSubmit,
   onCancel,
-  children
+  children,
 }) => {
   if (!visible) return null;
 
   return (
     <Overlay>
-        <ModalWrap>
-          <IoMdClose 
-            className="cancel_button"
-            onClick={() => onCancel(type)}
-          />
-          <h2>{ title }</h2>
-          <p>{ description }</p>
-          { children }
-        </ModalWrap>
+      <ModalWrap>
+        <IoMdClose
+          className="cancel_button"
+          onClick={() => onCancel(type)}
+        />
+        <h2>{ title }</h2>
+        <p>{ description }</p>
+        { children }
+      </ModalWrap>
     </Overlay>
   )
 }

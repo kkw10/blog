@@ -35,7 +35,6 @@ const PostViewContainer = ({ match, history }) => {
     commentError: post.commentError,
     user: user.user,
   }));
-  const toggle = useSelector(({ toggle }) => toggle);
   const {
     writeResult,
     editingCommentData,
@@ -68,10 +67,6 @@ const PostViewContainer = ({ match, history }) => {
       console.log(e);
     }
   };
-
-  const onToggling = useCallback((type) => {
-    dispatch(toggling(type));
-  }, [dispatch]);
 
   const onRecomend = useCallback(() => {
     dispatch(recomend(postId));
@@ -136,8 +131,6 @@ const PostViewContainer = ({ match, history }) => {
         onEdit={onEdit}
         editingCommentData={editingCommentData}
         onDelete={onDelete}
-        toggle={toggle}
-        onToggling={onToggling}
         onRecomend={onRecomend}
         onGetTargetProfile={onGetTargetProfile}
       />

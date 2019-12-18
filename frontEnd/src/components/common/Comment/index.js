@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React from 'react';
 import htmlParser, { domToReact } from 'html-react-parser';
 import styled from 'styled-components';
 
@@ -10,6 +10,7 @@ import EditorContainer from '../../../containers/common/EditorContainer';
 
 // lib...
 import { brandingColor } from '../../../lib/styles/branding';
+import useToggle from '../../../lib/hooks/toggleHook';
 
 const CommentWrap = styled.div`
   & > .comment-head {
@@ -47,8 +48,6 @@ const Comment = ({
   me,
   commentData,
   parentData,
-  toggle,
-  commentMoreToggle,
   editingCommentData,
   onEditingFieldSetting,
   onCommentSubmit,
@@ -62,8 +61,8 @@ const Comment = ({
   isDisliked,
   onShowSubComment,
   onHideSubComment,
-  subEditorToggle,
 }) => {
+  const [toggle, onToggle] = useToggle();
   const option = { // html-react-parser options
     replace: ({ attribs, children }) => {
       if (!attribs) return;
@@ -97,8 +96,6 @@ const Comment = ({
               type={type}
               commentData={commentData}
               parentData={parentData}
-              commentMoreToggle={commentMoreToggle}
-              toggle={toggle}
               onEditingFieldSetting={onEditingFieldSetting}
               onDeleteComment={onDeleteComment}
             />
@@ -129,13 +126,14 @@ const Comment = ({
       </div>
       <div className="comment-foot">
         <SocialButtons
+          me={me}
           type={type}
           isLiked={isLiked}
           isDisliked={isDisliked}
           commentData={commentData}
           onThumbsUp={onThumbsUp}
           onThumbsDown={onThumbsDown}
-          subEditorToggle={subEditorToggle}
+          editorToggle={() => onToggle(`subCommentEditor-${commentData.id}`)}
           onShowSubComment={onShowSubComment}
           onHideSubComment={onHideSubComment}
         />

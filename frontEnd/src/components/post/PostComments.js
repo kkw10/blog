@@ -4,21 +4,20 @@ import React, {
   useRef,
   useCallback,
 } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { CircleSpinner } from 'react-spinners-kit';
 import 'tui-editor/dist/tui-editor.css'; // editor's ui
 import 'tui-editor/dist/tui-editor-contents.css'; // editor's content
 import 'codemirror/lib/codemirror.css'; // codemirror
 import 'highlight.js/styles/github.css'; // code block highlight
 import Editor from 'tui-editor';
-import { toggling } from '../../models/actions/toggle';
 import { brandingColor } from '../../lib/styles/branding';
+import useToggle from '../../lib/hooks/toggleHook';
 
 // Component...
 import Button from '../common/Button';
 import Comment from '../common/Comment';
 import LoadingWrap from '../common/LoadingWrap';
+import InfoModal from '../common/modal/InfoModal';
 
 const PostCommentsWrap = styled.div`
   .tui-editor-defaultUI {
@@ -98,12 +97,11 @@ const PostComments = ({
   onHideSubComment,
   onGetTargetProfile,
 }) => {
-  const dispatch = useDispatch();
-  const toggle = useSelector(({ toggle }) => (toggle));
   const mounted = useRef(false);
   const instance = useRef(null);
   const [formClear, setFormClear] = useState(false);
   const [buttonType, setButtonType] = useState('새로고침');
+  const [toggle, onToggle] = useToggle();
 
   if (commentError) {
     return (
@@ -116,23 +114,18 @@ const PostComments = ({
   // 메인 댓글 에디터 버튼, 새로고침 or 댓글 전환
   const onClick = useCallback((e) => {
     e.preventDefault();
+
     if (buttonType === '댓글') {
+      if (!me.user) {
+        onToggle('info');
+        return;
+      }
       onCommentSubmit(e);
       setFormClear(true);
       return;
     }
     onRefresh();
   }, [onCommentSubmit, onRefresh]);
-
-  // 댓글 우측 더보기 아이콘 버튼 토글
-  const commentMoreToggle = useCallback((id) => {
-    dispatch(toggling(`commentMore-${id}`));
-  }, [dispatch]);
-
-  // 대댓글 에디터 show/off 토글 버튼
-  const subEditorToggle = useCallback((id) => {
-    dispatch(toggling(`subCommentEditor-${id}`));
-  }, [dispatch]);
 
   useEffect(() => { // 포스트 댓글 작성 에디터
     if (!me) return;
@@ -198,8 +191,6 @@ const PostComments = ({
               <Comment
                 key={comment.id}
                 me={me}
-                toggle={toggle}
-                commentMoreToggle={commentMoreToggle}
                 commentData={comment}
                 editingCommentData={editingCommentData}
                 onEditingFieldSetting={onEditingFieldSetting}
@@ -214,7 +205,6 @@ const PostComments = ({
                 isDisliked={isDisliked}
                 onShowSubComment={onShowSubComment}
                 onHideSubComment={onHideSubComment}
-                subEditorToggle={subEditorToggle}
               />
               {comment.isOpen && (comment.ChildComment && comment.ChildComment.map((child) => {
                 if (child) {
@@ -225,8 +215,6 @@ const PostComments = ({
                           key={child.id}
                           type="SUB"
                           me={me}
-                          toggle={toggle}
-                          commentMoreToggle={commentMoreToggle}
                           commentData={child}
                           parentData={comment}
                           editingCommentData={editingCommentData}
@@ -238,7 +226,6 @@ const PostComments = ({
                           onThumbsUp={onThumbsUp}
                           onThumbsDown={onThumbsDown}
                           onGetTargetProfile={onGetTargetProfile}
-                          subEditorToggle={subEditorToggle}
                         />
                       </div>
                     </SubComment>
@@ -255,6 +242,12 @@ const PostComments = ({
           color={brandingColor.point[6]}
         />
       </CommentsList>
+      <InfoModal
+        title="알림"
+        description="로그인이 필요한 기능입니다."
+        visible={toggle && toggle.activeToggle === 'info'}
+        onCancel={() => onToggle('info')}
+      />
     </PostCommentsWrap>
   );
 };

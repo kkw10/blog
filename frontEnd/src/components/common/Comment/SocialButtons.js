@@ -4,6 +4,7 @@ import { AiFillDislike, AiFillLike } from 'react-icons/ai';
 
 // lib...
 import { brandingColor } from '../../../lib/styles/branding';
+import useToggle from '../../../lib/hooks/toggleHook';
 
 const SocailButtonsWrap = styled.div`
   display: flex;
@@ -50,31 +51,38 @@ const ThumbsButton = styled.div`
 `;
 
 const SocailButtons = ({
+  me,
   type,
   isLiked,
   isDisliked,
   commentData,
   onThumbsUp,
   onThumbsDown,
-  subEditorToggle,
+  editorToggle,
   onShowSubComment,
   onHideSubComment,
 }) => {
+  const [toggle, onToggle] = useToggle();
+
   return (
     <SocailButtonsWrap>
       <div className="thumbs-area">
         <ThumbsButton fill={isLiked ? 'point' : 'common'}>
-          <AiFillLike onClick={() => onThumbsUp(commentData.id)} />
+          <AiFillLike
+            onClick={me.user ? () => onThumbsUp(commentData.id) : () => onToggle('info')}
+          />
           <span>{(commentData.Likers && commentData.Likers.length) || 0}</span>
         </ThumbsButton>
         <ThumbsButton fill={isDisliked ? 'point' : 'common'}>
-          <AiFillDislike onClick={() => onThumbsDown(commentData.id)} />
+          <AiFillDislike
+            onClick={me.user ? () => onThumbsDown(commentData.id) : () => onToggle('info')}
+          />
           <span>{(commentData.Dislikers && commentData.Dislikers.length) || 0}</span>
         </ThumbsButton>
         <button
           className="sub-comment"
           type="button"
-          onClick={() => subEditorToggle(commentData.id)}
+          onClick={me.user ? editorToggle : () => onToggle('info')}
         >
           댓글 달기
         </button>
