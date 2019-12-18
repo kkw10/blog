@@ -7,7 +7,7 @@ const isLoggedIn = require('../../lib/isLoggedIn');
 // POST
 router.post('/', 
   isLoggedIn,
-  postCtrl.write
+  postCtrl.writePost
 );
 router.post('/:id/recomend',
   isLoggedIn,
@@ -17,21 +17,21 @@ router.post('/:id/recomend',
 router.post('/:id/comment',
   isLoggedIn,
   postCtrl.getPostById,
-  postCtrl.writeComment
+  commentCtrl.writeComment
 );
 router.post('/:id/comment/:commentId/up',
   isLoggedIn,
-  postCtrl.getComment,
-  postCtrl.thumbsUp,
+  commentCtrl.getComment,
+  commentCtrl.thumbsUp,
 );
 router.post('/:id/comment/:commentId/down',
   isLoggedIn,
-  postCtrl.getComment,
-  postCtrl.thumbsDown,
+  commentCtrl.getComment,
+  commentCtrl.thumbsDown,
 );
 router.post('/subcomment/:commentId',
   isLoggedIn,
-  postCtrl.getComment,
+  commentCtrl.getComment,
   commentCtrl.writeSubComment,
 );
 
@@ -42,10 +42,10 @@ router.get('/:id',
 );
 router.get('/:id/comments',
   postCtrl.getPostById,
-  postCtrl.readComments
+  commentCtrl.readComments
 )
 router.get('/subcomments/:commentId',
-  postCtrl.getComment,
+  commentCtrl.getComment,
   commentCtrl.readSubComments,
 )
 
@@ -54,16 +54,16 @@ router.patch('/:id',
   isLoggedIn,
   postCtrl.getPostById,
   postCtrl.isMyPost,
-  postCtrl.update
+  postCtrl.updatePost,
 );
 router.patch('/comment/:id/:commentId',
   isLoggedIn,
-  postCtrl.getComment,
-  postCtrl.updateComment,
+  commentCtrl.getComment,
+  commentCtrl.updateComment,
 );
 router.patch('/subcomment/:commentId',
   isLoggedIn,
-  postCtrl.getComment,
+  commentCtrl.getComment,
   commentCtrl.updateSubComment,
 );
 
@@ -72,12 +72,12 @@ router.delete('/:id',
   isLoggedIn,
   postCtrl.getPostById,
   postCtrl.isMyPost,
-  postCtrl.delete,
+  postCtrl.deletePost,
 );
 router.delete('/comment/:commentId',
   isLoggedIn,
-  postCtrl.getComment,
-  postCtrl.deleteComment
+  commentCtrl.getComment,
+  commentCtrl.deleteComment
 );
 
 module.exports = router;
