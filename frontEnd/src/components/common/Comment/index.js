@@ -92,7 +92,7 @@ const Comment = ({
           </UserName>
         </div>
         <div className="more">
-          {commentData.UserId === me.user.id ? (
+          {me.user && (commentData.UserId === me.user.id) ? (
             <MoreButtons
               type={type}
               commentData={commentData}
