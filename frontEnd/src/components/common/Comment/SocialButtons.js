@@ -56,8 +56,7 @@ const SocailButtons = ({
   isLiked,
   isDisliked,
   commentData,
-  onThumbsUp,
-  onThumbsDown,
+  onThumbs,
   editorToggle,
   onShowSubComment,
   onHideSubComment,
@@ -69,13 +68,13 @@ const SocailButtons = ({
       <div className="thumbs-area">
         <ThumbsButton fill={isLiked ? 'point' : 'common'}>
           <AiFillLike
-            onClick={me.user ? () => onThumbsUp(commentData.id) : () => onToggle('info')}
+            onClick={me.user ? () => onThumbs('up', commentData.id) : () => onToggle('info')}
           />
           <span>{(commentData.Likers && commentData.Likers.length) || 0}</span>
         </ThumbsButton>
         <ThumbsButton fill={isDisliked ? 'point' : 'common'}>
           <AiFillDislike
-            onClick={me.user ? () => onThumbsDown(commentData.id) : () => onToggle('info')}
+            onClick={me.user ? () => onThumbs('down', commentData.id) : () => onToggle('info')}
           />
           <span>{(commentData.Dislikers && commentData.Dislikers.length) || 0}</span>
         </ThumbsButton>

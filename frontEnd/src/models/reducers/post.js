@@ -2,15 +2,17 @@ import {
   READ_POST,
   READ_POST_SUCCESS,
   READ_POST_FAILURE,
-  COMMENTING_SUCCESS,
-  COMMENTING_FAILURE,
   READ_COMMENTS,
   READ_COMMENTS_SUCCESS,
   READ_COMMENTS_FAILURE,
-  THUMBS_UP_SUCCESS,
-  THUMBS_UP_FAILURE,
-  THUMBS_DOWN_SUCCESS,
-  THUMBS_DOWN_FAILURE,
+  READ_SUB_COMMENTS_SUCCESS,
+  READ_SUB_COMMENTS_FAILURE,
+  COMMENTING_SUCCESS,
+  COMMENTING_FAILURE,
+  SUB_COMMENTING_SUCCESS,
+  SUB_COMMENTING_FAILURE,
+  THUMBS_SUCCESS,
+  THUMBS_FAILURE,
   RECOMEND_SUCCESS,
   RECOMEND_FAILURE,
   DELETE_COMMENT_SUCCESS,
@@ -19,10 +21,6 @@ import {
   UPDATE_COMMENT_FAILURE,
   UPDATE_SUB_COMMENT_SUCCESS,
   UPDATE_SUB_COMMENT_FAILURE,
-  SUB_COMMENTING_SUCCESS,
-  SUB_COMMENTING_FAILURE,
-  READ_SUB_COMMENTS_SUCCESS,
-  READ_SUB_COMMENTS_FAILURE,
   HIDE_SUB_COMMENTS,
   REFRESH_COMMENTS_SUCCESS,
   REFRESH_COMMENTS_FAILURE,
@@ -31,20 +29,39 @@ import {
 const initialState = {
   postResult: null,
   commentsResult: [],
-  hasMoreComments: true,
+  hasMoreComments: true, // 가져올 댓글이 더 있는지 확인
+  isLoading: false, // 댓글이 로딩 중인지 확인
   postError: null,
   recomendError: null,
   commentError: null,
   thumbsError: null,
-  isLoading: false,
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    // ETC
     case READ_POST:
       return {
         ...initialState,
       };
+    case READ_COMMENTS:
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case HIDE_SUB_COMMENTS: {
+      const targetId = action.payload;
+      const targetIndex = [...state.commentsResult].findIndex((comment) => (
+        comment.id === targetId
+      ));
+      const newCommentsResult = [...state.commentsResult];
+      newCommentsResult[targetIndex].isOpen = false;
+      return {
+        ...state,
+        commentsResult: newCommentsResult,
+      };
+    }
+    // SUCCESS
     case READ_POST_SUCCESS: {
       return {
         ...state,
@@ -52,18 +69,6 @@ const reducer = (state = initialState, action) => {
         postError: null,
       };
     }
-    case READ_POST_FAILURE:
-      return {
-        ...state,
-        postResult: null,
-        commentsResult: null,
-        postError: action.payload,
-      };
-    case READ_COMMENTS:
-      return {
-        ...state,
-        isLoading: true,
-      };
     case READ_COMMENTS_SUCCESS: {
       return {
         ...state,
@@ -71,6 +76,19 @@ const reducer = (state = initialState, action) => {
         hasMoreComments: action.payload.length === 10,
         commentError: null,
         isLoading: false,
+      };
+    }
+    case READ_SUB_COMMENTS_SUCCESS: {
+      const { parentId } = action.payload;
+      const parentIndex = [...state.commentsResult].findIndex((comment) => (
+        comment.id === parentId
+      ));
+      const newCommentsResult = [...state.commentsResult];
+      newCommentsResult[parentIndex].isOpen = true;
+      newCommentsResult[parentIndex].ChildComment = action.payload.subComments;
+      return {
+        ...state,
+        commentsResult: newCommentsResult,
       };
     }
     case REFRESH_COMMENTS_SUCCESS:
@@ -81,14 +99,6 @@ const reducer = (state = initialState, action) => {
         commentError: null,
         isLoading: false,
       };
-    case READ_COMMENTS_FAILURE:
-    case REFRESH_COMMENTS_FAILURE: {
-      return {
-        ...state,
-        commentsResult: null,
-        commentError: action.payload,
-      };
-    }
     case COMMENTING_SUCCESS: {
       const newCommentsResult = [...state.commentsResult];
       newCommentsResult.unshift(action.payload);
@@ -97,25 +107,18 @@ const reducer = (state = initialState, action) => {
         commentsResult: newCommentsResult,
       };
     }
-    case COMMENTING_FAILURE: {
-      return {
-        ...state,
-      };
-    }
-    case THUMBS_UP_SUCCESS: {
-      const newResult = [
-        ...state.commentsResult,
-      ];
-      const targetIndex = state.commentsResult.findIndex((v) => (
-        v.id === action.payload.id
+    case SUB_COMMENTING_SUCCESS: {
+      const targetId = action.payload.parentCommentId;
+      const targetIndex = [...state.commentsResult].findIndex((comment) => (
+        comment.id === targetId
       ));
-
-      newResult[targetIndex] = action.payload;
+      const newCommentsResult = [...state.commentsResult];
+      newCommentsResult[targetIndex].subCommentsNumb = state.commentsResult[targetIndex].subCommentsNumb + 1;
 
       return {
         ...state,
-        commentsResult: newResult,
-        thumbsError: null,
+        commentsResult: newCommentsResult,
+        commentError: null,
       };
     }
     case RECOMEND_SUCCESS:
@@ -126,7 +129,7 @@ const reducer = (state = initialState, action) => {
           Recomenders: action.payload,
         },
       };
-    case THUMBS_DOWN_SUCCESS: {
+    case THUMBS_SUCCESS: {
       const newResult = [
         ...state.commentsResult,
       ];
@@ -142,21 +145,6 @@ const reducer = (state = initialState, action) => {
         thumbsError: null,
       };
     }
-    case RECOMEND_FAILURE:
-      return {
-        ...state,
-        recomendError: action.payload,
-      };
-    case THUMBS_UP_FAILURE:
-      return {
-        ...state,
-        thumbsError: action.payload,
-      };
-    case THUMBS_DOWN_FAILURE:
-      return {
-        ...state,
-        thumbsError: action.payload,
-      };
     case DELETE_COMMENT_SUCCESS: {
       const { parentId, targetId, subCommentsNumb } = action.payload;
       let newComments = [...state.commentsResult];
@@ -177,11 +165,6 @@ const reducer = (state = initialState, action) => {
         commentError: null,
       };
     }
-    case DELETE_COMMENT_FAILURE:
-      return {
-        ...state,
-        commentError: action.payload,
-      };
     case UPDATE_COMMENT_SUCCESS: {
       const targetIndex = [...state.commentsResult].findIndex((comment) => (
         comment.id === action.payload.id
@@ -211,64 +194,35 @@ const reducer = (state = initialState, action) => {
         commentError: null,
       };
     }
+    // FAILURE
+    case READ_POST_FAILURE:
+      return {
+        ...state,
+        postError: action.payload,
+      };
+    case READ_COMMENTS_FAILURE:
+    case REFRESH_COMMENTS_FAILURE:
+    case COMMENTING_FAILURE:
+    case SUB_COMMENTING_FAILURE:
+    case READ_SUB_COMMENTS_FAILURE:
+    case DELETE_COMMENT_FAILURE:
     case UPDATE_COMMENT_FAILURE:
-    case UPDATE_SUB_COMMENT_FAILURE: {
+    case UPDATE_SUB_COMMENT_FAILURE:
       return {
         ...state,
         commentError: action.payload,
       };
-    }
-    case SUB_COMMENTING_SUCCESS: {
-      const targetId = action.payload.parentCommentId;
-      const targetIndex = [...state.commentsResult].findIndex((comment) => (
-        comment.id === targetId
-      ));
-      const newCommentsResult = [...state.commentsResult];
-      newCommentsResult[targetIndex].subCommentsNumb = state.commentsResult[targetIndex].subCommentsNumb + 1;
+    case RECOMEND_FAILURE:
+      return {
+        ...state,
+        recomendError: action.payload,
+      };
+    case THUMBS_FAILURE:
+      return {
+        ...state,
+        thumbsError: action.payload,
+      };
 
-      return {
-        ...state,
-        commentsResult: newCommentsResult,
-        commentError: null,
-      };
-    }
-    case SUB_COMMENTING_FAILURE: {
-      return {
-        ...state,
-        commentError: action.payload,
-      };
-    }
-    case READ_SUB_COMMENTS_SUCCESS: {
-      const { parentId } = action.payload;
-      const parentIndex = [...state.commentsResult].findIndex((comment) => (
-        comment.id === parentId
-      ));
-      const newCommentsResult = [...state.commentsResult];
-      newCommentsResult[parentIndex].isOpen = true;
-      newCommentsResult[parentIndex].ChildComment = action.payload.subComments;
-      return {
-        ...state,
-        commentsResult: newCommentsResult,
-      };
-    }
-    case READ_SUB_COMMENTS_FAILURE: {
-      return {
-        ...state,
-        commentError: action.payload,
-      };
-    }
-    case HIDE_SUB_COMMENTS: {
-      const targetId = action.payload;
-      const targetIndex = [...state.commentsResult].findIndex((comment) => (
-        comment.id === targetId
-      ));
-      const newCommentsResult = [...state.commentsResult];
-      newCommentsResult[targetIndex].isOpen = false;
-      return {
-        ...state,
-        commentsResult: newCommentsResult,
-      };
-    }
     default:
       return state;
   }

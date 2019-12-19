@@ -90,8 +90,7 @@ const PostComments = ({
   onEditingFieldSetting,
   onDeleteComment,
   onUpdateComment,
-  onThumbsUp,
-  onThumbsDown,
+  onThumbs,
   onRefresh,
   onShowSubComment,
   onHideSubComment,
@@ -198,8 +197,7 @@ const PostComments = ({
                 onDeleteComment={onDeleteComment}
                 onUpdateComment={onUpdateComment}
                 onEditCancel={onInitialize}
-                onThumbsUp={onThumbsUp}
-                onThumbsDown={onThumbsDown}
+                onThumbs={onThumbs}
                 onGetTargetProfile={onGetTargetProfile}
                 isLiked={isLiked}
                 isDisliked={isDisliked}
@@ -223,8 +221,7 @@ const PostComments = ({
                           onDeleteComment={onDeleteComment}
                           onUpdateComment={onUpdateComment}
                           onEditCancel={onInitialize}
-                          onThumbsUp={onThumbsUp}
-                          onThumbsDown={onThumbsDown}
+                          onThumbs={onThumbs}
                           onGetTargetProfile={onGetTargetProfile}
                         />
                       </div>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaUserAstronaut } from 'react-icons/fa';
@@ -200,10 +200,6 @@ const UserCard = ({
   onFollow,
   onUnfollow,
 }) => {
-  useEffect(() => {
-    console.log(currentUser)
-  }, [currentUser])
-
   return (
     <UserCardWrap>
       <div className="header">

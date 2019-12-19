@@ -61,10 +61,10 @@ export const recomend = (postId) => (
   client.post(`/api/post/${postId}/recomend`)
 );
 
-export const commentUp = ({ postId, commentId }) => (
-  client.post(`/api/post/${postId}/comment/${commentId}/up`)
-);
-
-export const commentDown = ({ postId, commentId }) => (
-  client.post(`/api/post/${postId}/comment/${commentId}/down`)
-);
+export const commentThumbs = ({ type, postId, commentId }) => {
+  console.log(type);
+  if (type === 'up') {
+    return client.post(`/api/post/${postId}/comment/${commentId}/up`);
+  }
+  return client.post(`/api/post/${postId}/comment/${commentId}/down`);
+};

@@ -21,15 +21,10 @@ export const [
   RECOMEND_FAILURE,
 ] = createRequestActionTypes('post/RECOMEND');
 export const [
-  THUMBS_UP,
-  THUMBS_UP_SUCCESS,
-  THUMBS_UP_FAILURE,
-] = createRequestActionTypes('post/THUMBS_UP');
-export const [
-  THUMBS_DOWN,
-  THUMBS_DOWN_SUCCESS,
-  THUMBS_DOWN_FAILURE,
-] = createRequestActionTypes('post/THUMBS_DOWN');
+  THUMBS,
+  THUMBS_SUCCESS,
+  THUMBS_FAILURE,
+] = createRequestActionTypes('post/THUMBS');
 export const [
   DELETE_COMMENT,
   DELETE_COMMENT_SUCCESS,
@@ -85,17 +80,10 @@ export const recomend = (postId) => ({
   payload: postId,
 });
 
-export const thumbsUp = ({ postId, commentId }) => ({
-  type: THUMBS_UP,
+export const thumbs = ({ type, postId, commentId }) => ({
+  type: THUMBS,
   payload: {
-    postId,
-    commentId,
-  },
-});
-
-export const thumbsDown = ({ postId, commentId }) => ({
-  type: THUMBS_DOWN,
-  payload: {
+    type,
     postId,
     commentId,
   },

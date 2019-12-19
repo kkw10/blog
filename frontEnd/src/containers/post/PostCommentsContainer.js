@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -19,8 +19,7 @@ import {
   updateComment,
   updateSubComment,
   deleteComment,
-  thumbsUp,
-  thumbsDown,
+  thumbs,
   subCommenting,
 } from '../../models/actions/post';
 import {
@@ -130,17 +129,10 @@ const PostCommentsContainer = ({
     dispatch(initialize());
   }, [dispatch, writtenComment]);
 
-  // 댓글 추천
-  const onThumbsUp = useCallback((commentId) => {
-    dispatch(thumbsUp({
-      postId,
-      commentId,
-    }));
-  }, [dispatch]);
-
-  // 댓글 비추천
-  const onThumbsDown = useCallback((commentId) => {
-    dispatch(thumbsDown({
+  // 댓글 좋아요, 싫어요
+  const onThumbs = useCallback((type, commentId) => {
+    dispatch(thumbs({
+      type,
       postId,
       commentId,
     }));
@@ -180,8 +172,7 @@ const PostCommentsContainer = ({
           onEditingFieldSetting={onEditingFieldSetting}
           onDeleteComment={onDeleteComment}
           onUpdateComment={onUpdateComment}
-          onThumbsUp={onThumbsUp}
-          onThumbsDown={onThumbsDown}
+          onThumbs={onThumbs}
           onRefresh={onRefresh}
           onShowSubComment={onShowSubComment}
           onHideSubComment={onHideSubComment}

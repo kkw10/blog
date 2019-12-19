@@ -5,8 +5,7 @@ import {
   READ_POST,
   COMMENTING,
   READ_COMMENTS,
-  THUMBS_UP,
-  THUMBS_DOWN,
+  THUMBS,
   RECOMEND,
   DELETE_COMMENT,
   UPDATE_COMMENT,
@@ -21,8 +20,7 @@ const readCommentsSaga = createRequestSaga(READ_COMMENTS, postAPI.readComments);
 const commentingSaga = createRequestSaga(COMMENTING, postAPI.writeComment);
 const readSubCommentsSaga = createRequestSaga(READ_SUB_COMMENTS, postAPI.readSubComments);
 const recomendSaga = createRequestSaga(RECOMEND, postAPI.recomend);
-const thumbsUpSaga = createRequestSaga(THUMBS_UP, postAPI.commentUp);
-const thumbsDownSaga = createRequestSaga(THUMBS_DOWN, postAPI.commentDown);
+const thumbsSaga = createRequestSaga(THUMBS, postAPI.commentThumbs);
 const deleteCommentSaga = createRequestSaga(DELETE_COMMENT, postAPI.removeComment);
 const updateCommentSaga = createRequestSaga(UPDATE_COMMENT, postAPI.updateComment);
 const updateSubCommentSaga = createRequestSaga(UPDATE_SUB_COMMENT, postAPI.updateSubComment);
@@ -35,8 +33,7 @@ export default function* postSaga() {
   yield throttle(1000, READ_COMMENTS, readCommentsSaga);
   yield takeLatest(READ_SUB_COMMENTS, readSubCommentsSaga);
   yield takeLatest(RECOMEND, recomendSaga);
-  yield takeLatest(THUMBS_UP, thumbsUpSaga);
-  yield takeLatest(THUMBS_DOWN, thumbsDownSaga);
+  yield takeLatest(THUMBS, thumbsSaga);
   yield takeLatest(DELETE_COMMENT, deleteCommentSaga);
   yield takeLatest(UPDATE_COMMENT, updateCommentSaga);
   yield takeLatest(UPDATE_SUB_COMMENT, updateSubCommentSaga);

@@ -54,8 +54,7 @@ const Comment = ({
   onDeleteComment,
   onUpdateComment,
   onEditCancel,
-  onThumbsUp,
-  onThumbsDown,
+  onThumbs,
   onGetTargetProfile,
   isLiked,
   isDisliked,
@@ -131,8 +130,7 @@ const Comment = ({
           isLiked={isLiked}
           isDisliked={isDisliked}
           commentData={commentData}
-          onThumbsUp={onThumbsUp}
-          onThumbsDown={onThumbsDown}
+          onThumbs={onThumbs}
           editorToggle={() => onToggle(`subCommentEditor-${commentData.id}`)}
           onShowSubComment={onShowSubComment}
           onHideSubComment={onHideSubComment}
