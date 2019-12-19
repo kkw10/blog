@@ -24,30 +24,15 @@ export const [
   FOLLOW_FAILURE,
 ] = createRequestActionTypes('user/FOLLOW');
 export const [
-  UNFOLLOW,
-  UNFOLLOW_SUCCESS,
-  UNFOLLOW_FAILURE,
-] = createRequestActionTypes('user/UNFOLLOW');
-export const [
-  READ_FOLLOWERS,
-  READ_FOLLOWERS_SUCCESS,
-  READ_FOLLOWERS_FAILURE,
-] = createRequestActionTypes('user/READ_FOLLOWERS');
-export const [
-  READ_FOLLOWINGS,
-  READ_FOLLOWINGS_SUCCESS,
-  READ_FOLLOWINGS_FAILURE,
-] = createRequestActionTypes('user/READ_FOLLOWINGS');
+  READ_FOLLOW_LIST,
+  READ_FOLLOW_LIST_SUCCESS,
+  READ_FOLLOW_LIST_FAILURE,
+] = createRequestActionTypes('user/READ_FOLLOW_LIST');
 export const [
   UNFOLLOW_FROM_LIST,
   UNFOLLOW_FROM_LIST_SUCCESS,
   UNFOLLOW_FROM_LIST_FAILURE,
 ] = createRequestActionTypes('user/UNFOLLOW_FROM_LIST');
-export const [
-  UNFOLLOWING_FROM_LIST,
-  UNFOLLOWING_FROM_LIST_SUCCESS,
-  UNFOLLOWING_FROM_LIST_FAILURE,
-] = createRequestActionTypes('user/UNFOLLOWING_FROM_LIST');
 export const CLEAR_FOLLOW_LIST = 'user/CLEAR_FOLLOW_LIST';
 
 // 새로고침 이후 임시 로그인 처리
@@ -78,36 +63,30 @@ export const resetStrangerProfile = () => ({
   type: RESET_STRANGER_PROFILE,
 });
 
-export const follow = (targetId) => ({
+export const follow = ({ type, targetId }) => ({
   type: FOLLOW,
-  payload: targetId,
+  payload: {
+    type,
+    targetId,
+  },
 });
 
-export const unfollow = (targetId) => ({
-  type: UNFOLLOW,
-  payload: targetId,
-});
-
-export const unfollowFromList = (targetId) => ({
+export const unfollowFromList = ({ type, targetId }) => ({
   type: UNFOLLOW_FROM_LIST,
-  payload: targetId,
+  payload: {
+    type,
+    targetId,
+  },
 });
 
-export const unfollowingFromList = (targetId) => ({
-  type: UNFOLLOWING_FROM_LIST,
-  payload: targetId,
-});
-
-export const readFollowers = (targetId) => ({
-  type: READ_FOLLOWERS,
-  payload: targetId,
-});
-
-export const readFollowings = (targetId) => ({
-  type: READ_FOLLOWINGS,
-  payload: targetId,
+export const readFollowList = ({ type, targetId }) => ({
+  type: READ_FOLLOW_LIST,
+  payload: {
+    type,
+    targetId,
+  },
 });
 
 export const clearFollowList = () => ({
   type: CLEAR_FOLLOW_LIST,
-})
+});

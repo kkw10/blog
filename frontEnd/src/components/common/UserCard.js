@@ -198,7 +198,6 @@ const UserCard = ({
   currentUser,
   onResetStranger,
   onFollow,
-  onUnfollow,
 }) => {
   return (
     <UserCardWrap>
@@ -277,10 +276,10 @@ const UserCard = ({
                   {currentUser.isFollowed ? (
                     <Button
                       placeholder="언팔로우"
-                      loadingType="user/UNFOLLOW"
+                      loadingType="user/FOLLOW"
                       size="mx"
                       background="main"
-                      onClick={() => onUnfollow(currentUser.id)}
+                      onClick={() => onFollow('unfollow', currentUser.id)}
                     />
                   ) : (
                     <Button
@@ -288,7 +287,7 @@ const UserCard = ({
                       loadingType="user/FOLLOW"
                       size="mx"
                       background="point"
-                      onClick={() => onFollow(currentUser.id)}
+                      onClick={() => onFollow('follow', currentUser.id)}
                     />
                   )}
                 </FollowButton>

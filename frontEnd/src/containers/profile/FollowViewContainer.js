@@ -6,9 +6,7 @@ import { brandingColor } from '../../lib/styles/branding';
 const FollowViewContaienr = ({ type, isMe, list, event }) => {
   return (
     <LoadingWrap
-      loadingType={
-        type === 'following' ? 'user/READ_FOLLOWINGS' : 'user/READ_FOLLOWERS'
-      }
+      loadingType="user/READ_FOLLOW_LIST"
       styleType="follow"
       size={30}
       color={brandingColor.point[6]}
@@ -20,7 +18,7 @@ const FollowViewContaienr = ({ type, isMe, list, event }) => {
         event={event}
       />
     </LoadingWrap>
-  )
+  );
 };
 
 export default FollowViewContaienr;

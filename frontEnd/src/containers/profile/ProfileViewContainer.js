@@ -3,10 +3,8 @@ import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   getTargetProfile,
-  readFollowers,
-  readFollowings,
+  readFollowList,
   unfollowFromList,
-  unfollowingFromList,
   clearFollowList,
 } from '../../models/actions/user';
 
@@ -31,20 +29,12 @@ const ProfileViewContainer = ({ match }) => {
   }));
   const [currentUser, setCurrentUser] = useState(null);
 
-  const onReadFollowers = useCallback((targetId) => {
-    dispatch(readFollowers(targetId));
+  const onReadFollowList = useCallback((type, targetId) => {
+    dispatch(readFollowList({ type, targetId }));
   }, [dispatch]);
 
-  const onReadFollowings = useCallback((targetId) => {
-    dispatch(readFollowings(targetId));
-  }, [dispatch]);
-
-  const onUnfollowFromList = useCallback((targetId) => {
-    dispatch(unfollowFromList(targetId));
-  }, [dispatch]);
-
-  const onUnfollowingFromList = useCallback((targetId) => {
-    dispatch(unfollowingFromList(targetId));
+  const onUnfollowFromList = useCallback((type, targetId) => {
+    dispatch(unfollowFromList({ type, targetId }));
   }, [dispatch]);
 
   useEffect(() => { // 타겟 유저 정보 가져오기
@@ -69,7 +59,7 @@ const ProfileViewContainer = ({ match }) => {
   useEffect(() => { // 언마운트될 때 팔로워, 팔로잉 리스트 초기화
     return () => {
       dispatch(clearFollowList());
-    }
+    };
   }, []);
 
   return (
@@ -77,10 +67,8 @@ const ProfileViewContainer = ({ match }) => {
       currentUser={currentUser}
       FollowersList={FollowersList}
       FollowingsList={FollowingsList}
-      onReadFollowers={onReadFollowers}
-      onReadFollowings={onReadFollowings}
+      onReadFollowList={onReadFollowList}
       onUnfollowFromList={onUnfollowFromList}
-      onUnfollowingFromList={onUnfollowingFromList}
     />
   );
 };

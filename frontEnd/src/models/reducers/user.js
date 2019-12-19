@@ -10,16 +10,10 @@ import {
   RESET_STRANGER_PROFILE,
   FOLLOW_SUCCESS,
   FOLLOW_FAILURE,
-  UNFOLLOW_SUCCESS,
-  UNFOLLOW_FAILURE,
   UNFOLLOW_FROM_LIST_SUCCESS,
   UNFOLLOW_FROM_LIST_FAILURE,
-  UNFOLLOWING_FROM_LIST_SUCCESS,
-  UNFOLLOWING_FROM_LIST_FAILURE,
-  READ_FOLLOWERS_SUCCESS,
-  READ_FOLLOWERS_FAILURE,
-  READ_FOLLOWINGS_SUCCESS,
-  READ_FOLLOWINGS_FAILURE,
+  READ_FOLLOW_LIST_SUCCESS,
+  READ_FOLLOW_LIST_FAILURE,
   CLEAR_FOLLOW_LIST,
 } from '../actions/user';
 
@@ -36,11 +30,28 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    // ETC
     case TEMP_SET_USER:
       return {
         ...state,
         user: action.payload,
       };
+    case LOGOUT:
+      return {
+        ...initialState,
+      };
+    case RESET_STRANGER_PROFILE:
+      return {
+        ...state,
+        stranger: null,
+      };
+    case CLEAR_FOLLOW_LIST:
+      return {
+        ...state,
+        FollowersList: [],
+        FollowingsList: [],
+      };
+    // SUCCESS
     case CHECK_SUCCESS:
       return {
         ...state,
@@ -48,15 +59,11 @@ const reducer = (state = initialState, action) => {
         profile: action.payload.profile,
         checkError: null,
       };
-    case CHECK_FAILURE:
+    case GET_TARGET_PROFILE_SUCCESS:
       return {
         ...state,
-        user: null,
-        checkError: action.payload,
-      };
-    case LOGOUT:
-      return {
-        ...initialState,
+        stranger: action.payload,
+        profileError: null,
       };
     case UPLOAD_PROFILE_SUCCESS:
       return {
@@ -67,112 +74,84 @@ const reducer = (state = initialState, action) => {
         },
         profileError: null,
       };
+    case READ_FOLLOW_LIST_SUCCESS: {
+      let targetList = '';
+      if (action.payload.type === 'followers') {
+        targetList = 'FollowersList';
+      } else {
+        targetList = 'FollowingsList';
+      }
+      return {
+        ...state,
+        [targetList]: action.payload.list,
+      };
+    }
+    case FOLLOW_SUCCESS: { // follow, unfollow => usercard
+      let newCounts = state.profile.followings;
+      if (action.payload.type === 'follow') {
+        newCounts = (newCounts || 0) + 1;
+      } else {
+        newCounts = (newCounts || 0) - 1;
+      }
+      return {
+        ...state,
+        profile: {
+          ...state.profile,
+          followings: newCounts,
+        },
+        stranger: {
+          ...state.stranger,
+          followers: action.payload.targetUser.followers,
+          isFollowed: action.payload.targetUser.isFollowed,
+        },
+      };
+    }
+    case UNFOLLOW_FROM_LIST_SUCCESS: { // unfonllow, unfollowing => profilePage array list
+      let newList = [];
+      let target = '';
+      let targetList = '';
+
+      if (action.payload.type === 'unfollow') {
+        newList = [...state.FollowingsList];
+        target = 'followings';
+        targetList = 'FollowingsList';
+      } else {
+        newList = [...state.FollowersList];
+        target = 'followers';
+        targetList = 'FollowersList';
+      }
+      newList = newList.filter((user) => {
+        return user.id !== action.payload.targetUser.id;
+      });
+
+      return {
+        ...state,
+        profile: {
+          ...state.profile,
+          [target]: (state.profile[target] || 0) - 1,
+        },
+        [targetList]: newList,
+      };
+    }
+    // FAIURE
+    case CHECK_FAILURE:
+      return {
+        ...state,
+        user: null,
+        checkError: action.payload,
+      };
     case UPLOAD_PROFILE_FAILURE:
-      return {
-        ...state,
-        profileError: action.payload,
-      };
-    case GET_TARGET_PROFILE_SUCCESS:
-      return {
-        ...state,
-        stranger: action.payload,
-        profileError: null,
-      };
     case GET_TARGET_PROFILE_FAILURE:
+    case FOLLOW_FAILURE:
+    case UNFOLLOW_FROM_LIST_FAILURE:
       return {
         ...state,
         profileError: action.payload,
       };
-    case RESET_STRANGER_PROFILE:
-      return {
-        ...state,
-        stranger: null,
-      };
-    case FOLLOW_SUCCESS:
-      return {
-        ...state,
-        profile: {
-          ...state.profile,
-          followings: (state.profile.followings || 0) + 1,
-        },
-        stranger: {
-          ...state.stranger,
-          followers: action.payload.targetUser.followers,
-          isFollowed: action.payload.targetUser.isFollowed,
-        },
-      };
-    case UNFOLLOW_SUCCESS:
-      return {
-        ...state,
-        profile: {
-          ...state.profile,
-          followings: (state.profile.followings || 0) - 1,
-        },
-        stranger: {
-          ...state.stranger,
-          followers: action.payload.targetUser.followers,
-          isFollowed: action.payload.targetUser.isFollowed,
-        },
-      };
-    case UNFOLLOW_FROM_LIST_SUCCESS: {
-      let newFollowingsList = [...state.FollowingsList];
-      newFollowingsList = newFollowingsList.filter((user) => {
-        return user.id !== action.payload.targetUser.id;
-      });
-
-      return {
-        ...state,
-        profile: {
-          ...state.profile,
-          followings: (state.profile.followings || 0) - 1,
-        },
-        FollowingsList: newFollowingsList,
-      };
-    }
-    case UNFOLLOWING_FROM_LIST_SUCCESS: {
-      let newFollowersList = [...state.FollowersList];
-      newFollowersList = newFollowersList.filter((user) => {
-        return user.id !== action.payload.targetUser.id;
-      });
-
-      return {
-        ...state,
-        FollowersList: newFollowersList,
-        profile: {
-          ...state.profile,
-          followers: (state.profile.followers || 0) - 1,
-        },
-      };
-    }
-    case FOLLOW_FAILURE:
-    case UNFOLLOW_FAILURE:
-    case UNFOLLOW_FROM_LIST_FAILURE:
-    case UNFOLLOWING_FROM_LIST_FAILURE:
+    case READ_FOLLOW_LIST_FAILURE:
       return {
         ...state,
         followError: action.payload,
-      };
-    case READ_FOLLOWERS_SUCCESS:
-      return {
-        ...state,
-        FollowersList: action.payload,
-      };
-    case READ_FOLLOWINGS_SUCCESS:
-      return {
-        ...state,
-        FollowingsList: action.payload,
-      };
-    case READ_FOLLOWERS_FAILURE:
-    case READ_FOLLOWINGS_FAILURE:
-      return {
-        ...state,
-        followError: action.payload,
-      };
-    case CLEAR_FOLLOW_LIST:
-      return {
-        ...state,
-        FollowersList: [],
-        FollowingsList: [],
       };
     default:
       return state;

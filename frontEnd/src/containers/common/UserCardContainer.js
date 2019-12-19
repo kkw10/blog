@@ -4,7 +4,6 @@ import UserCard from '../../components/common/UserCard';
 import {
   resetStrangerProfile,
   follow,
-  unfollow,
 } from '../../models/actions/user';
 
 const UserCardContainer = () => {
@@ -20,12 +19,8 @@ const UserCardContainer = () => {
     dispatch(resetStrangerProfile());
   }, [dispatch]);
 
-  const onFollow = useCallback((targetId) => {
-    dispatch(follow(targetId));
-  }, [dispatch]);
-
-  const onUnfollow = useCallback((targetId) => {
-    dispatch(unfollow(targetId));
+  const onFollow = useCallback((type, targetId) => {
+    dispatch(follow({ type, targetId }));
   }, [dispatch]);
 
   useEffect(() => { // 유저카드 대상이 나인지 다른 유저인지 판단.
@@ -52,7 +47,6 @@ const UserCardContainer = () => {
       currentUser={currentUser}
       onResetStranger={onResetStranger}
       onFollow={onFollow}
-      onUnfollow={onUnfollow}
     />
   )
 };

@@ -37,6 +37,7 @@ exports.follow = async (req, res, next) => {
     targetUser.dataValues.isFollowed = true;
 
     res.json({
+      type: 'follow',
       targetUser,
       me,
     });
@@ -61,6 +62,7 @@ exports.unfollow = async (req, res, next) => {
     targetUser.dataValues.isFollowed = false;
 
     res.json({
+      type: 'unfollow',
       targetUser,
       me
     });
@@ -84,6 +86,7 @@ exports.unfollowing = async (req, res, next) => {
     });
 
     res.json({
+      type: 'unfollowing',
       targetUser,
       me
     });
@@ -114,7 +117,10 @@ exports.readFollowers = async (req, res, next) => {
       return;
     }
 
-    res.json(targetUser.Followers);
+    res.json({
+      type: 'followers',
+      list: targetUser.Followers,
+    });
   } catch (e) {
     console.error(e);
     return next(e);
@@ -142,7 +148,10 @@ exports.readFollowings = async (req, res, next) => {
       return;
     }
 
-    res.json(targetUser.Followings);
+    res.json({
+      type: 'followings',
+      list: targetUser.Followings,
+    });
   } catch (e) {
     console.error(e);
     return next(e);

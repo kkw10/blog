@@ -9,7 +9,6 @@ import { brandingColor } from '../../lib/styles/branding';
 // Component...
 import Modal from '../common/modal';
 import FollowViewContainer from '../../containers/profile/FollowViewContainer';
-import FollowView from '../profile/FollowView';
 
 // lib...
 import useToggle from '../../lib/hooks/toggleHook';
@@ -201,21 +200,19 @@ const ProfileView = ({
   currentUser,
   FollowersList,
   FollowingsList,
-  onReadFollowers,
-  onReadFollowings,
+  onReadFollowList,
   onUnfollowFromList,
-  onUnfollowingFromList,
 }) => {
   if (!currentUser) return null;
   const [toggle, onToggle] = useToggle();
 
   const followerClickHandler = useCallback(() => {
-    onReadFollowers(currentUser.id);
+    onReadFollowList('followers', currentUser.id);
     onToggle('FollowersList');
   }, [currentUser]);
 
   const followingClickHandler = useCallback(() => {
-    onReadFollowings(currentUser.id);
+    onReadFollowList('followings', currentUser.id);
     onToggle('FollowingsList');
   }, [currentUser]);
 
@@ -293,7 +290,7 @@ const ProfileView = ({
             type="follower"
             isMe={currentUser.isMe}
             list={FollowersList}
-            event={onUnfollowingFromList}
+            event={onUnfollowFromList}
           />
         )}
       </Modal>
@@ -312,7 +309,7 @@ const ProfileView = ({
         )}
       </Modal>
     </ProfileViewWrap>
-  )
-}
+  );
+};
 
 export default ProfileView;

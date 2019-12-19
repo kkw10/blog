@@ -96,26 +96,26 @@ const FollowView = ({ type, isMe, list, event }) => {
                       placeholder="언팔로잉"
                       size="md"
                       background="main"
-                      onClick={() => event(follower.id)}
+                      onClick={() => event('unfollowing', follower.id)}
                     />
                   ) : (
                     <Button
                       placeholder="언팔로우"
                       size="md"
                       background="main"
-                      onClick={() => event(follower.id)}
+                      onClick={() => event('unfollow', follower.id)}
                     />
                   )}
                 </Buttons>
               ) : (null)}
             </li>
-          )
+          );
         }) : (
           <NoContents placeholder={type === 'follower' ? '팔로워가 존재하지 않습니다.' : '팔로잉한 유저가 존재하지 않습니다.'} />
         )}
       </ul>
     </FollowViewWrap>
-  )
+  );
 };
 
 export default FollowView;
