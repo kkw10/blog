@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import AuthForm from '../../components/auth/AuthForm';
@@ -7,35 +7,70 @@ import {
   initializeForm,
   register,
 } from '../../models/actions/auth';
+import { check } from '../../models/actions/user';
+import { toggling } from '../../models/actions/toggle';
+
+// lib...
 import {
-  check,
-} from '../../models/actions/user';
-import {
-  toggling,
-} from '../../models/actions/toggle';
+  initForm,
+  emailValidate,
+  nickValidate,
+  passwordValidate,
+  passwordCheckValidate,
+} from '../../lib/util/validation';
 
 const AuthFormContainer = ({ type, history }) => {
-  const [formError, setFormError] = useState(null);
   const dispatch = useDispatch();
-
+  const [formError, setFormError] = useState(null);
+  const [emailError, setEmailError] = useState(initForm);
+  const [nickError, setNickError] = useState(initForm);
+  const [passwordError, setPasswordError] = useState(initForm);
+  const [passwordCheckError, setPasswordCheckError] = useState(initForm);
   const form = useSelector(({ auth }) => auth.register);
-
   const { result, error, user } = useSelector(({ auth, user }) => ({
     result: auth.result,
     error: auth.error,
     user: user.user,
   }));
 
-  const onChange = (e) => {
+  // 유효성 검사 함수
+  const onValidate = useCallback((name, value) => {
+    let isError = null;
+
+    if (name === 'email') {
+      isError = emailValidate(value);
+      setEmailError(isError);
+    }
+
+    if (name === 'nickname') {
+      isError = nickValidate(value);
+      setNickError(isError);
+    }
+
+    if (name === 'password') {
+      isError = passwordValidate(value);
+      setPasswordError(isError);
+    }
+
+    if (name === 'passwordConfirm') {
+      isError = passwordCheckValidate(value, form.password);
+      setPasswordCheckError(isError);
+    }
+  }, [form]);
+
+  // form input change 함수
+  const onChange = useCallback((e) => {
     const { value, name } = e.target;
     dispatch(changeField({
       form: 'register',
       key: name,
       value,
     }));
-  };
 
-  const onSubmit = (e) => {
+    onValidate(name, value);
+  }, [onValidate]);
+
+  const onSubmit = useCallback((e) => {
     e.preventDefault();
     const {
       email,
@@ -55,9 +90,9 @@ const AuthFormContainer = ({ type, history }) => {
     }
 
     dispatch(register({ email, nickname, password }));
-  };
+  }, [form]);
 
-  useEffect(() => {
+  useEffect(() => { // 에러 체크
     if (error) {
       if (error.response.status === 409) {
         setFormError('이미 존재하는 계정입니다.');
@@ -77,7 +112,7 @@ const AuthFormContainer = ({ type, history }) => {
     }
   }, [result, error, dispatch]);
 
-  useEffect(() => {
+  useEffect(() => { // 로컬 스토리지에 유저 저장 및 메인페이지로 이동
     if (user) history.push('/');
     try {
       localStorage.setItem('user', JSON.stringify(user));
@@ -86,7 +121,7 @@ const AuthFormContainer = ({ type, history }) => {
     }
   }, [user, history]);
 
-  useEffect(() => {
+  useEffect(() => { // 초기화
     dispatch(initializeForm(type));
     setFormError(null);
   }, [dispatch]);
@@ -98,6 +133,10 @@ const AuthFormContainer = ({ type, history }) => {
       onChange={onChange}
       onSubmit={onSubmit}
       error={formError}
+      emailError={emailError}
+      nickError={nickError}
+      passwordError={passwordError}
+      passwordCheckError={passwordCheckError}
     />
   );
 };

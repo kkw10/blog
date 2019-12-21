@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import Button from '../common/Button';
 import { brandingColor } from '../../lib/styles/branding';
 
+// components...
+import AuthFieldset from './AuthFieldset';
+
 const AuthFormWrap = styled.div`
   width: 320px;
   
@@ -25,10 +28,16 @@ const AuthFormWrap = styled.div`
   button {
     margin-top: 0.5rem;
   }
+
+  & > form {
+    & > fieldset {
+      position: relative;
+    }
+  }
 `;
 
 const ErrorMessage = styled.div`
-  color: ${brandingColor.main[8]};
+  color: ${brandingColor.red[6]};
   text-align: center;
   font-size: 13px;
   font-weight: bold;
@@ -42,38 +51,47 @@ const AuthForm = ({
   onChange,
   onSubmit,
   error,
+  emailError,
+  nickError,
+  passwordError,
+  passwordCheckError,
 }) => (
   <AuthFormWrap>
     <form onSubmit={onSubmit}>
-      <input
-        autoComplete="email"
+      <AuthFieldset
         name="email"
         placeholder="이메일"
         value={form.email}
         onChange={onChange}
+        validationError={emailError.result}
+        validationMessage={emailError.message}
       />
       {type === 'register' && (
-        <input
+        <AuthFieldset
           name="nickname"
           placeholder="닉네임"
           value={form.nickname}
           onChange={onChange}
+          validationError={nickError.result}
+          validationMessage={nickError.message}
         />
       )}
-      <input
+      <AuthFieldset
         name="password"
         placeholder="비밀번호"
-        type="password"
         value={form.password}
         onChange={onChange}
+        validationError={passwordError.result}
+        validationMessage={passwordError.message}
       />
       {type === 'register' && (
-        <input
+        <AuthFieldset
           name="passwordConfirm"
           placeholder="비밀번호 확인"
-          type="password"
           value={form.passwordConfirm}
           onChange={onChange}
+          validationError={passwordCheckError.result}
+          validationMessage={passwordCheckError.message}
         />
       )}
       {error && <ErrorMessage>{ error }</ErrorMessage>}

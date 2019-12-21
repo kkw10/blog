@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import AuthForm from '../../components/auth/AuthForm';
@@ -7,35 +7,55 @@ import {
   initializeForm,
   login,
 } from '../../models/actions/auth';
+import { check } from '../../models/actions/user';
+import { toggling } from '../../models/actions/toggle';
+
+// lib...
 import {
-  check,
-} from '../../models/actions/user';
-import {
-  toggling,
-} from '../../models/actions/toggle';
+  initForm,
+  emailValidate,
+  passwordValidate,
+} from '../../lib/util/validation';
 
 const LoginContainer = ({ type, history }) => {
-  const [formError, setFormError] = useState(null);
   const dispatch = useDispatch();
-
+  const [formError, setFormError] = useState(null);
+  const [emailError, setEmailError] = useState(initForm);
+  const [passwordError, setPasswordError] = useState(initForm);
   const form = useSelector(({ auth }) => auth.login);
-
   const { result, error, user } = useSelector(({ auth, user }) => ({
     result: auth.result,
     error: auth.error,
     user: user.user,
   }));
 
-  const onChange = (e) => {
+  // 유효성 검사 함수
+  const onValidate = useCallback((name, value) => {
+    let isError = null;
+
+    if (name === 'email') {
+      isError = emailValidate(value);
+      setEmailError(isError);
+    }
+
+    if (name === 'password') {
+      isError = passwordValidate(value);
+      setPasswordError(isError);
+    }
+  }, [form]);
+
+  const onChange = useCallback((e) => {
     const { value, name } = e.target;
     dispatch(changeField({
       form: 'login',
       key: name,
       value,
     }));
-  };
 
-  const onSubmit = (e) => {
+    onValidate(name, value);
+  }, [onValidate]);
+
+  const onSubmit = useCallback((e) => {
     e.preventDefault();
     const {
       email,
@@ -43,7 +63,7 @@ const LoginContainer = ({ type, history }) => {
     } = form;
 
     dispatch(login({ email, password }));
-  };
+  }, [form]);
 
   useEffect(() => {
     if (error) {
@@ -84,6 +104,8 @@ const LoginContainer = ({ type, history }) => {
       onChange={onChange}
       onSubmit={onSubmit}
       error={formError}
+      emailError={emailError}
+      passwordError={passwordError}
     />
   );
 };
