@@ -195,6 +195,7 @@ const FollowNumber = styled.ul`
 `;
 
 const UserCard = ({
+  me,
   currentUser,
   onResetStranger,
   onFollow,
@@ -219,7 +220,7 @@ const UserCard = ({
             </Link>
           </>
         ) : null}
-        {currentUser && !currentUser.isMe ? (
+        {me && currentUser && !currentUser.isMe ? (
           <>
             <button
               type="button"
@@ -270,7 +271,7 @@ const UserCard = ({
                 {(currentUser.followings && currentUser.followings) || 0}
               </li>
             </FollowNumber>
-            {!currentUser.isMe ? (
+            {me && !currentUser.isMe ? (
               <div className="buttons">
                 <FollowButton>
                   {currentUser.isFollowed ? (

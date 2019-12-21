@@ -24,26 +24,30 @@ const UserCardContainer = () => {
   }, [dispatch]);
 
   useEffect(() => { // 유저카드 대상이 나인지 다른 유저인지 판단.
-    if (!user) return;
-    if (stranger && user.id === stranger.id) {
+    if ((stranger && user) && (user.id === stranger.id)) {
       dispatch(resetStrangerProfile());
       return;
     }
-
     if (stranger) {
       setCurrentUser(stranger);
       return;
     }
-
-    setCurrentUser({
-      ...user,
-      ...profile,
-      isMe: true,
-    });
+    if (user) {
+      setCurrentUser({
+        ...user,
+        ...profile,
+        isMe: true,
+      });
+    }
   }, [stranger, user, profile]);
+
+  useEffect(() => {
+    console.log(currentUser);
+  }, [currentUser]);
 
   return (
     <UserCard
+      me={user}
       currentUser={currentUser}
       onResetStranger={onResetStranger}
       onFollow={onFollow}
