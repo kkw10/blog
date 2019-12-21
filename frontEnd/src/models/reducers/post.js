@@ -31,10 +31,7 @@ const initialState = {
   commentsResult: [],
   hasMoreComments: true, // 가져올 댓글이 더 있는지 확인
   isLoading: false, // 댓글이 로딩 중인지 확인
-  postError: null,
-  recomendError: null,
-  commentError: null,
-  thumbsError: null,
+  error: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -66,7 +63,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         postResult: action.payload,
-        postError: null,
+        error: null,
       };
     }
     case READ_COMMENTS_SUCCESS: {
@@ -74,8 +71,8 @@ const reducer = (state = initialState, action) => {
         ...state,
         commentsResult: [...state.commentsResult, ...action.payload],
         hasMoreComments: action.payload.length === 10,
-        commentError: null,
         isLoading: false,
+        error: null,
       };
     }
     case READ_SUB_COMMENTS_SUCCESS: {
@@ -89,6 +86,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         commentsResult: newCommentsResult,
+        error: null,
       };
     }
     case REFRESH_COMMENTS_SUCCESS:
@@ -96,8 +94,8 @@ const reducer = (state = initialState, action) => {
         ...state,
         commentsResult: action.payload,
         hasMoreComments: true,
-        commentError: null,
         isLoading: false,
+        error: null,
       };
     case COMMENTING_SUCCESS: {
       const newCommentsResult = [...state.commentsResult];
@@ -105,6 +103,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         commentsResult: newCommentsResult,
+        error: null,
       };
     }
     case SUB_COMMENTING_SUCCESS: {
@@ -118,7 +117,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         commentsResult: newCommentsResult,
-        commentError: null,
+        error: null,
       };
     }
     case RECOMEND_SUCCESS:
@@ -128,6 +127,7 @@ const reducer = (state = initialState, action) => {
           ...state.postResult,
           Recomenders: action.payload,
         },
+        error: null,
       };
     case THUMBS_SUCCESS: {
       const newResult = [
@@ -142,7 +142,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         commentsResult: newResult,
-        thumbsError: null,
+        error: null,
       };
     }
     case DELETE_COMMENT_SUCCESS: {
@@ -162,7 +162,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         commentsResult: newComments,
-        commentError: null,
+        error: null,
       };
     }
     case UPDATE_COMMENT_SUCCESS: {
@@ -175,7 +175,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         commentsResult: updatedComments,
-        commentError: null,
+        error: null,
       };
     }
     case UPDATE_SUB_COMMENT_SUCCESS: {
@@ -191,15 +191,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         commentsResult: newCommentResults,
-        commentError: null,
+        error: null,
       };
     }
     // FAILURE
     case READ_POST_FAILURE:
-      return {
-        ...state,
-        postError: action.payload,
-      };
     case READ_COMMENTS_FAILURE:
     case REFRESH_COMMENTS_FAILURE:
     case COMMENTING_FAILURE:
@@ -208,21 +204,12 @@ const reducer = (state = initialState, action) => {
     case DELETE_COMMENT_FAILURE:
     case UPDATE_COMMENT_FAILURE:
     case UPDATE_SUB_COMMENT_FAILURE:
-      return {
-        ...state,
-        commentError: action.payload,
-      };
     case RECOMEND_FAILURE:
-      return {
-        ...state,
-        recomendError: action.payload,
-      };
     case THUMBS_FAILURE:
       return {
         ...state,
-        thumbsError: action.payload,
+        error: action.payload,
       };
-
     default:
       return state;
   }

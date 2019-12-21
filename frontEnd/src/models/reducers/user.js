@@ -23,9 +23,7 @@ const initialState = {
   stranger: null,
   FollowersList: [],
   FollowingsList: [],
-  checkError: null,
-  profileError: null,
-  followError: null,
+  error: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -57,13 +55,13 @@ const reducer = (state = initialState, action) => {
         ...state,
         user: action.payload.user,
         profile: action.payload.profile,
-        checkError: null,
+        error: null,
       };
     case GET_TARGET_PROFILE_SUCCESS:
       return {
         ...state,
         stranger: action.payload,
-        profileError: null,
+        error: null,
       };
     case UPLOAD_PROFILE_SUCCESS:
       return {
@@ -72,7 +70,7 @@ const reducer = (state = initialState, action) => {
           ...state.profile,
           ...action.payload,
         },
-        profileError: null,
+        error: null,
       };
     case READ_FOLLOW_LIST_SUCCESS: {
       let targetList = '';
@@ -84,6 +82,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         [targetList]: action.payload.list,
+        error: null,
       };
     }
     case FOLLOW_SUCCESS: { // follow, unfollow => usercard
@@ -104,6 +103,7 @@ const reducer = (state = initialState, action) => {
           followers: action.payload.targetUser.followers,
           isFollowed: action.payload.targetUser.isFollowed,
         },
+        error: null,
       };
     }
     case UNFOLLOW_FROM_LIST_SUCCESS: { // unfonllow, unfollowing => profilePage array list
@@ -131,6 +131,7 @@ const reducer = (state = initialState, action) => {
           [target]: (state.profile[target] || 0) - 1,
         },
         [targetList]: newList,
+        error: null,
       };
     }
     // FAIURE
@@ -138,20 +139,16 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         user: null,
-        checkError: action.payload,
+        error: action.payload,
       };
     case UPLOAD_PROFILE_FAILURE:
     case GET_TARGET_PROFILE_FAILURE:
     case FOLLOW_FAILURE:
     case UNFOLLOW_FROM_LIST_FAILURE:
-      return {
-        ...state,
-        profileError: action.payload,
-      };
     case READ_FOLLOW_LIST_FAILURE:
       return {
         ...state,
-        followError: action.payload,
+        error: action.payload,
       };
     default:
       return state;

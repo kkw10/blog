@@ -45,17 +45,13 @@ const reducer = (state = initialState, action) => {
         result: action.payload,
         error: null,
       };
-    case REGISTER_FAILURE:
-      return {
-        ...state,
-        error: action.payload,
-      };
     case LOGIN_SUCCESS:
       return {
         ...state,
         result: action.payload,
         error: null,
       };
+    case REGISTER_FAILURE:
     case LOGIN_FAILURE:
       return {
         ...state,

@@ -29,11 +29,9 @@ const initialState = {
   search_type: 'tag',
   search_query: '',
   result: null,
-  postingError: null,
-  commentingError: null,
   editingPostId: null,
   editingCommentId: null,
-  userProfileError: null,
+  error: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -42,40 +40,12 @@ const reducer = (state = initialState, action) => {
       return {
         ...initialState,
         search_type: state.search_type,
+        error: state.error,
       };
     case CHANGE_FIELD:
       return {
         ...state,
         [action.payload.key]: action.payload.value,
-      };
-    case POSTING:
-      return {
-        ...state,
-        result: null,
-        postingError: null,
-      };
-    case POSTING_SUCCESS:
-      return {
-        ...state,
-        result: action.payload,
-        postingError: null,
-      };
-    case POSTING_FAILURE:
-      return {
-        ...state,
-        result: null,
-        postingError: action.payload,
-      };
-    case UPDATE_SUCCESS:
-      return {
-        ...state,
-        result: action.payload,
-        postingError: null,
-      };
-    case UPDATE_FAILURE:
-      return {
-        ...state,
-        postingError: action.payload,
       };
     case SET_ORIGINAL_POST:
       return {
@@ -100,22 +70,44 @@ const reducer = (state = initialState, action) => {
         user_location: action.payload.location,
         user_favorite: action.payload.favorite,
         user_contact: action.payload.contact,
-      }
-    case UPLOAD_PORTRAIT_SUCCESS:
-      return {
-        ...state,
-        user_portrait: action.payload,
-        userProfileError: null,
-      };
-    case UPLOAD_PORTRAIT_FAILURE:
-      return {
-        ...state,
-        userProfileError: action.payload,
       };
     case CHANGE_SEARCH_TYPE:
       return {
         ...state,
         search_type: action.payload,
+      };
+    // SUCCESS
+    case POSTING:
+      return {
+        ...state,
+        result: null,
+        error: null,
+      };
+    case POSTING_SUCCESS:
+    case UPDATE_SUCCESS:
+      return {
+        ...state,
+        result: action.payload,
+        error: null,
+      };
+    case UPLOAD_PORTRAIT_SUCCESS:
+      return {
+        ...state,
+        user_portrait: action.payload,
+        error: null,
+      };
+    // FAILURE
+    case POSTING_FAILURE:
+      return {
+        ...state,
+        result: null,
+        error: action.payload,
+      };
+    case UPDATE_FAILURE:
+    case UPLOAD_PORTRAIT_FAILURE:
+      return {
+        ...state,
+        error: action.payload,
       };
     default:
       return state;

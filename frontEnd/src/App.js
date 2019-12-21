@@ -1,6 +1,6 @@
 import React from 'react';
 import { createGlobalStyle } from 'styled-components';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import tuiStyle from 'tui-editor/dist/tui-editor-contents.css'; // editor's content
 import { resetCSS } from './lib/styles/reset';
 import Layout from './components/common/Layout';
@@ -8,8 +8,11 @@ import MainPage from './pages/MainPage';
 import ProfilePage from './pages/ProfilePage';
 import WritePage from './pages/WritePage';
 import PostPage from './pages/PostPage';
+import ErrorPage from './pages/ErrorPage';
 import SearchedPostsPage from './pages/SearchedPostsPage';
 import { brandingColor } from './lib/styles/branding';
+import ErrorRouterContainer from './containers/common/ErrorRouterContainer';
+import NoMatchPage from './components/common/NoMatchPage';
 
 const GlobalStyle = createGlobalStyle`
   ${resetCSS}
@@ -41,14 +44,19 @@ const GlobalStyle = createGlobalStyle`
 const App = () => (
   <Layout>
     <GlobalStyle />
-    <Route component={MainPage} path="/" exact />
-    <Route component={ProfilePage} path="/profile/:UserId" />
-    <Route component={WritePage} path="/write" />
-    <Route component={PostPage} path="/post/:UserId/:PostId" />
-    <Route component={SearchedPostsPage} path="/posts/user/:UserId" exact />
-    <Route component={SearchedPostsPage} path="/posts/tagged/:TagName" exact />
-    <Route component={SearchedPostsPage} path="/posts/liked" />
-    <Route component={SearchedPostsPage} path="/posts/search" exact />
+    <Switch>
+      <Route component={MainPage} path="/" exact />
+      <Route component={ProfilePage} path="/profile/:UserId" />
+      <Route component={WritePage} path="/write" />
+      <Route component={PostPage} path="/post/:UserId/:PostId" />
+      <Route component={SearchedPostsPage} path="/posts/user/:UserId" exact />
+      <Route component={SearchedPostsPage} path="/posts/tagged/:TagName" exact />
+      <Route component={SearchedPostsPage} path="/posts/liked" />
+      <Route component={SearchedPostsPage} path="/posts/search" exact />
+      <Route component={ErrorPage} path="/error" exact />
+      <Route component={NoMatchPage} path="*" />
+    </Switch>
+    <ErrorRouterContainer />
   </Layout>
 );
 

@@ -7,28 +7,28 @@ import {
 const initialState = {
   result: null,
   lastPage: 1,
-  postsError: null,
+  error: null,
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case CLEAR_POSTS:
+      return {
+        ...initialState,
+      };
     case READ_POSTS_SUCCESS:
       return {
         ...state,
         result: action.payload,
         lastPage: action.meta.headers['last-page'],
-        postsError: null,
+        error: null,
       };
     case READ_POSTS_FAILURE:
       return {
         ...state,
         result: null,
-        postsError: action.payload,
+        error: action.payload,
       };
-    case CLEAR_POSTS:
-      return {
-        ...initialState,
-      }
     default:
       return state;
   }
