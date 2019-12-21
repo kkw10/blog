@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -8,6 +9,17 @@ import {
 } from '../../models/actions/write';
 import { uploadProfile } from '../../models/actions/user';
 import ProfileSetting from '../../components/profile/ProfileSetting';
+import { brandingColor } from '../../lib/styles/branding';
+
+const NoAuthorityUser = styled.div`
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: ${brandingColor.common[6]};
+`;
 
 const ProfileSettingContainer = ({ match, onChangeMenu }) => {
   const targetId = match.params.UserId;
@@ -34,13 +46,9 @@ const ProfileSettingContainer = ({ match, onChangeMenu }) => {
 
   const onChangePortrait = (e) => {
     const portraitFile = e.target.files[0];
-
     if (!portraitFile) return;
-
     const formData = new FormData();
     formData.append('portrait', portraitFile);
-    console.log(portraitFile);
-
     dispatch(uploadImage(formData));
   };
 
@@ -58,12 +66,13 @@ const ProfileSettingContainer = ({ match, onChangeMenu }) => {
   };
 
   useEffect(() => {
+    if (!me) return;
     dispatch(setOriginProfile(userProfileData));
-  }, [dispatch]);
+  }, [dispatch, me]);
 
   return (
     <>
-      {Number(targetId) === me.id ? (
+      {me && (Number(targetId) === me.id) ? (
         <ProfileSetting
           portraitEl={portraitEl}
           writeProfileData={writeProfileData}
@@ -75,7 +84,9 @@ const ProfileSettingContainer = ({ match, onChangeMenu }) => {
           onChangeMenu={onChangeMenu}
         />
       ) : (
-        <div>권한이 없는 유저입니다.</div>
+        <NoAuthorityUser>
+          권한이 없는 유저입니다.
+        </NoAuthorityUser>
       )}
     </>
   );

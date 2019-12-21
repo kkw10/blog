@@ -36,24 +36,24 @@ const MenuButton = styled.div`
   align-items: center;
   justify-content: center;
   transition: 0.2s ease-in-out;
-  color: ${(props) => (props.currentmenu ? brandingColor.main[6] : brandingColor.common[6])};
+  color: ${(props) => (props.selectedMenu ? brandingColor.main[6] : brandingColor.common[6])};
   &:hover {
     color: ${brandingColor.main[6]};
   }
 `;
 
-const TabArea = ({ currentMenu, onChangeMenu }) => {
+const TabArea = ({ selectedMenu, onChangeMenu }) => {
   return (
     <TabAreaWrap>
       <ul>
         <li onClick={() => onChangeMenu('activity')}>
-          <MenuButton currentmenu={currentMenu === 'activity'}>
+          <MenuButton selectedMenu={selectedMenu === 'activity'}>
             <FiActivity />
             <span>활동 내역</span>
           </MenuButton>
         </li>
         <li onClick={() => onChangeMenu('setting')}>
-          <MenuButton currentmenu={currentMenu === 'setting'}>
+          <MenuButton selectedMenu={selectedMenu === 'setting'}>
             <IoMdSettings />
             <span>프로필 수정</span>
           </MenuButton>

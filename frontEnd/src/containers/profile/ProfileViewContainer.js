@@ -39,12 +39,10 @@ const ProfileViewContainer = ({ match }) => {
 
   useEffect(() => { // 타겟 유저 정보 가져오기
     dispatch(getTargetProfile(pageId));
-  }, [pageId]);
+  }, []);
 
   useEffect(() => { // 타켓 유저가 나인지 다른 유저인지 정의
-    if (!user) return;
-
-    if (user.id === Number(pageId)) {
+    if (user && user.id === Number(pageId)) {
       setCurrentUser({
         ...user,
         ...profile,
