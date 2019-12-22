@@ -91,6 +91,7 @@ const PostComments = ({
   onDeleteComment,
   onUpdateComment,
   onThumbs,
+  onSubThumbs,
   onRefresh,
   onShowSubComment,
   onHideSubComment,
@@ -183,8 +184,6 @@ const PostComments = ({
       )}
       <CommentsList>
         {commentsResult.map((comment) => {
-          const isLiked = comment.Likers && comment.Likers.find((v) => v.id === me.user.id);
-          const isDisliked = comment.Dislikers && comment.Dislikers.find((v) => v.id === me.user.id);
           return (
             <div className="comment-border-wrap">
               <Comment
@@ -198,9 +197,8 @@ const PostComments = ({
                 onUpdateComment={onUpdateComment}
                 onEditCancel={onInitialize}
                 onThumbs={onThumbs}
+                onSubThumbs={onSubThumbs}
                 onGetTargetProfile={onGetTargetProfile}
-                isLiked={isLiked}
-                isDisliked={isDisliked}
                 onShowSubComment={onShowSubComment}
                 onHideSubComment={onHideSubComment}
               />
@@ -210,8 +208,8 @@ const PostComments = ({
                     <SubComment>
                       <div className="comment-border-wrap">
                         <Comment
-                          key={child.id}
                           type="SUB"
+                          key={child.id}
                           me={me}
                           commentData={child}
                           parentData={comment}
@@ -222,6 +220,7 @@ const PostComments = ({
                           onUpdateComment={onUpdateComment}
                           onEditCancel={onInitialize}
                           onThumbs={onThumbs}
+                          onSubThumbs={onSubThumbs}
                           onGetTargetProfile={onGetTargetProfile}
                         />
                       </div>

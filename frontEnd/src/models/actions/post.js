@@ -26,6 +26,11 @@ export const [
   THUMBS_FAILURE,
 ] = createRequestActionTypes('post/THUMBS');
 export const [
+  SUB_THUMBS,
+  SUB_THUMBS_SUCCESS,
+  SUB_THUMBS_FAILURE,
+] = createRequestActionTypes('post/SUB_THUMBS');
+export const [
   DELETE_COMMENT,
   DELETE_COMMENT_SUCCESS,
   DELETE_COMMENT_FAILURE,
@@ -88,6 +93,15 @@ export const thumbs = ({ type, postId, commentId }) => ({
     commentId,
   },
 });
+
+export const subThumbs = ({ type, postId, commentId }) => ({
+  type: SUB_THUMBS,
+  payload: {
+    type,
+    postId,
+    commentId,
+  }
+})
 
 export const deleteComment = ({ commentId, parentId }) => ({
   type: DELETE_COMMENT,

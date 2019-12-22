@@ -4,8 +4,17 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    likeNumb: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    dislikeNumb: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
     subCommentsNumb: {
       type: DataTypes.INTEGER(11),
+      defaultValue: 0,
     },
     parentCommentId: {
       type: DataTypes.INTEGER(11),

@@ -62,7 +62,6 @@ export const recomend = (postId) => (
 );
 
 export const commentThumbs = ({ type, postId, commentId }) => {
-  console.log(type);
   if (type === 'up') {
     return client.post(`/api/post/${postId}/comment/${commentId}/up`);
   }

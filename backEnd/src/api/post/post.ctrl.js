@@ -75,7 +75,6 @@ exports.writePost = async (req, res, next) => {
 
 exports.readPost = async (req, res, next) => {
   const post = httpContext.get('post');
-  // const comments = httpContext.get('comments');
 
   try {
     await post.update({

@@ -13,6 +13,8 @@ import {
   SUB_COMMENTING_FAILURE,
   THUMBS_SUCCESS,
   THUMBS_FAILURE,
+  SUB_THUMBS_SUCCESS,
+  SUB_THUMBS_FAILURE,
   RECOMEND_SUCCESS,
   RECOMEND_FAILURE,
   DELETE_COMMENT_SUCCESS,
@@ -130,20 +132,41 @@ const reducer = (state = initialState, action) => {
         error: null,
       };
     case THUMBS_SUCCESS: {
-      const newResult = [
-        ...state.commentsResult,
-      ];
+      const newResult = [...state.commentsResult];
       const targetIndex = state.commentsResult.findIndex((v) => (
         v.id === action.payload.id
       ));
 
-      newResult[targetIndex] = action.payload;
+      newResult[targetIndex] = {
+        ...action.payload,
+        isOpen: newResult[targetIndex].isOpen,
+        ChildComment: newResult[targetIndex].ChildComment,
+      };
 
       return {
         ...state,
         commentsResult: newResult,
         error: null,
       };
+    }
+    case SUB_THUMBS_SUCCESS: {
+      const newResult = [...state.commentsResult];
+      const parentIndex = newResult.findIndex((v) => (
+        v.id === action.payload.parentCommentId
+      ));
+      const parentComment = newResult[parentIndex];
+      const childIndex = parentComment.ChildComment.findIndex((v) => (
+        v.id === action.payload.id
+      ));
+      parentComment.ChildComment[childIndex] = {
+        ...action.payload,
+      };
+
+      return {
+        ...state,
+        commentsResult: newResult,
+        error: null,
+      }
     }
     case DELETE_COMMENT_SUCCESS: {
       const { parentId, targetId, subCommentsNumb } = action.payload;
@@ -206,6 +229,7 @@ const reducer = (state = initialState, action) => {
     case UPDATE_SUB_COMMENT_FAILURE:
     case RECOMEND_FAILURE:
     case THUMBS_FAILURE:
+    case SUB_THUMBS_FAILURE:
       return {
         ...state,
         error: action.payload,

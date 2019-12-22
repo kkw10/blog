@@ -20,6 +20,7 @@ import {
   updateSubComment,
   deleteComment,
   thumbs,
+  subThumbs,
   subCommenting,
 } from '../../models/actions/post';
 import {
@@ -138,6 +139,14 @@ const PostCommentsContainer = ({
     }));
   }, [dispatch]);
 
+  const onSubThumbs = useCallback((type, commentId) => {
+    dispatch(subThumbs({
+      type,
+      postId,
+      commentId,
+    }))
+  }, [dispatch]);
+
   // 댓글 새로고침
   const onRefresh = useCallback(() => {
     dispatch(refreshComments({ postId }));
@@ -173,6 +182,7 @@ const PostCommentsContainer = ({
           onDeleteComment={onDeleteComment}
           onUpdateComment={onUpdateComment}
           onThumbs={onThumbs}
+          onSubThumbs={onSubThumbs}
           onRefresh={onRefresh}
           onShowSubComment={onShowSubComment}
           onHideSubComment={onHideSubComment}

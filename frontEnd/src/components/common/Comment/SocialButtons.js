@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { AiFillDislike, AiFillLike } from 'react-icons/ai';
 
@@ -43,7 +43,7 @@ const ThumbsButton = styled.div`
     & > svg {
       cursor: pointer;
       font-size: 16px;
-      color: ${(props) => (props.fill === 'point' ? brandingColor.main[5] : brandingColor.common[4])};
+      color: ${(props) => (props.fill ? brandingColor.main[5] : brandingColor.common[4])};
       margin-right: 0.5rem;
       transition: 0.2s ease-in-out;
       &:hover { color: ${brandingColor.main[5]} }
@@ -53,30 +53,36 @@ const ThumbsButton = styled.div`
 const SocailButtons = ({
   me,
   type,
-  isLiked,
-  isDisliked,
   commentData,
   onThumbs,
+  onSubThumbs,
   editorToggle,
   onShowSubComment,
   onHideSubComment,
 }) => {
   const [toggle, onToggle] = useToggle();
+  const onThumbsClick = useCallback((thumbType, commentId) => {
+    if (type === 'SUB') {
+      onSubThumbs(thumbType, commentId);
+    } else {
+      onThumbs(thumbType, commentId);
+    }
+  }, [type]);
 
   return (
     <SocailButtonsWrap>
       <div className="thumbs-area">
-        <ThumbsButton fill={isLiked ? 'point' : 'common'}>
+        <ThumbsButton fill={commentData.isLiked}>
           <AiFillLike
-            onClick={me.user ? () => onThumbs('up', commentData.id) : () => onToggle('info')}
+            onClick={me.user ? () => onThumbsClick('up', commentData.id) : () => onToggle('info')}
           />
-          <span>{(commentData.Likers && commentData.Likers.length) || 0}</span>
+          <span>{(commentData.likeNumb) || 0}</span>
         </ThumbsButton>
-        <ThumbsButton fill={isDisliked ? 'point' : 'common'}>
+        <ThumbsButton fill={commentData.isDisliked}>
           <AiFillDislike
-            onClick={me.user ? () => onThumbs('down', commentData.id) : () => onToggle('info')}
+            onClick={me.user ? () => onThumbsClick('down', commentData.id) : () => onToggle('info')}
           />
-          <span>{(commentData.Dislikers && commentData.Dislikers.length) || 0}</span>
+          <span>{(commentData.dislikeNumb) || 0}</span>
         </ThumbsButton>
         <button
           className="sub-comment"

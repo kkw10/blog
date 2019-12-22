@@ -55,9 +55,8 @@ const Comment = ({
   onUpdateComment,
   onEditCancel,
   onThumbs,
+  onSubThumbs,
   onGetTargetProfile,
-  isLiked,
-  isDisliked,
   onShowSubComment,
   onHideSubComment,
 }) => {
@@ -127,10 +126,9 @@ const Comment = ({
         <SocialButtons
           me={me}
           type={type}
-          isLiked={isLiked}
-          isDisliked={isDisliked}
           commentData={commentData}
           onThumbs={onThumbs}
+          onSubThumbs={onSubThumbs}
           editorToggle={() => onToggle(`subCommentEditor-${commentData.id}`)}
           onShowSubComment={onShowSubComment}
           onHideSubComment={onHideSubComment}

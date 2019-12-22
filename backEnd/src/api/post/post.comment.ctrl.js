@@ -80,6 +80,7 @@ exports.writeComment = async (req, res, next) => {
 exports.readComments = async (req, res, next) => {
   const post = httpContext.get('post');
   const lastId = parseInt(req.query.lastCommentId, 10);
+  const user = httpContext.get('user');
   let where = {};
 
   try {
@@ -94,33 +95,38 @@ exports.readComments = async (req, res, next) => {
       }
     }
 
-    const comments = await db.Comment.findAndCountAll({
+    let comments = await db.Comment.findAndCountAll({
       where,
       include: [{
         model: db.User,
         attributes: ['email', 'nickname', 'portrait']
-      }, {
-        model: db.User,
-        through: 'CommentsLike',
-        as: 'Likers',
-        attributes: ['id', 'email', 'nickname']
-      }, {
-        model: db.User,
-        through: 'CommentsDislike',
-        as: 'Dislikers',
-        attributes: ['id', 'email', 'nickname']
       }],
       distinct: true,
       order: [['createdAt', 'DESC']],
       limit: 10,
     })
-    .then(result => {
+    .then(result => { // 댓글 총개수 계산
       res.set('Comments-Count', result.count);
-      return result.rows;
+      return result;
     })
-
-    console.log('@@@@@@@@@@@@@');
-    console.log(comments);
+    .then(async (result) => { // 좋아요, 싫어요한 댓글 확인
+      let newResult = result.rows
+      if (user) {
+        newResult = await Promise.all(result.rows.map(async (v) => {
+          const isLiked = await v.getLikers({ where: { id: user.id } });
+          const isDisliked = await v.getDislikers({ where: { id: user.id } });
+  
+          if (isLiked[0]) {
+            v.dataValues.isLiked = true;
+          }
+          if (isDisliked[0]) {
+            v.dataValues.isDisliked = true;
+          }
+          return v;
+        }))
+      }
+      return newResult;
+    });
 
     res.json(comments);
   } catch (e) {
@@ -179,16 +185,6 @@ exports.writeSubComment = async (req, res, next) => {
       include: [{
         model: db.User,
         attributes: ['id', 'email', 'nickname'],
-      }, {
-        model: db.User,
-        through: 'CommentsLike',
-        as: 'Likers',
-        attributes: ['id', 'email', 'nickname']
-      }, {
-        model: db.User,
-        through: 'CommentsDislike',
-        as: 'Dislikers',
-        attributes: ['id', 'email', 'nickname']
       }]
     })
 
@@ -201,27 +197,33 @@ exports.writeSubComment = async (req, res, next) => {
 
 exports.readSubComments = async (req, res, next) => {
   const parentId = httpContext.get('comment').id;
+  const user = httpContext.get('user');
   
   try {
-    const subComments = await db.Comment.findAll({
+    let subComments = await db.Comment.findAll({
       where: {
         parentCommentId: parentId,
       },
       include: [{
         model: db.User,
         attributes: ['id', 'email', 'nickname', 'portrait']
-      },{
-        model: db.User,
-        through: 'CommentsLike',
-        as: 'Likers',
-        attributes: ['id', 'email', 'nickname']
-      }, {
-        model: db.User,
-        through: 'CommentsDislike',
-        as: 'Dislikers',
-        attributes: ['id', 'email', 'nickname']
       }],
-    })
+    });
+
+    if (user) {
+      subComments = await Promise.all(subComments.map(async (v) => {
+        const isLiked = await v.getLikers({ where: { id: user.id } });
+        const isDisliked = await v.getDislikers({ where: { id: user.id } });
+
+        if (isLiked[0]) {
+          v.dataValues.isLiked = true;
+        }
+        if (isDisliked[0]) {
+          v.dataValues.isDisliked = true;
+        }
+        return v;
+      }))
+    }
 
     res.json({
       parentId,
@@ -311,15 +313,18 @@ exports.thumbsUp = async (req, res, next) => {
   const comment = httpContext.get('comment');
 
   try {
-    const isDisLiked = await comment.getDislikers({
+    const isDisliked = await comment.getDislikers({
       where: {
         id: user.id
       },
       attributes: ['id'],
     })
 
-    if (isDisLiked) {
+    if (isDisliked) {
       await comment.removeDislikers([user.id]);
+      await comment.update({
+        dislikeNumb: (comment.dislikeNumb !== 0) ? comment.dislikeNumb - 1 : 0,
+      })
     }
 
     const isLiked = await comment.getLikers({
@@ -331,8 +336,14 @@ exports.thumbsUp = async (req, res, next) => {
 
     if (isLiked[0]) {
       await comment.removeLikers([user.id]);
+      await comment.update({
+        likeNumb: (comment.likeNumb !== 0) ? comment.likeNumb - 1 : 0,
+      })      
     } else {
       await comment.addLikers(user.id);
+      await comment.update({
+        likeNumb: comment.likeNumb + 1,
+      })
     }
 
     const newComment = await db.Comment.findOne({
@@ -342,18 +353,14 @@ exports.thumbsUp = async (req, res, next) => {
       include: [{
         model: db.User,
         attributes: ['email', 'nickname', 'portrait']
-      },{
-        model: db.User,
-        through: 'CommentsLike',
-        as: 'Likers',
-        attributes: ['id', 'email', 'nickname']
-      },{
-        model: db.User,
-        through: 'CommentsDislike',
-        as: 'Dislikers',
-        attributes: ['id', 'email', 'nickname']
-      }],      
+      }],
     })
+
+    if (isLiked[0]) {
+      newComment.dataValues.isLiked = false;
+    } else {
+      newComment.dataValues.isLiked = true;
+    }
 
     return res.json(newComment);    
   } catch (e) {
@@ -376,6 +383,9 @@ exports.thumbsDown = async (req, res, next) => {
 
     if (isLiked) {
       await comment.removeLikers([user.id]);
+      await comment.update({
+        likeNumb: (comment.likeNumb !== 0) ? comment.likeNumb - 1 : 0,
+      })      
     }
 
     const isDisliked = await comment.getDislikers({
@@ -387,8 +397,14 @@ exports.thumbsDown = async (req, res, next) => {
 
     if (isDisliked[0]) {
       await comment.removeDislikers([user.id]);
+      await comment.update({
+        dislikeNumb: (comment.dislikeNumb !== 0) ? comment.dislikeNumb - 1 : 0,
+      })      
     } else {
       await comment.addDislikers(user.id);
+      await comment.update({
+        dislikeNumb: comment.dislikeNumb + 1,
+      })      
     }
 
     const newComment = await db.Comment.findOne({
@@ -398,18 +414,14 @@ exports.thumbsDown = async (req, res, next) => {
       include: [{
         model: db.User,
         attributes: ['email', 'nickname', 'portrait']
-      },{
-        model: db.User,
-        through: 'CommentsLike',
-        as: 'Likers',
-        attributes: ['id', 'email', 'nickname']
-      }, {
-        model: db.User,
-        through: 'CommentsDislike',
-        as: 'Dislikers',
-        attributes: ['id', 'email', 'nickname']
-      }],      
-    })
+      }],   
+    });
+
+    if (isDisliked[0]) {
+      newComment.dataValues.isDisliked = false;
+    } else {
+      newComment.dataValues.isDisliked = true;
+    }
 
     return res.json(newComment);    
   } catch (e) {
