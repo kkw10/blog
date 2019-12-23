@@ -12,7 +12,6 @@ import {
   setOriginalPost,
 } from '../../models/actions/write';
 import { getTargetProfile } from '../../models/actions/user';
-import { toggling } from '../../models/actions/toggle';
 import { remove } from '../../lib/api/post';
 import LoadingWrap from '../../components/common/LoadingWrap';
 

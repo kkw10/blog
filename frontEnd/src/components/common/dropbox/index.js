@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 
 const DropBoxWrap = styled.div`
+  & > .main {
+    position: relative;
+  }
+`;
+
+const List = styled.div`
   position: absolute;
   top: ${(props) => (props.top ? props.top : 0)};
   ${(props) => (
@@ -16,19 +22,36 @@ const DropBoxWrap = styled.div`
 `;
 
 const DropBox = ({
-  children,
   visible,
-  top,
-  side,
+  top, // list position => top
+  side, // list position => left, right
+  main,
+  list,
 }) => {
-  if (!visible) return null;
+  // if (!visible) return null;
+
+  const modalMarker = useRef();
+
+  useEffect(() => {
+    const nodes = modalMarker.current.querySelectorAll('*');
+    modalMarker.current.setAttribute('data-this-is-toggle-element', true);
+    nodes.forEach((v) => v.setAttribute('data-this-is-toggle-element', true));
+  }, [main, list]);
 
   return (
     <DropBoxWrap
+      ref={modalMarker}
       top={top}
       side={side}
     >
-      {children}
+      <div className="main">
+        {main}
+        {visible && (
+          <List top={top} side={side}>
+            {list}
+          </List>
+        )}
+      </div>
     </DropBoxWrap>
   );
 };

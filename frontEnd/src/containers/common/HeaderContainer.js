@@ -2,17 +2,13 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Header from '../../components/common/Header';
-import { toggling } from '../../models/actions/toggle';
 import { logout } from '../../models/actions/user';
+import useToggle from '../../lib/hooks/toggleHook';
 
 const HeaderContainer = ({ history }) => {
   const dispatch = useDispatch();
-  const toggle = useSelector((state) => state.toggle);
+  const [toggle, onToggle] = useToggle();
   const user = useSelector(({ user }) => (user.user));
-
-  const onToggling = (type) => {
-    dispatch(toggling(type));
-  };
 
   const onLogout = () => {
     dispatch(logout());
@@ -22,7 +18,7 @@ const HeaderContainer = ({ history }) => {
   return (
     <Header
       toggle={toggle}
-      onToggling={onToggling}
+      onToggle={onToggle}
       onLogout={onLogout}
       user={user}
     />

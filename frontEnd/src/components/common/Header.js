@@ -115,7 +115,7 @@ const Spacer = styled.div`
 
 const Header = ({
   toggle,
-  onToggling,
+  onToggle,
   onLogout,
   user,
 }) => (
@@ -135,13 +135,13 @@ const Header = ({
             <Button
               placeholder="로그인"
               size="lg"
-              onClick={() => onToggling('login')}
+              onClick={() => onToggle('login')}
             />
             <Button
               placeholder="회원가입"
               size="lg"
               background="point"
-              onClick={() => onToggling('register')}
+              onClick={() => onToggle('register')}
             />
           </div>
         ) : (
@@ -178,14 +178,14 @@ const Header = ({
           title="회원가입"
           description="양식을 작성해 주세요."
           visible={!user && toggle.activeToggle === 'register'}
-          onCancel={onToggling}
+          onCancel={onToggle}
         />
         <AuthModal
           type="login"
           title="로그인"
           description="양식을 작성해 주세요."
           visible={!user && toggle.activeToggle === 'login'}
-          onCancel={onToggling}
+          onCancel={onToggle}
         />
       </>
     ) : (

@@ -1,9 +1,16 @@
 import {
   TOGGLING,
+  STRICT_TOGGLING,
   CLEAR_TOGGLE,
+  OVERLAY_TOGGLE,
 } from '../actions/toggle';
 
-const reducer = (state = {}, action) => {
+const initialState = {
+  activeToggle: null,
+  activeStricToggle: null,
+};
+
+const reducer = (state = initialState, action) => {
   switch (action.type) {
     case TOGGLING: {
       let newState = action.payload;
@@ -18,8 +25,29 @@ const reducer = (state = {}, action) => {
         activeToggle: newState,
       };
     }
+    case STRICT_TOGGLING: {
+      let newState = action.payload;
+      const prevState = state.activeStrictToggle;
+
+      if (newState === prevState) {
+        newState = null;
+      }
+
+      return {
+        ...state,
+        activeStrictToggle: newState,
+      };
+    }
     case CLEAR_TOGGLE:
-      return {};
+      return {
+        activeToggle: null,
+        activeStricToggle: null,
+      };
+    case OVERLAY_TOGGLE:
+      return {
+        ...state,
+        activeToggle: null,
+      };
     default:
       return state;
   }

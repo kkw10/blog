@@ -1,12 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import { IoMdSearch } from 'react-icons/io';
-import { FaHashtag } from 'react-icons/fa';
-import { TiArrowSortedDown } from 'react-icons/ti';
-import { MdShortText } from 'react-icons/md';
 
 // components...
 import DropBox from './dropbox';
+import SearchOption from './SearchBar/SearchOption';
+import SearchOptionList from './SearchBar/SearchOptionList';
 
 // lib...
 import useToggle from '../../lib/hooks/toggleHook';
@@ -47,62 +46,6 @@ const SearchBarWrap = styled.div`
   }
 `;
 
-const SearchType = styled.div`
-  cursor: pointer;
-  width: 220px;
-  margin-right: 0.5rem;
-  position: relative;
-
-  .current-type-wrap {
-    display: flex;
-    height: 32px;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 0.5rem;
-    border-radius: 5px;
-    color: ${brandingColor.common[6]};
-    border: 1px solid transparent;
-    &:hover {
-      border-color: ${brandingColor.common[4]};
-    }
-  }
-
-  .current-type {
-    display: flex;
-    align-items: center;
-    font-size: 13px;
-    font-weight: bold;
-  
-    & > svg {
-      margin-right: 0.5rem;
-    }
-  }
-`;
-
-const SearchTypeList = styled.ul`
-  background: #fff;
-  width: 220px;
-
-  & > li {
-    font-size: 12px;
-    color: ${brandingColor.common[6]};
-    font-weight: bold;
-    padding: 0.7rem 0.5rem;
-    border-bottom: 1px solid ${brandingColor.common[2]};
-    transition: 0.2s ease-in-out;
-    &:last-child {
-      border-bottom: none;
-    }
-    &:hover {
-      background: ${brandingColor.point[6]};
-      color: #fff;
-    }
-    & > svg {
-      margin-right: 0.5rem;
-    }
-  }
-`;
-
 const SearchBar = ({
   searchType,
   searchQuery,
@@ -115,46 +58,13 @@ const SearchBar = ({
 
   return (
     <SearchBarWrap>
-      <SearchType>
-        <div
-          className="current-type-wrap"
-          onClick={() => onToggle('SearchType')}
-        >
-          {searchType === 'tag' ? (
-            <>
-              <div className="current-type">
-                <FaHashtag />
-                <span>태그검색</span>
-              </div>
-              <TiArrowSortedDown />
-            </>
-          ) : (
-            <>
-              <div className="current-type">
-                <MdShortText />
-                <span>제목 + 내용검색</span>
-              </div>
-              <TiArrowSortedDown />
-            </>
-          )}
-        </div>
-        <DropBox
-          visible={toggle.activeToggle === 'SearchType'}
-          top="32px"
-          side="left"
-        >
-          <SearchTypeList>
-            <li onClick={() => onChangeSearchType('tag')}>
-              <FaHashtag />
-              <span>태그검색</span>
-            </li>
-            <li onClick={() => onChangeSearchType('contents')}>
-              <MdShortText />
-              <span>제목 + 내용검색</span>
-            </li>
-          </SearchTypeList>
-        </DropBox>
-      </SearchType>
+      <DropBox
+        visible={toggle.activeToggle === 'SearchType'}
+        top="32px"
+        side="left"
+        main={<SearchOption onToggle={onToggle} searchType={searchType} />}
+        list={<SearchOptionList onChangeSearchType={onChangeSearchType} />}
+      />
       <fieldset>
         <input
           type="text"

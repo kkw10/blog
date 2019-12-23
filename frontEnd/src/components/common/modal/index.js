@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { IoMdClose } from 'react-icons/io';
-import Button from '../Button';
 import { brandingColor } from '../../../lib/styles/branding';
 
 const Overlay = styled.div`
@@ -52,9 +51,17 @@ const Modal = ({
 }) => {
   if (!visible) return null;
 
+  const modalMarker = useRef();
+
+  useEffect(() => {
+    const nodes = modalMarker.current.querySelectorAll('*');
+    modalMarker.current.setAttribute('data-this-is-toggle-element', true);
+    nodes.forEach((v) => v.setAttribute('data-this-is-toggle-element', true));
+  }, [children]);
+
   return (
     <Overlay>
-      <ModalWrap>
+      <ModalWrap ref={modalMarker}>
         <IoMdClose
           className="cancel_button"
           onClick={() => onCancel(type)}
@@ -64,7 +71,7 @@ const Modal = ({
         { children }
       </ModalWrap>
     </Overlay>
-  )
-}
+  );
+};
 
 export default Modal;

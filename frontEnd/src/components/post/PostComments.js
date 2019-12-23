@@ -241,8 +241,8 @@ const PostComments = ({
       <InfoModal
         title="알림"
         description="로그인이 필요한 기능입니다."
-        visible={toggle && toggle.activeToggle === 'info'}
-        onCancel={() => onToggle('info')}
+        visible={toggle && toggle.activeToggle === 'warn'}
+        onCancel={() => onToggle('warn')}
       />
     </PostCommentsWrap>
   );

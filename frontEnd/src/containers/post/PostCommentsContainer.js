@@ -144,7 +144,7 @@ const PostCommentsContainer = ({
       type,
       postId,
       commentId,
-    }))
+    }));
   }, [dispatch]);
 
   // 댓글 새로고침

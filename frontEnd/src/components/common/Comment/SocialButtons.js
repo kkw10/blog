@@ -74,20 +74,20 @@ const SocailButtons = ({
       <div className="thumbs-area">
         <ThumbsButton fill={commentData.isLiked}>
           <AiFillLike
-            onClick={me.user ? () => onThumbsClick('up', commentData.id) : () => onToggle('info')}
+            onClick={me.user ? () => onThumbsClick('up', commentData.id) : () => onToggle('warn')}
           />
           <span>{(commentData.likeNumb) || 0}</span>
         </ThumbsButton>
         <ThumbsButton fill={commentData.isDisliked}>
           <AiFillDislike
-            onClick={me.user ? () => onThumbsClick('down', commentData.id) : () => onToggle('info')}
+            onClick={me.user ? () => onThumbsClick('down', commentData.id) : () => onToggle('warn')}
           />
           <span>{(commentData.dislikeNumb) || 0}</span>
         </ThumbsButton>
         <button
           className="sub-comment"
           type="button"
-          onClick={me.user ? editorToggle : () => onToggle('info')}
+          onClick={me.user ? editorToggle : () => onToggle('warn')}
         >
           댓글 달기
         </button>

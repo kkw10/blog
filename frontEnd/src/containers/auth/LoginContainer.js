@@ -8,7 +8,7 @@ import {
   login,
 } from '../../models/actions/auth';
 import { check } from '../../models/actions/user';
-import { toggling } from '../../models/actions/toggle';
+import { clearToggle } from '../../models/actions/toggle';
 
 // lib...
 import {
@@ -78,7 +78,8 @@ const LoginContainer = ({ type, history }) => {
       console.log(result);
       dispatch(check());
       dispatch(initializeForm(type));
-      dispatch(toggling(''));
+      dispatch(clearToggle());
+      history.push('/');
     }
   }, [result, error, dispatch]);
 

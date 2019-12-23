@@ -8,7 +8,7 @@ import {
   register,
 } from '../../models/actions/auth';
 import { check } from '../../models/actions/user';
-import { toggling } from '../../models/actions/toggle';
+import { clearToggle } from '../../models/actions/toggle';
 
 // lib...
 import {
@@ -108,7 +108,7 @@ const AuthFormContainer = ({ type, history }) => {
       console.log(result);
       dispatch(check());
       dispatch(initializeForm(type));
-      dispatch(toggling(''));
+      dispatch(clearToggle());
     }
   }, [result, error, dispatch]);
 

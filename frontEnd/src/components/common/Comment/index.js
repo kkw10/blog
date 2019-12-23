@@ -129,13 +129,13 @@ const Comment = ({
           commentData={commentData}
           onThumbs={onThumbs}
           onSubThumbs={onSubThumbs}
-          editorToggle={() => onToggle(`subCommentEditor-${commentData.id}`)}
+          editorToggle={() => onToggle(`subCommentEditor-${commentData.id}`, 'strict')}
           onShowSubComment={onShowSubComment}
           onHideSubComment={onHideSubComment}
         />
         <EditorContainer
           type={type}
-          visible={toggle && toggle.activeToggle === `subCommentEditor-${commentData.id}`}
+          visible={toggle && toggle.activeStrictToggle === `subCommentEditor-${commentData.id}`}
           editorName={`tui_sub_editor${commentData.id}`}
           toSomeone={commentData.User}
           submitHolder="등록"
