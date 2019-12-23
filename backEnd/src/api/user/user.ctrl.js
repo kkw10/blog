@@ -7,6 +7,9 @@ exports.findTargetUser = async (req, res, next) => {
   try {
     const user = await db.User.findOne({
       where: { id: targetId },
+      attributes: {
+        exclude: ['password'],
+      }
     });
 
     if (!user) {

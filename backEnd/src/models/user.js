@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     email: {
       type: DataTypes.STRING,
+      validate: { isEmail: true },
       allowNull: false
     },
     nickname: {
@@ -14,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     password: {
       type: DataTypes.STRING(100),
+      validate: { min: 3 },
       allowNull: false
     },
     followers: {
@@ -23,10 +25,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER(11),
     },
     portrait: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING(200),
     },
     background: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING(200),
     },
     title: {
       type: DataTypes.STRING(200),

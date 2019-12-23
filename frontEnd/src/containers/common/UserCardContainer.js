@@ -41,10 +41,6 @@ const UserCardContainer = () => {
     }
   }, [stranger, user, profile]);
 
-  useEffect(() => {
-    console.log(currentUser);
-  }, [currentUser]);
-
   return (
     <UserCard
       me={user}
@@ -52,7 +48,7 @@ const UserCardContainer = () => {
       onResetStranger={onResetStranger}
       onFollow={onFollow}
     />
-  )
+  );
 };
 
 export default UserCardContainer;
