@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import styled from 'styled-components';
 import PostViewContainer from '../containers/post/postViewContainer';
 import Responsive from '../components/common/Responsive';
@@ -26,6 +27,9 @@ const FixedWrap = styled.div`
 
 const PostPage = () => (
   <Responsive maxWidth="1400">
+    <Helmet>
+      <title>글 상세보기 - SPACER</title>
+    </Helmet>
     <PostPageLayout>
       <div className="posts_area">
         <PostViewContainer />

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import styled from 'styled-components';
 import Responsive from '../components/common/Responsive';
 import ProfileViewContainer from '../containers/profile/ProfileViewContainer';
@@ -11,6 +12,9 @@ const ProfilePageHead = styled.div`
 const ProfilePage = () => {
   return (
     <Responsive maxWidth="1200">
+      <Helmet>
+        <title>프로필 - SPACER</title>
+      </Helmet>
       <ProfilePageHead>
         <ProfileViewContainer />
       </ProfilePageHead>

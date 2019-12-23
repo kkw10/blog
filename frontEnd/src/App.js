@@ -1,4 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useDispatch, useSelector } from 'react-redux';
 import { createGlobalStyle } from 'styled-components';
 import { Route, Switch } from 'react-router-dom';
@@ -60,22 +61,27 @@ const App = () => {
   }, [toggle]);
 
   return (
-    <Layout>
-      <GlobalStyle />
-      <Switch>
-        <Route component={MainPage} path="/" exact />
-        <Route component={ProfilePage} path="/profile/:UserId" />
-        <Route component={WritePage} path="/write" />
-        <Route component={PostPage} path="/post/:UserId/:PostId" />
-        <Route component={SearchedPostsPage} path="/posts/user/:UserId" exact />
-        <Route component={SearchedPostsPage} path="/posts/tagged/:TagName" exact />
-        <Route component={SearchedPostsPage} path="/posts/liked" />
-        <Route component={SearchedPostsPage} path="/posts/search" exact />
-        <Route component={ErrorPage} path="/error" exact />
-        <Route component={NoMatchPage} path="*" />
-      </Switch>
-      <ErrorRouterContainer />
-    </Layout>
+    <>
+      <Helmet>
+        <title>SPACER</title>
+      </Helmet>
+      <Layout>
+        <GlobalStyle />
+        <Switch>
+          <Route component={MainPage} path="/" exact />
+          <Route component={ProfilePage} path="/profile/:UserId" />
+          <Route component={WritePage} path="/write" />
+          <Route component={PostPage} path="/post/:UserId/:PostId" />
+          <Route component={SearchedPostsPage} path="/posts/user/:UserId" exact />
+          <Route component={SearchedPostsPage} path="/posts/tagged/:TagName" exact />
+          <Route component={SearchedPostsPage} path="/posts/liked" />
+          <Route component={SearchedPostsPage} path="/posts/search" exact />
+          <Route component={ErrorPage} path="/error" exact />
+          <Route component={NoMatchPage} path="*" />
+        </Switch>
+        <ErrorRouterContainer />
+      </Layout>
+    </>
   );
 };
 
