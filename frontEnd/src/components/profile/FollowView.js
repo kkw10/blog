@@ -78,7 +78,7 @@ const FollowView = ({ type, isMe, list, event }) => {
         {list.length > 0 ? list.map((follower) => {
           return (
             <li>
-              <Portrait background={follower.portrait ? `http://localhost:1991/${follower.portrait}` : null}>
+              <Portrait background={follower.portrait ? `http://localhost:1991/uploads/${follower.portrait}` : null}>
                 <span>{follower.nickname}</span>
               </Portrait>
               <Introduce>

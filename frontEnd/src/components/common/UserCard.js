@@ -16,7 +16,7 @@ const UserCardWrap = styled.div`
 
   & .header {
     height: 100px;
-    background: url('http://localhost:1991/default_profile_background.jpg') no-repeat;
+    background: url('http://localhost:1991/uploads/default_profile_background.jpg') no-repeat;
     background-size: cover;
     position: relative;
 
@@ -204,7 +204,7 @@ const UserCard = ({
     <UserCardWrap>
       <div className="header">
         {currentUser && currentUser.portrait ? (
-          <UserPortrait className="user" background={`http://localhost:1991/${currentUser.portrait}`} />
+          <UserPortrait className="user" background={`http://localhost:1991/uploads/${currentUser.portrait}`} />
         ) : (
           <div className="user user_default">
             <FaUserAstronaut />

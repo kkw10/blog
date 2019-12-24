@@ -21,7 +21,7 @@ const ProfileViewWrap = styled.div`
 const BackgroundArea = styled.div`
   border-radius: 5px 5px 0 0;
   height: 250px;
-  background: url('http://localhost:1991/default_profile_background.jpg') no-repeat;
+  background: url('http://localhost:1991/uploads/default_profile_background.jpg') no-repeat;
   background-size: cover;
   background-position-y: 30%;
   border-bottom: 10px solid ${brandingColor.main[7]};
@@ -224,7 +224,7 @@ const ProfileView = ({
           <Portrait>
             <div className="absoluteWrap">
               {currentUser.portrait ? (
-                <PortraitImage background={`http://localhost:1991/${currentUser.portrait}`} />
+                <PortraitImage background={`http://localhost:1991/uploads/${currentUser.portrait}`} />
               ) : (
                 <div className="defaultUser">
                   <FaUserAstronaut />

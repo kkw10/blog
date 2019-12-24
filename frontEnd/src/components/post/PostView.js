@@ -187,7 +187,7 @@ const PostView = ({
               <div className="auther">
                 <div className="auther_portrait">
                   {postResult.User.portrait ? (
-                    <img src={`http://localhost:1991/${postResult.User.portrait}`} alt="" />
+                    <img src={`http://localhost:1991/uploads/${postResult.User.portrait}`} alt="" />
                   ) : (
                     <div className="default_user">
                       <FaUserAstronaut />

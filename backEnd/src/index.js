@@ -12,13 +12,15 @@ const profileAPIRouter = require('./api/profile');
 const postAPIRouter = require('./api/post');
 const postsAPIRouter = require('./api/posts');
 const jwtMiddleware = require('./lib/jwtMiddleware');
+const path = require('path');
 
 const app = new Express();
 db.sequelize.sync();
 
 // Middleware 설정
 app.use(morgan('dev'));
-app.use('/', Express.static('uploads'));
+app.use('/uploads', Express.static('uploads'));
+app.use(Express.static(path.join(__dirname, '../../frontEnd/dist')))
 app.use(Express.json());
 app.use(Express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -31,6 +33,11 @@ app.use('/api/user', userAPIRouter);
 app.use('/api/profile', profileAPIRouter);
 app.use('/api/post', postAPIRouter);
 app.use('/api/posts', postsAPIRouter);
+
+// 빌드 파일 제공
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '../../frontEnd/dist/index.html'));
+});
 
 const port = PORT || 8080;
 app.listen(port, () => {

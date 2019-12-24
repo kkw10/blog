@@ -46,7 +46,7 @@ const CommentPortrait = ({ portraitURL, type }) => {
     <CommentPortraitWrap type={type}>
       {portraitURL ? (
         <div className="target-user">
-          <img src={`http://localhost:1991/${portraitURL}`} alt="유저 이미지" />
+          <img src={`http://localhost:1991/uploads/${portraitURL}`} alt="유저 이미지" />
         </div>
       ) : (
         <div className="default-user">
