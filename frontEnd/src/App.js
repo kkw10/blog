@@ -5,17 +5,21 @@ import { createGlobalStyle } from 'styled-components';
 import { Route, Switch } from 'react-router-dom';
 import tuiStyle from 'tui-editor/dist/tui-editor-contents.css'; // editor's content
 import { resetCSS } from './lib/styles/reset';
-import Layout from './components/common/Layout';
-import MainPage from './pages/MainPage';
-import ProfilePage from './pages/ProfilePage';
-import WritePage from './pages/WritePage';
-import PostPage from './pages/PostPage';
-import ErrorPage from './pages/ErrorPage';
-import SearchedPostsPage from './pages/SearchedPostsPage';
 import { brandingColor } from './lib/styles/branding';
-import ErrorRouterContainer from './containers/common/ErrorRouterContainer';
-import NoMatchPage from './components/common/NoMatchPage';
 import { overlayToggle } from './models/actions/toggle';
+
+// components...
+import Layout from './components/common/Layout';
+import ErrorRouterContainer from './containers/common/ErrorRouterContainer';
+import ErrorPage from './pages/ErrorPage';
+import NoMatchPage from './components/common/NoMatchPage';
+import {
+  MainPage,
+  ProfilePage,
+  WritePage,
+  PostPage,
+  SearchedPostsPage,
+} from './pages';
 
 const GlobalStyle = createGlobalStyle`
   ${resetCSS}
@@ -47,6 +51,7 @@ const GlobalStyle = createGlobalStyle`
 const App = () => {
   const dispatch = useDispatch();
   const toggle = useSelector(({ toggle }) => toggle);
+
   const onOverlayToggle = useCallback((e) => {
     if (e.target.getAttribute('data-this-is-toggle-element')) return;
     dispatch(overlayToggle());
