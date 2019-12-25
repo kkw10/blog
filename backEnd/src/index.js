@@ -39,7 +39,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '../../frontEnd/dist/index.html'));
 });
 
-const port = PORT || 8080;
+const port = PORT || 80;
 app.listen(port, () => {
   console.log(`[@@@ Backend server is running on ${port}port...]`)
 })
