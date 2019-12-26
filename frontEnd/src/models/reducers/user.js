@@ -24,6 +24,7 @@ const initialState = {
   FollowersList: [],
   FollowingsList: [],
   error: null,
+  error_check: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -139,7 +140,8 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         user: null,
-        error: action.payload,
+        error: null,
+        error_check: action.payload,
       };
     case UPLOAD_PROFILE_FAILURE:
     case GET_TARGET_PROFILE_FAILURE:

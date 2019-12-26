@@ -6,17 +6,22 @@ const ErrorContainer = () => {
   const [currentError, setCurrentError] = useState(null);
   const {
     userError,
+    userCheckError,
     postsError,
     postError,
     writeError,
   } = useSelector(({ user, posts, post, write }) => ({
     userError: user.error,
+    userCheckError: user.error_check,
     postsError: posts.error,
     postError: post.error,
     writeError: write.error,
   }));
 
   useEffect(() => {
+    // 로그인 체크 에러는 에러페이지로 이동 x;
+    if (userCheckError) return;
+
     if (userError) {
       setCurrentError(userError);
     } else if (postsError) {
@@ -26,7 +31,7 @@ const ErrorContainer = () => {
     } else {
       setCurrentError(writeError);
     }
-  }, [userError, postsError, postError, writeError])
+  }, [userError, userCheckError, postsError, postError, writeError]);
 
   return (
     <Error
