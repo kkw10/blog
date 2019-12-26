@@ -1,10 +1,10 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const CompressionPlugin = require('compression-webpack-plugin');
 
 module.exports = {
+  mode: 'production',
   // [번들링 시작점]
   entry: [
     './src/index.js',
@@ -49,20 +49,6 @@ module.exports = {
       filename: 'index.html',
     }),
     new CleanWebpackPlugin(), // 빌드할 때 기존 dist 폴더 정리.
-    new BundleAnalyzerPlugin(), // 번들 파일 크기 시각화.
     new CompressionPlugin(), // 번들 파일에 gzip 적용.
   ],
-  // [소스맵 생성 설정( 디버깅 보조 )]
-  devtool: 'cheap-eval-source-map',
-  // [개발 서버 설정]
-  devServer: {
-    publicPath: '/',
-    port: 1990,
-    historyApiFallback: true, // url 변경 허용.
-    proxy: { // 백엔드 cors 해결
-      '/api': {
-        target: 'http://localhost:1991',
-      },
-    },
-  },
 };

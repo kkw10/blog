@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack",
-    "start:dev": "webpack-dev-server --content-base public"
+    "start": "webpack --config webpack.config.prod",
+    "start:dev": "webpack-dev-server --content-base public --config webpack.config.dev"
   },
   "keywords": [],
   "author": "",

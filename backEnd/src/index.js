@@ -1,5 +1,6 @@
 require('dotenv').config();
 const { PORT } = process.env;
+const isProd = process.env.NODE_ENV === 'production';
 
 const Express = require('express');
 const morgan = require('morgan');
@@ -39,7 +40,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../../frontEnd/dist', 'index.html'));
 });
 
-const port = PORT || 80;
+const port = isProd ? 80 : PORT;
 app.listen(port, () => {
   console.log(`[@@@ Backend server is running on ${port}port...]`)
 })
