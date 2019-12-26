@@ -19,7 +19,7 @@ db.sequelize.sync();
 
 // Middleware 설정
 app.use(morgan('dev'));
-app.use('/uploads', Express.static('uploads'));
+// app.use('/uploads', Express.static('uploads'));
 app.use(Express.static(path.resolve(__dirname, '../../frontEnd/dist')))
 app.use(Express.json());
 app.use(Express.urlencoded({ extended: true }));

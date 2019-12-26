@@ -2,8 +2,10 @@ const db = require('../../models');
 const httpContext = require('express-http-context');
 
 exports.submitPortrait = async (req, res, next) => {
+  console.log('@@@@@ Profile.ctrl');
+  console.log(req.file.location);
+  console.log(req.file.location.filename);
   res.json(req.file.location.filename);
-  // res.json(req.file.filename);
 };
 
 exports.submitProfile = async (req, res, next) => {
