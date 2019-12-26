@@ -2,7 +2,8 @@ const db = require('../../models');
 const httpContext = require('express-http-context');
 
 exports.submitPortrait = async (req, res, next) => {
-  res.json(req.file.filename);
+  res.json(req.file.location.filename);
+  // res.json(req.file.filename);
 };
 
 exports.submitProfile = async (req, res, next) => {
