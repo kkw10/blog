@@ -109,7 +109,7 @@ const ProfileSetting = ({
             <div className="mirror">
               {writeProfileData.userPortrait ? (
                 <UserImage
-                  background={`http://localhost:1991/uploads/${writeProfileData.userPortrait}`}
+                  background={`${writeProfileData.userPortrait}`}
                 />
               ) : (
                 <div className="defaultUser">

@@ -224,7 +224,7 @@ const ProfileView = ({
           <Portrait>
             <div className="absoluteWrap">
               {currentUser.portrait ? (
-                <PortraitImage background={`http://localhost:1991/uploads/${currentUser.portrait}`} />
+                <PortraitImage background={`${currentUser.portrait}`} />
               ) : (
                 <div className="defaultUser">
                   <FaUserAstronaut />
