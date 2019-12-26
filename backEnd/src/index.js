@@ -20,7 +20,7 @@ db.sequelize.sync();
 // Middleware 설정
 app.use(morgan('dev'));
 app.use('/uploads', Express.static('uploads'));
-app.use(Express.static(path.join(__dirname, '../../frontEnd/dist')))
+app.use(Express.static(path.resolve(__dirname, '../../frontEnd/dist')))
 app.use(Express.json());
 app.use(Express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -36,7 +36,7 @@ app.use('/api/posts', postsAPIRouter);
 
 // 빌드 파일 제공
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + '../../frontEnd/dist/index.html'));
+  res.sendFile(path.resolve(__dirname, '../../frontEnd/dist', 'index.html'));
 });
 
 const port = PORT || 80;
