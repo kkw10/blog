@@ -204,7 +204,7 @@ const UserCard = ({
     <UserCardWrap>
       <div className="header">
         {currentUser && currentUser.portrait ? (
-          <UserPortrait className="user" background={`http://localhost:1991/uploads/${currentUser.portrait}`} />
+          <UserPortrait className="user" background={`${currentUser.portrait}`} />
         ) : (
           <div className="user user_default">
             <FaUserAstronaut />
