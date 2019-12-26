@@ -12,14 +12,6 @@ AWS.config.update({
 
 const upload = multer({
   storage: multerS3({
-    // destination(req, file, result) {
-    //   result(null, 'uploads') // 저장할 폴더 경로
-    // },
-    // filename(req, file, result) {
-    //   const ext = path.extname(file.originalname); // 확장자명 추출
-    //   const basename = path.basename(file.originalname, ext); // 확장자 제외 파일명
-    //   result(null, basename + new Date().valueOf() + ext); // 파일명 중복 방지
-    // },
     s3: new AWS.S3(),
     bucket: 'react-spacer',
     key(req, file, cb) {
