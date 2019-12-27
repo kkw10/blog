@@ -1,8 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { CircleSpinner } from 'react-spinners-kit';
-
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 // lib...
 import { brandingColor } from '../../lib/styles/branding';
@@ -59,7 +58,11 @@ const StyledButton = styled.button`
       font-weight: bold;
       border-radius: 5px;      
     `
-  )}  
+  )}
+
+  & > * {
+    display: inline-block;
+  }
 `;
 
 const Button = ({ placeholder, loadingType, ...props }) => {

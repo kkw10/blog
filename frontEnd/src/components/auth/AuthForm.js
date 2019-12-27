@@ -99,6 +99,7 @@ const AuthForm = ({
         placeholder={type === 'login' ? '로그인' : '회원가입'}
         size="mx"
         background="point"
+        loadingType={type === 'login' ? 'auth/LOGIN' : 'auth/REGISTER'}
       />
     </form>
   </AuthFormWrap>
