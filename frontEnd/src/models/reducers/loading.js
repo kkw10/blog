@@ -1,6 +1,7 @@
 import {
   START_LOADING,
   FINISH_LOADING,
+  CLEAR_LOADING,
 } from '../actions/loading';
 
 const reducer = (state = {}, action) => {
@@ -8,16 +9,18 @@ const reducer = (state = {}, action) => {
     case START_LOADING:
       return {
         ...state,
-        [action.payload]: true
-      }
+        [action.payload]: true,
+      };
     case FINISH_LOADING:
       return {
         ...state,
-        [action.payload]: false
-      }
+        [action.payload]: false,
+      };
+    case CLEAR_LOADING:
+      return {};
     default:
       return state;
   }
-}
+};
 
 export default reducer;

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import HeaderContainer from '../../containers/common/HeaderContainer';
 import { brandingColor } from '../../lib/styles/branding';
+import MessageBoxContainer from '../../containers/common/MessageBoxContainer';
 
 const LayoutWrap = styled.div`
   position: absolute;
@@ -14,8 +15,9 @@ const Layout = ({ children }) => {
     <LayoutWrap>
       <HeaderContainer />
       { children }
+      <MessageBoxContainer />
     </LayoutWrap>
-  )
-}
+  );
+};
 
 export default Layout;
