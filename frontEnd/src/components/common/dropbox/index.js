@@ -28,8 +28,6 @@ const DropBox = ({
   main,
   list,
 }) => {
-  // if (!visible) return null;
-
   const modalMarker = useRef();
 
   useEffect(() => {

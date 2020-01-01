@@ -8,7 +8,8 @@ const MessageBoxContainer = () => {
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState('');
   const loading = useSelector(({ loading }) => loading);
-  const targetAction = [
+
+  const targetAction = [ // 알림 메시지 띄울 액션 및 알림 메시지 지정
     {
       type: 'user/UPLOAD_PROFILE',
       message: '프로필 설정이 완료되었습니다.',
@@ -21,7 +22,7 @@ const MessageBoxContainer = () => {
       type: 'user/UNFOLLOWING_FROM_LIST',
       message: '언팔로잉이 완료되었습니다.',
     },
-  ]; // 알림 메시지 띄울 액션 및 메시지 지정
+  ];
 
   // 현재 로딩 목록에 있는 상태들 중 알림 메시지 타겟으로 지정된 것이 있는지 체크
   const findAction = useCallback(() => {
